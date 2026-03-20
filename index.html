@@ -12,6 +12,7 @@
 
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%231A3A6B'/%3E%3Crect x='114' y='130' width='284' height='196' rx='50' fill='%232563C0'/%3E%3Crect x='134' y='150' width='100' height='80' rx='14' fill='%231A3A6B'/%3E%3Crect x='278' y='150' width='100' height='80' rx='14' fill='%231A3A6B'/%3E%3Cpath d='M114 252 Q256 210 398 252 L398 296 Q256 254 114 296 Z' fill='white'/%3E%3Crect x='114' y='296' width='284' height='64' rx='24' fill='%231A4FA0'/%3E%3Crect x='130' y='348' width='80' height='56' rx='20' fill='%231A3A6B'/%3E%3Crect x='302' y='348' width='80' height='56' rx='20' fill='%231A3A6B'/%3E%3Crect x='222' y='358' width='68' height='42' rx='12' fill='%231A3A6B'/%3E%3Crect x='228' y='82' width='56' height='26' rx='13' fill='white' opacity='0.9'/%3E%3Ccircle cx='256' cy='126' r='20' fill='white' opacity='0.9'/%3E%3C/svg%3E">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%231A3A6B'/%3E%3Crect x='114' y='130' width='284' height='196' rx='50' fill='%232563C0'/%3E%3Crect x='134' y='150' width='100' height='80' rx='14' fill='%231A3A6B'/%3E%3Crect x='278' y='150' width='100' height='80' rx='14' fill='%231A3A6B'/%3E%3Cpath d='M114 252 Q256 210 398 252 L398 296 Q256 254 114 296 Z' fill='white'/%3E%3Crect x='114' y='296' width='284' height='64' rx='24' fill='%231A4FA0'/%3E%3Crect x='130' y='348' width='80' height='56' rx='20' fill='%231A3A6B'/%3E%3Crect x='302' y='348' width='80' height='56' rx='20' fill='%231A3A6B'/%3E%3Crect x='222' y='358' width='68' height='42' rx='12' fill='%231A3A6B'/%3E%3Crect x='228' y='82' width='56' height='26' rx='13' fill='white' opacity='0.9'/%3E%3Ccircle cx='256' cy='126' r='20' fill='white' opacity='0.9'/%3E%3C/svg%3E">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..500;9..600;9..700&display=swap" rel="stylesheet">
@@ -96,7 +97,7 @@ html, body {
   );
 }
 
-.nav-home {
+.nav-info-btn {
   position: absolute;
   left: 16px;
   display: flex;
@@ -108,8 +109,23 @@ html, body {
   cursor: pointer;
   border-radius: 10px;
   transition: background 0.15s, opacity 0.15s;
+  opacity: 0;
+  pointer-events: none;
 }
-.nav-home:active { background: rgba(255,255,255,0.2); opacity: 0.7; }
+.nav-info-btn.visible { opacity: 1; pointer-events: auto; }
+.nav-info-btn:active { background: rgba(255,255,255,0.2); }
+
+/* home info block */
+.home-info {
+  margin-top: 8px;
+  padding: 12px 4px 0;
+}
+.home-info-text {
+  font-size: 13px;
+  color: var(--label3);
+  line-height: 1.6;
+  text-align: center;
+}
 
 .nav-center { display: flex; flex-direction: column; align-items: center; gap: 1px; }
 
@@ -185,8 +201,8 @@ html, body {
   justify-content: center;
   flex-shrink: 0;
 }
-.picker-icon.from { background: rgba(37,99,192,0.1); }
-.picker-icon.to   { background: rgba(26,140,78,0.1); }
+.picker-icon.from { background: rgba(26,140,78,0.1); }
+.picker-icon.to   { background: rgba(74,158,232,0.1); }
 
 .picker-text {
   flex: 1;
@@ -209,14 +225,16 @@ select {
   border: none;
   padding: 0;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--label);
   appearance: none;
   outline: none;
   cursor: pointer;
 }
-select option { color: var(--label); background: var(--surface); }
+select.empty { color: var(--label3); font-size: 15px; }
+select option { color: var(--label); background: var(--surface); font-size: 16px; }
+select option[value=""] { display: none; }
 
 .picker-chevron {
   color: var(--label4);
@@ -607,77 +625,73 @@ select option { color: var(--label); background: var(--surface); }
 }
 .past-toggle:active { background: var(--surface2); }
 
-/* ── TOMORROW CARD ── */
-.tomorrow-card {
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 0 var(--sep), 0 2px 12px rgba(0,0,0,0.04);
+/* ── SHARE BLOCK ── */
+.share-block {
+  margin-top: 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  transition: opacity 0.2s;
 }
-.tomorrow-icon {
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  background: rgba(26,58,107,0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+.share-block.hidden { display: none; }
+
+.share-qr {
+  background: white;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
-.tomorrow-text {}
-.tomorrow-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--label3);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 2px;
-}
-.tomorrow-time {
-  font-family: var(--mono);
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--label);
-  letter-spacing: -0.3px;
+.share-qr canvas, .share-qr img {
+  display: block;
+  border-radius: 6px;
 }
 
-/* ── EMPTY STATE ── */
-.empty {
-  text-align: center;
-  padding: 56px 24px;
-  color: var(--label3);
-}
-.empty-icon-wrap {
-  margin-bottom: 18px;
+.share-instructions {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
 }
-.empty-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--label2);
-  margin-bottom: 8px;
-  letter-spacing: -0.4px;
-}
-.empty-sub {
-  font-size: 14px;
-  line-height: 1.6;
+
+.share-instruction {
+  font-size: 11.5px;
   color: var(--label3);
-  max-width: 260px;
-  margin: 0 auto;
+  line-height: 1.5;
+  text-align: center;
+  letter-spacing: -0.1px;
 }
-.empty-credit {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--label4);
-  margin-top: 28px;
-  letter-spacing: 0.06em;
+
+.share-os {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-light);
+  background: rgba(37,99,192,0.08);
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-right: 4px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.share-credit {
+  font-size: 10px;
+  color: var(--label4);
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+.app-credit {
+  text-align: center;
+  padding: 12px 0 4px;
+  font-size: 10px;
+  color: var(--label4);
+  font-weight: 500;
+  letter-spacing: 0.06em;
   font-family: var(--mono);
 }
+.app-credit.hidden { display: none; }
 
 .no-more {
   text-align: center;
@@ -689,8 +703,416 @@ select option { color: var(--label); background: var(--surface); }
   text-transform: uppercase;
 }
 
-/* ── TRAIN ICON SVG ── */
-.train-svg-wrap {
+/* ── DETAIL VIEW ── */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.detail-overlay.open {
+  transform: translateX(0);
+}
+
+.detail-nav {
+  background: var(--accent);
+  padding: 0 16px;
+  padding-top: env(safe-area-inset-top, 0px);
+  min-height: calc(env(safe-area-inset-top, 0px) + 56px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.detail-nav-clock {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.detail-nav-info {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+.detail-nav-title {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 0.02em;
+}
+.detail-nav-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  font-weight: 500;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.detail-nav-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 3px 8px;
+  flex-shrink: 0;
+}
+
+.detail-scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 16px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 24px);
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* journey stop rows */
+.journey-stop {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  min-height: 52px;
+}
+
+.journey-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 20px;
+}
+
+.journey-node {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--label4);
+  background: var(--bg);
+  flex-shrink: 0;
+  margin-top: 6px;
+  transition: all 0.3s;
+}
+.journey-node.endpoint {
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent-light);
+  background: var(--accent-light);
+  margin-top: 5px;
+}
+.journey-node.current {
+  width: 14px;
+  height: 14px;
+  border-color: var(--green);
+  background: var(--green);
+  box-shadow: 0 0 0 4px rgba(29,185,84,0.2);
+  margin-top: 5px;
+  animation: pulseDot 2s infinite;
+}
+.journey-node.passed {
+  border-color: var(--accent-light);
+  background: var(--accent-light);
+  opacity: 0.35;
+}
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(29,185,84,0.2); }
+  50%       { box-shadow: 0 0 0 7px rgba(29,185,84,0.08); }
+}
+
+.journey-seg {
+  width: 2px;
+  flex: 1;
+  background: var(--sep);
+  margin: 2px 0;
+  min-height: 16px;
+}
+.journey-seg.passed {
+  background: var(--accent-light);
+  opacity: 0.35;
+}
+
+.journey-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0 16px;
+  border-bottom: 1px solid var(--sep);
+  gap: 8px;
+}
+.journey-stop:last-child .journey-info {
+  border-bottom: none;
+  padding-bottom: 4px;
+}
+
+.journey-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--label2);
+  line-height: 1.3;
+}
+.journey-name.endpoint {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--label);
+}
+.journey-name.current {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green);
+}
+.journey-name.passed {
+  color: var(--label3);
+}
+
+.journey-time {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--label2);
+  flex-shrink: 0;
+}
+.journey-time.endpoint {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--label);
+}
+.journey-time.current {
+  color: var(--green);
+  font-weight: 500;
+}
+.journey-time.passed {
+  color: var(--label3);
+}
+
+.journey-now-badge {
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--green);
+  color: white;
+  border-radius: 4px;
+  padding: 2px 5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* ── DIAGRAM WRAP (collapsible) ── */
+.dep-diagram-wrap {
+  display: none;
+  padding-bottom: 4px;
+}
+.dep-row.expanded .dep-diagram-wrap {
+  display: block;
+}
+.dep-row.expanded .dep-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── КРЕНИ BUTTON ── */
+.kreni-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: calc(100% - 32px);
+  margin: 4px 16px 12px;
+  padding: 10px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: opacity 0.15s;
+}
+.kreni-btn:active { opacity: 0.8; }
+.kreni-btn.kreni-disabled {
+  background: var(--fill2);
+  color: var(--label3);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* ── ЗАВРШИ ПУТОВАЊЕ BUTTON ── */
+.zavrsi-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: calc(100% - 32px);
+  margin: 8px 16px 0;
+  padding: 12px;
+  background: var(--surface2);
+  color: var(--label2);
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background 0.15s;
+}
+.zavrsi-btn:active { background: var(--sep); }
+.live-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 0 var(--sep), 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.live-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.live-label::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 3px rgba(29,185,84,0.2);
+  animation: pulse 2s infinite;
+}
+
+.live-stations {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.live-station {
+  flex: 1;
+  min-width: 0;
+}
+.live-station-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--label3);
+  margin-bottom: 3px;
+}
+.live-station-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.live-station-time {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--label3);
+  margin-top: 2px;
+}
+.live-station.next .live-station-name { color: var(--label2); font-weight: 500; }
+
+.live-arrow {
+  color: var(--label4);
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+.live-progress-wrap {
+  position: relative;
+  height: 4px;
+  background: var(--sep);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.live-progress-bar {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+.live-progress-train {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px; height: 10px;
+  background: var(--green);
+  border: 2px solid var(--card);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--green);
+  transition: left 1s linear;
+}
+
+.live-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--label3);
+}
+
+.live-not-departed {
+  font-size: 13px;
+  color: var(--label3);
+  text-align: center;
+  padding: 8px 0 4px;
+}
+.live-not-departed span {
+  font-family: var(--mono);
+  color: var(--accent-light);
+  font-weight: 500;
+}
+
+.live-completed {
+  font-size: 13px;
+  color: var(--label3);
+  text-align: center;
+  padding: 8px 0 4px;
+}
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.detail-btn:active { background: rgba(255,255,255,0.25); }
+
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
@@ -712,11 +1134,24 @@ select option { color: var(--label); background: var(--surface); }
 </head>
 <body>
 
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-nav">
+    <div class="detail-nav-clock" id="detailClock">--:--</div>
+    <div class="detail-nav-info">
+      <div class="detail-nav-title" id="detailTitle">--:--</div>
+      <div class="detail-nav-sub" id="detailSub"></div>
+    </div>
+    <div class="detail-nav-badge" id="detailBadge"></div>
+  </div>
+  <div class="detail-scroll" id="detailScroll"></div>
+</div>
+
 <div class="nav-bar">
-  <button class="nav-home" onclick="resetToHome()" aria-label="Почетна страница">
+  <button class="nav-info-btn" id="navInfoBtn" onclick="toggleInfoPanel()" aria-label="Информације">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M3 10.5L12 3L21 10.5V20C21 20.5523 20.5523 21 20 21H15V15H9V21H4C3.44772 21 3 20.5523 3 20V10.5Z"
-        stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+      <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.8"/>
+      <path d="M12 11V17" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="12" cy="8" r="0.9" fill="white"/>
     </svg>
   </button>
   <div class="nav-center">
@@ -733,8 +1168,8 @@ select option { color: var(--label); background: var(--surface); }
     <div class="picker-row">
       <div class="picker-icon from">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="5" stroke="#2563C0" stroke-width="1.8"/>
-          <circle cx="8" cy="8" r="2" fill="#2563C0"/>
+          <circle cx="8" cy="8" r="5" stroke="#1A8C4E" stroke-width="1.8"/>
+          <circle cx="8" cy="8" r="2" fill="#1A8C4E"/>
         </svg>
       </div>
       <div class="picker-text">
@@ -759,8 +1194,8 @@ select option { color: var(--label); background: var(--surface); }
     <div class="picker-row">
       <div class="picker-icon to">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <rect x="3.5" y="3.5" width="9" height="9" rx="2" stroke="#1A8C4E" stroke-width="1.8"/>
-          <rect x="6" y="6" width="4" height="4" rx="0.5" fill="#1A8C4E"/>
+          <circle cx="8" cy="8" r="5" stroke="#4A9EE8" stroke-width="1.8"/>
+          <circle cx="8" cy="8" r="2" fill="#4A9EE8"/>
         </svg>
       </div>
       <div class="picker-text">
@@ -772,6 +1207,23 @@ select option { color: var(--label); background: var(--surface); }
       </svg>
     </div>
   </div>
+
+  <div class="share-block" id="shareBlock">
+    <div class="share-qr" id="qrcode"></div>
+    <div class="share-instructions">
+      <div class="share-instruction">
+        <span class="share-os">Android</span>
+        Отвори у Chrome · ⋮ · Додај на почетни екран
+      </div>
+      <div class="share-instruction">
+        <span class="share-os">iPhone</span>
+        Отвори у Safari · Дели · Додај на почетни екран
+      </div>
+    </div>
+    <div class="share-credit">важи од 18.02.2026. до 12.12.2026. · by: miki93</div>
+  </div>
+
+  <div class="app-credit hidden" id="appCredit">важи од 18.02.2026. до 12.12.2026. · by: miki93</div>
 
   <!-- BANNERS -->
   <div class="banner banner-noservice" id="noServiceBanner">
@@ -911,7 +1363,6 @@ function isShortTrain(tr, to) {
 function populateDropdowns() {
   const f = document.getElementById('fromStation');
   const t = document.getElementById('toStation');
-  // restore from URL hash or localStorage
   const saved = getSaved();
   ALL_UNIQUE.forEach(s => {
     const oF = document.createElement('option');
@@ -924,6 +1375,16 @@ function populateDropdowns() {
     if (saved.to === s) oT.selected = true;
     t.appendChild(oT);
   });
+  updateSelectStyle(f);
+  updateSelectStyle(t);
+}
+
+function updateSelectStyle(sel) {
+  if (sel.value === '') {
+    sel.classList.add('empty');
+  } else {
+    sel.classList.remove('empty');
+  }
 }
 
 function swapStations() {
@@ -964,25 +1425,22 @@ function getTrains(dir, from, to, noService) {
 }
 
 // Find first train on the next working day (used when no more trains today)
-function firstTomorrow(dir, from, to) {
+function getTomorrowTrains(dir, from, to) {
   const pool = dir === 'A' ? TRAINS_A : TRAINS_B;
   for (let offset = 1; offset <= 7; offset++) {
     const d = new Date();
     d.setDate(d.getDate() + offset);
     d.setHours(0,0,0,0);
     const ns = isNoServiceDay(d);
-    for (const tr of pool) {
-      if (tr.hol === true && !ns) continue;
-      if (tr.hol === true && ns) { /* include */ }
-      else if (tr.hol === 'weekday' && ns) continue;
-      if (!tr.t[from] || !tr.t[to]) continue;
-      if (toMin(tr.t[to]) > toMin(tr.t[from])) {
-        const dayNames = ['недеља','понедељак','уторак','среда','четвртак','петак','субота'];
-        return { tr, dayLabel: offset === 1 ? 'сутра' : dayNames[d.getDay()] };
-      }
-    }
+    const trains = pool.filter(tr => {
+      if (tr.hol === true && !ns) return false;
+      if (tr.hol === 'weekday' && ns) return false;
+      if (!tr.t[from] || !tr.t[to]) return false;
+      return toMin(tr.t[to]) > toMin(tr.t[from]);
+    });
+    if (trains.length) return trains;
   }
-  return null;
+  return [];
 }
 
 // ─── PERSISTENCE ───────────────────────────────────────────────────────────
@@ -1049,6 +1507,186 @@ function renderRouteDiagram(tr, from, to, midStops) {
   return `<div class="dep-route-diagram">${html}</div>`;
 }
 
+function toggleRow(rowId) {
+  const row = document.getElementById(rowId);
+  if (row) row.classList.toggle('expanded');
+}
+
+// ─── INFO PANEL / HOME TOGGLE ──────────────────────────────────────────────
+function showHome(isHome) {
+  // info button: hidden on home, visible when route active
+  document.getElementById('navInfoBtn').classList.toggle('visible', !isHome);
+  // credit + validity footer
+  setCredit(!isHome);
+  // results area
+  if (isHome) {
+    document.getElementById('results').innerHTML = homeScreen();
+  }
+}
+
+function toggleInfoPanel() {
+  // acts as home button — goes back to landing
+  resetToHome();
+}
+
+function setCredit(hasRoute) {
+  const share = document.getElementById('shareBlock');
+  if (share) share.classList.toggle('hidden', hasRoute);
+}
+
+// ─── DETAIL VIEW ───────────────────────────────────────────────────────────
+let detailTimer = null;
+
+function openDetail(trainId, from, to, dir) {
+  const pool = dir === 'A' ? TRAINS_A : TRAINS_B;
+  const tr = pool.find(t => t.id === trainId);
+  if (!tr) return;
+
+  const stations = dir === 'A' ? STATIONS_A : STATIONS_B;
+  const iFrom = stations.indexOf(from);
+  const iTo   = stations.indexOf(to);
+  const stops  = stations.slice(iFrom, iTo + 1).filter(s => tr.t[s] != null);
+
+  document.getElementById('detailTitle').textContent = fmt(tr.t[from]) + ' → ' + fmt(tr.t[to]);
+  document.getElementById('detailSub').textContent = from + ' → ' + to;
+  document.getElementById('detailBadge').textContent = trainId;
+
+  // start detail clock
+  function tickDetailClock() {
+    const n = new Date();
+    const el = document.getElementById('detailClock');
+    if (el) el.textContent = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+  }
+  tickDetailClock();
+  if (detailTimer) clearInterval(detailTimer);
+  detailTimer = setInterval(() => { tickDetailClock(); renderDetail(tr, stops); }, 30000);
+
+  renderDetail(tr, stops);
+  document.getElementById('detailOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (detailTimer) { clearInterval(detailTimer); detailTimer = null; }
+}
+
+function renderDetail(tr, stops) {
+  const nm = nowMin();
+  const depMin = toMin(tr.t[stops[0]]);
+  const arrMin = toMin(tr.t[stops[stops.length - 1]]);
+
+  let liveHtml = '';
+
+  if (nm < depMin) {
+    // Train hasn't departed yet
+    const minsLeft = depMin - nm;
+    liveHtml = `<div class="live-card">
+      <div class="live-label">Чека на поласку</div>
+      <div class="live-not-departed">Полазак за <span>${minsLeft} мин.</span> у ${fmt(tr.t[stops[0]])}</div>
+    </div>`;
+  } else if (nm >= arrMin) {
+    // Journey completed
+    liveHtml = `<div class="live-card">
+      <div class="live-label" style="color:var(--label3)">Путовање завршено</div>
+      <div class="live-completed">Воз је стигао у ${fmt(tr.t[stops[stops.length-1]])}</div>
+    </div>`;
+  } else {
+    // Train is en route — find current and next stop
+    let currentStop = null, nextStop = null;
+    for (let i = 0; i < stops.length - 1; i++) {
+      const s = stops[i], sNext = stops[i + 1];
+      if (toMin(tr.t[s]) <= nm && toMin(tr.t[sNext]) > nm) {
+        currentStop = s;
+        nextStop = sNext;
+        break;
+      }
+    }
+
+    if (currentStop && nextStop) {
+      const segStart = toMin(tr.t[currentStop]);
+      const segEnd   = toMin(tr.t[nextStop]);
+      const elapsed  = nm - segStart;
+      const total    = segEnd - segStart;
+      const pct      = Math.min(100, Math.round((elapsed / total) * 100));
+
+      liveHtml = `<div class="live-card">
+        <div class="live-label">Тренутно у вожњи</div>
+        <div class="live-stations">
+          <div class="live-station current">
+            <div class="live-station-label">Тренутна</div>
+            <div class="live-station-name">${currentStop}</div>
+            <div class="live-station-time">${fmt(tr.t[currentStop])}</div>
+          </div>
+          <div class="live-arrow">→</div>
+          <div class="live-station next">
+            <div class="live-station-label">Следећа</div>
+            <div class="live-station-name">${nextStop}</div>
+            <div class="live-station-time">${fmt(tr.t[nextStop])}</div>
+          </div>
+        </div>
+        <div class="live-progress-wrap">
+          <div class="live-progress-bar" style="width:${pct}%"></div>
+          <div class="live-progress-train" style="left:${pct}%"></div>
+        </div>
+        <div class="live-progress-labels">
+          <span>${fmt(tr.t[currentStop])}</span>
+          <span>${fmt(tr.t[nextStop])}</span>
+        </div>
+      </div>`;
+    }
+  }
+
+  // Station list
+  let stopsHtml = '';
+  stops.forEach((s, i) => {
+    const isFirst    = i === 0;
+    const isLast     = i === stops.length - 1;
+    const isEndpoint = isFirst || isLast;
+    const stopMin    = toMin(tr.t[s]);
+    const nextS      = stops[i + 1];
+    const nextMin    = nextS ? toMin(tr.t[nextS]) : null;
+
+    let state = 'future';
+    if (stopMin < nm) state = 'passed';
+    if (stopMin <= nm && nextMin !== null && nextMin > nm) state = 'current';
+    if (isLast && stopMin <= nm) state = 'passed';
+
+    const nodeClass = state === 'current' ? 'current' : state === 'passed' ? 'passed' : isEndpoint ? 'endpoint' : '';
+    const nameClass = state === 'current' ? 'current' : state === 'passed' ? 'passed' : isEndpoint ? 'endpoint' : '';
+    const timeClass = state === 'current' ? 'current' : state === 'passed' ? 'passed' : isEndpoint ? 'endpoint' : '';
+    const segClass  = (state === 'passed' || state === 'current') ? 'passed' : '';
+
+    stopsHtml += `<div class="journey-stop">
+      <div class="journey-line">
+        <div class="journey-node ${nodeClass}"></div>
+        ${!isLast ? `<div class="journey-seg ${segClass}"></div>` : ''}
+      </div>
+      <div class="journey-info">
+        <div class="journey-name ${nameClass}">${s}</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          ${state === 'current' ? '<div class="journey-now-badge">сада</div>' : ''}
+          <div class="journey-time ${timeClass}">${fmt(tr.t[s])}</div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('detailScroll').innerHTML = liveHtml + stopsHtml +
+    `<button class="zavrsi-btn" onclick="closeDetail()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      Заврши путовање
+    </button>`;
+
+  setTimeout(() => {
+    const el = document.querySelector('.journey-node.current');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
 // ─── RENDER ────────────────────────────────────────────────────────────────
 let cdTimer = null;
 
@@ -1061,10 +1699,16 @@ function render() {
   nosB.classList.remove('visible');
   if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
 
+  // show home button only when both stations are selected
+  
+  
+
   saveRoute(from, to);
+  setCredit(true);
+  document.getElementById('navInfoBtn').classList.add('visible');
 
   if (!from || !to) {
-    res.innerHTML = homeScreen();
+    showHome(true);
     return;
   }
   if (from === to) {
@@ -1116,6 +1760,10 @@ function render() {
       </div>
       <div class="next-divider"></div>
       <div class="next-arr-row">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+          <circle cx="8" cy="8" r="5" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+          <circle cx="8" cy="8" r="2.5" fill="rgba(255,255,255,0.8)"/>
+        </svg>
         <span class="next-arr-label">${to}</span>
         <span class="next-arr-time">${fmt(arr)}</span>
         <span class="next-train-badge">${next.id}</span>
@@ -1123,26 +1771,46 @@ function render() {
     </div>`;
   }
 
-  // ── NO MORE + TOMORROW ──
+  // ── NO MORE + TOMORROW FULL LIST ──
   if (!future.length) {
-    const tom = firstTomorrow(dir, from, to);
-    if (tom) {
-      html += `
-      <div class="tomorrow-card">
-        <div class="tomorrow-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="5" width="18" height="16" rx="2.5" stroke="var(--accent)" stroke-width="1.6"/>
-            <path d="M8 3V7M16 3V7" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M3 10H21" stroke="var(--accent)" stroke-width="1.6"/>
-          </svg>
-        </div>
-        <div class="tomorrow-text">
-          <div class="tomorrow-label">${tom.dayLabel} · Први воз</div>
-          <div class="tomorrow-time">${fmt(tom.tr.t[from])} → ${fmt(tom.tr.t[to])}</div>
-        </div>
-      </div>`;
+    const tomorrowTrains = getTomorrowTrains(dir, from, to);
+    html += `<div class="no-more">Нема више полазака за данас</div>`;
+    if (tomorrowTrains.length) {
+      html += `<div class="section-header" style="margin-top:12px">Сутрашњи поласци</div>
+      <div class="dep-list-card">`;
+      tomorrowTrains.forEach((tr, i) => {
+        const dep = tr.t[from];
+        const arr = tr.t[to];
+        const rowId = `row-tom-${tr.id}`;
+        html += `<div class="dep-row" id="${rowId}">
+          <div class="dep-row-main" onclick="toggleRow('${rowId}')" style="cursor:pointer">
+            <div class="dep-track">
+              <div class="dep-dot"></div>
+            </div>
+            <div class="dep-times">
+              <div class="dep-dep">${fmt(dep)}</div>
+              <div class="dep-arr">${from} → ${to} у ${fmt(arr)}</div>
+            </div>
+            <div class="dep-right">
+              <div class="dep-train">${tr.id}</div>
+              <svg class="dep-chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" style="opacity:0.3;margin-top:2px;transition:transform 0.2s">
+                <path d="M4 6L8 10L12 6" stroke="var(--label)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="dep-diagram-wrap">
+            ${renderRouteDiagram(tr, from, to, getIntermediateStops(dir, from, to))}
+            <button class="kreni-btn kreni-disabled" disabled>
+              Крени од сутра
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
     }
-    html += `<div class="no-more">Нема више полазака данас</div>`;
   }
 
   // ── UPCOMING LIST ──
@@ -1156,21 +1824,33 @@ function render() {
       if (!arr) return;
       const isNext = i === 0;
       const minsAway = toMin(dep) - nm;
-      html += `<div class="dep-row ${isNext ? 'is-next' : ''}">
-        <div class="dep-row-main">
+      const rowId = `row-${tr.id}`;
+      html += `<div class="dep-row ${isNext ? 'is-next' : ''}" id="${rowId}">
+        <div class="dep-row-main" onclick="toggleRow('${rowId}')" style="cursor:pointer">
           <div class="dep-track">
             <div class="dep-dot ${isNext ? 'upcoming' : ''}"></div>
           </div>
           <div class="dep-times">
             <div class="dep-dep">${fmt(dep)}</div>
-            <div class="dep-arr">→ ${to} у ${fmt(arr)}</div>
+            <div class="dep-arr">${from} → ${to} у ${fmt(arr)}</div>
           </div>
           <div class="dep-right">
             <div class="dep-train">${tr.id}</div>
             ${isNext ? `<div class="dep-min-away">${minsAway} мин.</div>` : ''}
+            <svg class="dep-chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" style="opacity:0.3;margin-top:2px;transition:transform 0.2s">
+              <path d="M4 6L8 10L12 6" stroke="var(--label)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
         </div>
-        ${renderRouteDiagram(tr, from, to, midStops)}
+        <div class="dep-diagram-wrap">
+          ${renderRouteDiagram(tr, from, to, midStops)}
+          <button class="kreni-btn" onclick="openDetail('${tr.id}','${from}','${to}','${dir}')">
+            Крени
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
       </div>`;
     });
     html += `</div>`;
@@ -1199,54 +1879,18 @@ function emptyState(icon, title, sub) {
   </div>`;
 }
 
-function homeScreen() {
-  return `<div class="empty">
-    <div class="empty-icon-wrap">
-      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="72" height="72" rx="18" fill="var(--accent)"/>
-        <!-- pantograph base -->
-        <rect x="32" y="8" width="8" height="4" rx="2" fill="white" opacity="0.9"/>
-        <!-- pantograph connector -->
-        <circle cx="36" cy="14" r="3" fill="white" opacity="0.9"/>
-        <!-- train body -->
-        <rect x="16" y="13" width="40" height="38" rx="7" fill="#2563C0"/>
-        <!-- left window -->
-        <rect x="19" y="18" width="13" height="11" rx="3" fill="var(--accent)"/>
-        <!-- right window -->
-        <rect x="40" y="18" width="13" height="11" rx="3" fill="var(--accent)"/>
-        <!-- diagonal stripe white background -->
-        <path d="M16 35 Q36 29 56 35 L56 42 Q36 36 16 42 Z" fill="white" opacity="0.95"/>
-        <!-- diagonal stripe blue overlay (chevron) -->
-        <path d="M16 37 Q36 31.5 56 37 L56 39 Q36 33.5 16 39 Z" fill="#2563C0" opacity="0.4"/>
-        <!-- lower body -->
-        <rect x="16" y="42" width="40" height="9" rx="3" fill="#1A4FA0"/>
-        <!-- left buffer housing -->
-        <rect x="18" y="49" width="11" height="8" rx="3" fill="#1A3A6B"/>
-        <!-- right buffer housing -->
-        <rect x="43" y="49" width="11" height="8" rx="3" fill="#1A3A6B"/>
-        <!-- coupler center -->
-        <rect x="31" y="51" width="10" height="6" rx="2" fill="#1A3A6B"/>
-        <!-- left buffer -->
-        <rect x="19" y="51" width="4" height="4" rx="1.5" fill="white" opacity="0.5"/>
-        <!-- right buffer -->
-        <rect x="49" y="51" width="4" height="4" rx="1.5" fill="white" opacity="0.5"/>
-      </svg>
-    </div>
-    <div class="empty-title">БГ:воз</div>
-    <div class="empty-sub">Изаберите полазну и одредишну станицу да видите ред вожње</div>
-    <div class="empty-credit" style="margin-top:16px">важи од 18.02.2026. до 12.12.2026. године</div>
-    <div class="empty-credit" style="margin-top:4px">by: miki93</div>
-  </div>`;
-}
+function homeScreen() { return ''; }
 
 // ─── RESET ─────────────────────────────────────────────────────────────────
 function resetToHome() {
   document.getElementById('fromStation').value = '';
   document.getElementById('toStation').value = '';
+  updateSelectStyle(document.getElementById('fromStation'));
+  updateSelectStyle(document.getElementById('toStation'));
   if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
   document.getElementById('noServiceBanner').classList.remove('visible');
   saveRoute('', '');
-  document.getElementById('results').innerHTML = homeScreen();
+  showHome(true);
 }
 
 // ─── INIT ──────────────────────────────────────────────────────────────────
@@ -1255,15 +1899,25 @@ updateClock();
 setInterval(updateClock, 10000);
 setInterval(render, 60000);
 
-document.getElementById('fromStation').addEventListener('change', render);
-document.getElementById('toStation').addEventListener('change', render);
+// generate QR code
+new QRCode(document.getElementById('qrcode'), {
+  text: 'https://mikimisha93.github.io/BG-VOZ/',
+  width: 160,
+  height: 160,
+  colorDark: '#1A3A6B',
+  colorLight: '#ffffff',
+  correctLevel: QRCode.CorrectLevel.H
+});
+
+document.getElementById('fromStation').addEventListener('change', function() { updateSelectStyle(this); render(); });
+document.getElementById('toStation').addEventListener('change', function() { updateSelectStyle(this); render(); });
 
 // auto-render if saved route exists
 const { from: sf, to: st } = getSaved();
 if (sf && st) {
   render();
 } else {
-  document.getElementById('results').innerHTML = homeScreen();
+  showHome(true);
 }
 
 // ─── PWA MANIFEST ────────────────────────────────────────────────────────────
@@ -1290,6 +1944,17 @@ _manifestLink.rel = 'manifest';
 _manifestLink.href = _manifestUrl;
 document.head.appendChild(_manifestLink);
 
+// handle Android hardware back button
+window.addEventListener('popstate', () => {
+  if (document.getElementById('detailOverlay').classList.contains('open')) {
+    closeDetail();
+  }
+});
+document.getElementById('detailOverlay').addEventListener('transitionend', () => {
+  if (!document.getElementById('detailOverlay').classList.contains('open')) {
+    document.getElementById('detailScroll').innerHTML = '';
+  }
+});
 // ─── SERVICE WORKER (PWA offline support) ─────────────────────────────────
 if ('serviceWorker' in navigator) {
   const swCode = `
