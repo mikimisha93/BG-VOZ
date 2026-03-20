@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="БГ:воз">
+<meta name="theme-color" content="#1A3A6B">
+
+
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%231A3A6B'/%3E%3Crect x='114' y='130' width='284' height='196' rx='50' fill='%232563C0'/%3E%3Crect x='134' y='150' width='100' height='80' rx='14' fill='%231A3A6B'/%3E%3Crect x='278' y='150' width='100' height='80' rx='14' fill='%231A3A6B'/%3E%3Cpath d='M114 252 Q256 210 398 252 L398 296 Q256 254 114 296 Z' fill='white'/%3E%3Crect x='114' y='296' width='284' height='64' rx='24' fill='%231A4FA0'/%3E%3Crect x='130' y='348' width='80' height='56' rx='20' fill='%231A3A6B'/%3E%3Crect x='302' y='348' width='80' height='56' rx='20' fill='%231A3A6B'/%3E%3Crect x='222' y='358' width='68' height='42' rx='12' fill='%231A3A6B'/%3E%3Crect x='228' y='82' width='56' height='26' rx='13' fill='white' opacity='0.9'/%3E%3Ccircle cx='256' cy='126' r='20' fill='white' opacity='0.9'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%231A3A6B'/%3E%3Crect x='114' y='130' width='284' height='196' rx='50' fill='%232563C0'/%3E%3Crect x='134' y='150' width='100' height='80' rx='14' fill='%231A3A6B'/%3E%3Crect x='278' y='150' width='100' height='80' rx='14' fill='%231A3A6B'/%3E%3Cpath d='M114 252 Q256 210 398 252 L398 296 Q256 254 114 296 Z' fill='white'/%3E%3Crect x='114' y='296' width='284' height='64' rx='24' fill='%231A4FA0'/%3E%3Crect x='130' y='348' width='80' height='56' rx='20' fill='%231A3A6B'/%3E%3Crect x='302' y='348' width='80' height='56' rx='20' fill='%231A3A6B'/%3E%3Crect x='222' y='358' width='68' height='42' rx='12' fill='%231A3A6B'/%3E%3Crect x='228' y='82' width='56' height='26' rx='13' fill='white' opacity='0.9'/%3E%3Ccircle cx='256' cy='126' r='20' fill='white' opacity='0.9'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..500;9..600;9..700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #F2F2F7;
+  --surface: #FFFFFF;
+  --surface2: #F2F2F7;
+  --card: #FFFFFF;
+  --label: #0A0A0F;
+  --label2: #3A3A4A;
+  --label3: rgba(10,10,15,0.42);
+  --label4: rgba(10,10,15,0.12);
+  --sep: rgba(10,10,15,0.08);
+  --accent: #1A3A6B;
+  --accent-mid: #1E4D96;
+  --accent-light: #2563C0;
+  --green: #1A8C4E;
+  --green-bg: #E8F5EE;
+  --red: #C0392B;
+  --orange: #C05C00;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --track: #1A3A6B;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #08080F;
+    --surface: #111118;
+    --surface2: #18181F;
+    --card: #16161E;
+    --label: #F0F0F8;
+    --label2: rgba(240,240,248,0.72);
+    --label3: rgba(240,240,248,0.38);
+    --label4: rgba(240,240,248,0.13);
+    --sep: rgba(240,240,248,0.07);
+    --accent: #2563C0;
+    --accent-mid: #3070D0;
+    --accent-light: #4A85E8;
+    --green: #1DB954;
+    --green-bg: rgba(29,185,84,0.1);
+    --red: #E5534B;
+    --orange: #E07820;
+    --track: #2563C0;
+  }
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--label);
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV BAR ── */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--accent);
+  padding: 0 20px;
+  padding-top: env(safe-area-inset-top, 0px);
+  min-height: calc(env(safe-area-inset-top, 0px) + 58px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* subtle rail texture via repeating gradient */
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 39px,
+    rgba(255,255,255,0.025) 39px,
+    rgba(255,255,255,0.025) 40px
+  );
+}
+
+.nav-home {
+  position: absolute;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  padding: 7px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background 0.15s, opacity 0.15s;
+}
+.nav-home:active { background: rgba(255,255,255,0.2); opacity: 0.7; }
+
+.nav-center { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+
+.nav-title {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.nav-subtitle {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.06em;
+}
+
+.nav-time {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  position: absolute;
+  right: 20px;
+  letter-spacing: 0.04em;
+}
+
+/* ── CONTENT ── */
+.content {
+  padding: 18px 16px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 24px);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── SECTION LABEL ── */
+.section-header {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--label3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 4px 8px;
+}
+
+/* ── STATION PICKER CARD ── */
+.picker-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: visible;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 0 var(--sep), 0 2px 12px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.picker-row {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  min-height: 56px;
+  gap: 12px;
+  border-bottom: 1px solid var(--sep);
+}
+.picker-row:last-child { border-bottom: none; }
+
+.picker-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.picker-icon.from { background: rgba(37,99,192,0.1); }
+.picker-icon.to   { background: rgba(26,140,78,0.1); }
+
+.picker-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.picker-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--label3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--label);
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+select option { color: var(--label); background: var(--surface); }
+
+.picker-chevron {
+  color: var(--label4);
+  flex-shrink: 0;
+}
+
+/* ── SWAP BUTTON ── */
+.swap-btn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 2px solid var(--sep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.25s;
+  z-index: 10;
+}
+.swap-btn:active { background: var(--sep); }
+.swap-btn.spinning { transform: translateY(-50%) rotate(180deg); }
+
+/* ── BANNERS ── */
+.banner {
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 14px;
+  display: none;
+  letter-spacing: -0.1px;
+  border-left: 3px solid;
+}
+.banner.visible { display: flex; align-items: center; gap: 8px; }
+.banner-holiday { background: rgba(192,92,0,0.07); color: var(--orange); border-color: var(--orange); }
+.banner-noservice { background: rgba(192,57,43,0.07); color: var(--red); border-color: var(--red); }
+
+/* ── NEXT DEPARTURE CARD ── */
+.next-card {
+  background: var(--accent);
+  border-radius: var(--radius);
+  padding: 20px 20px 18px;
+  margin-bottom: 16px;
+  display: none;
+  box-shadow: 0 4px 20px rgba(26,58,107,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.next-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle at 100% 0%, rgba(255,255,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+/* decorative track lines */
+.next-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,0.15) 0px,
+    rgba(255,255,255,0.15) 20px,
+    transparent 20px,
+    transparent 30px
+  );
+}
+.next-card.visible { display: block; }
+
+.next-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.next-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #4AE87A;
+  box-shadow: 0 0 0 3px rgba(74,232,122,0.25);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(74,232,122,0.25); }
+  50% { box-shadow: 0 0 0 6px rgba(74,232,122,0.1); }
+}
+
+.next-main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.next-dep-time {
+  font-family: var(--mono);
+  font-size: 56px;
+  font-weight: 300;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.next-route {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 6px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.next-right {
+  text-align: right;
+  padding-bottom: 4px;
+}
+
+.next-countdown {
+  font-family: var(--mono);
+  font-size: 42px;
+  font-weight: 300;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.next-countdown-label {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  margin-top: 4px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.next-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.12);
+  margin: 0 0 14px;
+}
+
+.next-arr-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.next-arr-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 500;
+}
+
+.next-arr-time {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.9);
+}
+
+.next-train-badge {
+  margin-left: auto;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+
+/* ── SHORT LINE BADGE ── */
+.short-badge {
+  display: inline-block;
+  background: rgba(224,120,32,0.12);
+  color: var(--orange);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+/* ── DEPARTURE LIST ── */
+.dep-list-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 0 var(--sep), 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.dep-row {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--sep);
+  transition: background 0.1s;
+}
+.dep-row:last-child { border-bottom: none; }
+.dep-row.is-next { background: rgba(37,99,192,0.04); }
+
+.dep-row-main {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 14px;
+}
+
+/* station line dot */
+.dep-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+  width: 16px;
+}
+.dep-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--label4);
+  border: 2px solid var(--label4);
+  flex-shrink: 0;
+}
+.dep-dot.upcoming {
+  background: var(--accent-light);
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(37,99,192,0.15);
+}
+.dep-dot.past {
+  background: transparent;
+  border-color: var(--label4);
+  opacity: 0.4;
+}
+
+.dep-times { flex: 1; min-width: 0; }
+
+.dep-dep {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--label);
+  letter-spacing: -0.3px;
+}
+.dep-row.past-train .dep-dep {
+  color: var(--label3);
+}
+
+.dep-arr {
+  font-size: 12px;
+  color: var(--label3);
+  margin-top: 1px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.1px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.dep-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.dep-train {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--label3);
+  background: var(--surface2);
+  border-radius: 5px;
+  padding: 2px 7px;
+  letter-spacing: 0.04em;
+}
+
+.dep-min-away {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-light);
+  letter-spacing: -0.2px;
+}
+
+/* ── ROUTE DIAGRAM (intermediate stops) ── */
+.dep-route-diagram {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 12px 42px;
+}
+
+.dep-route-stop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dep-route-node-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 7px;
+}
+
+.route-node {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-light);
+  background: transparent;
+  flex-shrink: 0;
+}
+.route-node.endpoint { background: var(--accent-light); }
+
+.route-seg {
+  width: 1.5px;
+  height: 7px;
+  background: var(--sep);
+  flex-shrink: 0;
+}
+
+.route-seg-spacer {
+  height: 7px;
+  flex-shrink: 0;
+}
+
+.dep-route-stop-name {
+  font-size: 10.5px;
+  color: var(--label3);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.1px;
+  padding: 3px 0;
+}
+.dep-route-stop-name.endpoint {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--label2);
+}
+
+.dep-route-stop-time {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--label3);
+  margin-left: auto;
+  padding-left: 10px;
+}
+.dep-route-stop-time.endpoint {
+  font-size: 11px;
+  color: var(--label2);
+  font-weight: 500;
+}
+
+/* ── PAST TRAINS TOGGLE ── */
+.past-toggle {
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-light);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border-top: 1px solid var(--sep);
+  transition: background 0.1s;
+}
+.past-toggle:active { background: var(--surface2); }
+
+/* ── TOMORROW CARD ── */
+.tomorrow-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 0 var(--sep), 0 2px 12px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tomorrow-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(26,58,107,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.tomorrow-text {}
+.tomorrow-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--label3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+.tomorrow-time {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--label);
+  letter-spacing: -0.3px;
+}
+
+/* ── EMPTY STATE ── */
+.empty {
+  text-align: center;
+  padding: 56px 24px;
+  color: var(--label3);
+}
+.empty-icon-wrap {
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: center;
+}
+.empty-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--label2);
+  margin-bottom: 8px;
+  letter-spacing: -0.4px;
+}
+.empty-sub {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--label3);
+  max-width: 260px;
+  margin: 0 auto;
+}
+.empty-credit {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--label4);
+  margin-top: 28px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+
+.no-more {
+  text-align: center;
+  padding: 16px;
+  font-size: 11px;
+  color: var(--label3);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── TRAIN ICON SVG ── */
+.train-svg-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ── ANIMATIONS ── */
+.next-card.visible { animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dep-list-card { animation: fadeIn 0.25s ease; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <button class="nav-home" onclick="resetToHome()" aria-label="Почетна страница">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M3 10.5L12 3L21 10.5V20C21 20.5523 20.5523 21 20 21H15V15H9V21H4C3.44772 21 3 20.5523 3 20V10.5Z"
+        stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <div class="nav-center">
+    <div class="nav-title">БГ:воз</div>
+    <div class="nav-subtitle">ред вожње</div>
+  </div>
+  <div class="nav-time" id="clock">--:--</div>
+</div>
+
+<div class="content">
+
+  <!-- STATION PICKER -->
+  <div class="picker-card">
+    <div class="picker-row">
+      <div class="picker-icon from">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="5" stroke="#2563C0" stroke-width="1.8"/>
+          <circle cx="8" cy="8" r="2" fill="#2563C0"/>
+        </svg>
+      </div>
+      <div class="picker-text">
+        <div class="picker-label">Полазак</div>
+        <select id="fromStation"><option value="">Изаберите станицу…</option></select>
+      </div>
+      <svg class="picker-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- divider with swap -->
+    <div style="position:relative; height:0; overflow:visible; z-index:5;">
+      <button class="swap-btn" id="swapBtn" onclick="swapStations()" aria-label="Замени станице">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <path d="M5 3L5 13M5 13L2.5 10.5M5 13L7.5 10.5" stroke="var(--label2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 13L11 3M11 3L8.5 5.5M11 3L13.5 5.5" stroke="var(--label2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="picker-row">
+      <div class="picker-icon to">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <rect x="3.5" y="3.5" width="9" height="9" rx="2" stroke="#1A8C4E" stroke-width="1.8"/>
+          <rect x="6" y="6" width="4" height="4" rx="0.5" fill="#1A8C4E"/>
+        </svg>
+      </div>
+      <div class="picker-text">
+        <div class="picker-label">Долазак</div>
+        <select id="toStation"><option value="">Изаберите станицу…</option></select>
+      </div>
+      <svg class="picker-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- BANNERS -->
+  <div class="banner banner-noservice" id="noServiceBanner">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M8 5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="8" cy="11" r="0.7" fill="currentColor"/>
+    </svg>
+    Нема возова данас
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results"></div>
+
+</div>
+
+<script>
+// ─── HOLIDAYS ──────────────────────────────────────────────────────────────
+const HOLIDAYS = new Set([
+  // 2026
+  '2026-01-01','2026-01-02','2026-01-07',
+  '2026-02-15','2026-02-16','2026-02-17',
+  '2026-04-10','2026-04-12','2026-04-13',
+  '2026-05-01','2026-05-02','2026-11-11',
+  // 2027
+  '2027-01-01','2027-01-02','2027-01-07',
+  '2027-02-15','2027-02-16',
+  '2027-04-30','2027-05-02','2027-05-03',
+  '2027-05-01','2027-11-11'
+]);
+
+// ─── STATIONS ──────────────────────────────────────────────────────────────
+const STATIONS_A = [
+  'Овча','Себеш','Крњача укр.','Крњача мост',
+  'Панчевачки мост','Вуков споменик','Карађорђев парк',
+  'Београд Центар','Нови Београд','Тошин бунар',
+  'Земун','Алтина','Земунско поље',
+  'Камендин','Батајница'
+];
+
+const STATIONS_B = [
+  'Батајница','Камендин','Земунско поље',
+  'Алтина','Земун','Тошин бунар',
+  'Нови Београд','Београд Центар','Карађорђев парк',
+  'Вуков споменик','Панчевачки мост','Крњача мост',
+  'Крњача укр.','Себеш','Овча'
+];
+
+// Stations for dropdown (A order, no duplicates)
+const ALL_UNIQUE = [...STATIONS_A];
+
+// ─── TIMETABLES ────────────────────────────────────────────────────────────
+const TRAINS_A = [
+  {id:'8000',hol:'weekday',t:{'Овча':'5.40','Себеш':'5.44','Крњача укр.':'5.48','Крњача мост':'5.50','Панчевачки мост':'5.56','Вуков споменик':'5.59','Карађорђев парк':'6.03','Београд Центар':'6.05','Нови Београд':'6.10','Тошин бунар':'6.13','Земун':'6.17','Алтина':'6.20','Земунско поље':'6.22','Камендин':'6.24','Батајница':'6.28'}},
+  {id:'8002',hol:false,t:{'Овча':'6.10','Себеш':'6.14','Крњача укр.':'6.18','Крњача мост':'6.20','Панчевачки мост':'6.26','Вуков споменик':'6.29','Карађорђев парк':'6.33','Београд Центар':'6.35','Нови Београд':'6.40','Тошин бунар':'6.43','Земун':'6.47','Алтина':'6.50','Земунско поље':'6.52','Камендин':'6.54','Батајница':'6.58'}},
+  {id:'8004',hol:'weekday',t:{'Овча':'6.40','Себеш':'6.44','Крњача укр.':'6.48','Крњача мост':'6.50','Панчевачки мост':'6.56','Вуков споменик':'6.59','Карађорђев парк':'7.03','Београд Центар':'7.05','Нови Београд':'7.10','Тошин бунар':'7.13','Земун':'7.17','Алтина':'7.20','Земунско поље':'7.22','Камендин':'7.24','Батајница':'7.28'}},
+  {id:'8006',hol:false,t:{'Овча':'7.10','Себеш':'7.14','Крњача укр.':'7.18','Крњача мост':'7.20','Панчевачки мост':'7.26','Вуков споменик':'7.29','Карађорђев парк':'7.33','Београд Центар':'7.35','Нови Београд':'7.40','Тошин бунар':'7.43','Земун':'7.47','Алтина':'7.50','Земунско поље':'7.52','Камендин':'7.54','Батајница':'7.58'}},
+  {id:'8008',hol:'weekday',t:{'Овча':'7.40','Себеш':'7.44','Крњача укр.':'7.48','Крњача мост':'7.50','Панчевачки мост':'7.56','Вуков споменик':'7.59','Карађорђев парк':'8.03','Београд Центар':'8.05','Нови Београд':'8.10','Тошин бунар':'8.13','Земун':'8.17','Алтина':'8.20','Земунско поље':'8.22','Камендин':'8.24','Батајница':'8.28'}},
+  {id:'8010',hol:false,t:{'Овча':'8.10','Себеш':'8.14','Крњача укр.':'8.18','Крњача мост':'8.20','Панчевачки мост':'8.26','Вуков споменик':'8.29','Карађорђев парк':'8.33','Београд Центар':'8.35','Нови Београд':'8.40','Тошин бунар':'8.43','Земун':'8.47','Алтина':'8.50','Земунско поље':'8.52','Камендин':'8.54','Батајница':'8.58'}},
+  {id:'8012',hol:'weekday',t:{'Овча':'8.40','Себеш':'8.44','Крњача укр.':'8.48','Крњача мост':'8.50','Панчевачки мост':'8.56','Вуков споменик':'8.59','Карађорђев парк':'9.03','Београд Центар':'9.05','Нови Београд':'9.10','Тошин бунар':'9.13','Земун':'9.17','Алтина':'9.20','Земунско поље':'9.22','Камендин':'9.24','Батајница':'9.28'}},
+  {id:'8014',hol:false,t:{'Овча':'9.10','Себеш':'9.14','Крњача укр.':'9.18','Крњача мост':'9.20','Панчевачки мост':'9.26','Вуков споменик':'9.29','Карађорђев парк':'9.33','Београд Центар':'9.35','Нови Београд':'9.40','Тошин бунар':'9.43','Земун':'9.47','Алтина':'9.50','Земунско поље':'9.52','Камендин':'9.54','Батајница':'9.58'}},
+  {id:'8016',hol:false,t:{'Овча':'9.50','Себеш':'9.54','Крњача укр.':'9.58','Крњача мост':'10.00','Панчевачки мост':'10.06','Вуков споменик':'10.09','Карађорђев парк':'10.13','Београд Центар':'10.15','Нови Београд':'10.20','Тошин бунар':'10.23','Земун':'10.27','Алтина':'10.30','Земунско поље':'10.32','Камендин':'10.34','Батајница':'10.38'}},
+  {id:'8018',hol:false,t:{'Овча':'10.50','Себеш':'10.54','Крњача укр.':'10.58','Крњача мост':'11.00','Панчевачки мост':'11.06','Вуков споменик':'11.09','Карађорђев парк':'11.13','Београд Центар':'11.15','Нови Београд':'11.20','Тошин бунар':'11.23','Земун':'11.27','Алтина':'11.30','Земунско поље':'11.32','Камендин':'11.34','Батајница':'11.38'}},
+  {id:'8020',hol:'weekday',t:{'Овча':'11.20','Себеш':'11.24','Крњача укр.':'11.28','Крњача мост':'11.30','Панчевачки мост':'11.36','Вуков споменик':'11.39','Карађорђев парк':'11.43','Београд Центар':'11.45','Нови Београд':'11.50','Тошин бунар':'11.53','Земун':'11.56','Алтина':'12.00','Земунско поље':'12.02','Камендин':'12.04','Батајница':'12.08'}},
+  {id:'8022',hol:false,t:{'Овча':'12.10','Себеш':'12.14','Крњача укр.':'12.18','Крњача мост':'12.20','Панчевачки мост':'12.26','Вуков споменик':'12.29','Карађорђев парк':'12.33','Београд Центар':'12.35','Нови Београд':'12.40','Тошин бунар':'12.43','Земун':'12.47','Алтина':'12.50','Земунско поље':'12.52','Камендин':'12.54','Батајница':'12.58'}},
+  {id:'8024',hol:false,t:{'Овча':'13.10','Себеш':'13.14','Крњача укр.':'13.18','Крњача мост':'13.20','Панчевачки мост':'13.26','Вуков споменик':'13.29','Карађорђев парк':'13.33','Београд Центар':'13.35','Нови Београд':'13.40','Тошин бунар':'13.43','Земун':'13.47','Алтина':'13.50','Земунско поље':'13.52','Камендин':'13.54','Батајница':'13.58'}},
+  {id:'8026',hol:false,t:{'Овча':'13.50','Себеш':'13.54','Крњача укр.':'13.58','Крњача мост':'14.00','Панчевачки мост':'14.06','Вуков споменик':'14.09','Карађорђев парк':'14.13','Београд Центар':'14.15','Нови Београд':'14.20','Тошин бунар':'14.23','Земун':'14.27','Алтина':'14.30','Земунско поље':'14.32','Камендин':'14.34','Батајница':'14.38'}},
+  {id:'8028',hol:'weekday',t:{'Овча':'14.40','Себеш':'14.44','Крњача укр.':'14.48','Крњача мост':'14.50','Панчевачки мост':'14.56','Вуков споменик':'14.59','Карађорђев парк':'15.03','Београд Центар':'15.05','Нови Београд':'15.10','Тошин бунар':'15.13','Земун':'15.17','Алтина':'15.20','Земунско поље':'15.22','Камендин':'15.24','Батајница':'15.28'}},
+  {id:'8030',hol:false,t:{'Овча':'15.10','Себеш':'15.14','Крњача укр.':'15.18','Крњача мост':'15.20','Панчевачки мост':'15.26','Вуков споменик':'15.29','Карађорђев парк':'15.33','Београд Центар':'15.35','Нови Београд':'15.40','Тошин бунар':'15.43','Земун':'15.47','Алтина':'15.50','Земунско поље':'15.52','Камендин':'15.54','Батајница':'15.58'}},
+  {id:'8032',hol:'weekday',t:{'Овча':'15.40','Себеш':'15.44','Крњача укр.':'15.48','Крњача мост':'15.50','Панчевачки мост':'15.56','Вуков споменик':'15.59','Карађорђев парк':'16.03','Београд Центар':'16.05','Нови Београд':'16.10','Тошин бунар':'16.13','Земун':'16.17','Алтина':'16.20','Земунско поље':'16.22','Камендин':'16.24','Батајница':'16.28'}},
+  {id:'8034',hol:false,t:{'Овча':'16.20','Себеш':'16.24','Крњача укр.':'16.28','Крњача мост':'16.30','Панчевачки мост':'16.36','Вуков споменик':'16.39','Карађорђев парк':'16.43','Београд Центар':'16.45','Нови Београд':'16.50','Тошин бунар':'16.53','Земун':'16.57','Алтина':'17.00','Земунско поље':'17.02','Камендин':'17.04','Батајница':'17.08'}},
+  {id:'8036',hol:'weekday',t:{'Овча':'16.40','Себеш':'16.44','Крњача укр.':'16.48','Крњача мост':'16.50','Панчевачки мост':'16.56','Вуков споменик':'16.59','Карађорђев парк':'17.03','Београд Центар':'17.05','Нови Београд':'17.10','Тошин бунар':'17.13','Земун':'17.17','Алтина':'17.20','Земунско поље':'17.22','Камендин':'17.24','Батајница':'17.28'}},
+  {id:'8038',hol:false,t:{'Овча':'17.10','Себеш':'17.14','Крњача укр.':'17.18','Крњача мост':'17.20','Панчевачки мост':'17.26','Вуков споменик':'17.29','Карађорђев парк':'17.33','Београд Центар':'17.35','Нови Београд':'17.40','Тошин бунар':'17.43','Земун':'17.47','Алтина':'17.50','Земунско поље':'17.52','Камендин':'17.54','Батајница':'17.58'}},
+  {id:'8040',hol:false,t:{'Овча':'17.50','Себеш':'17.54','Крњача укр.':'17.58','Крњача мост':'18.00','Панчевачки мост':'18.06','Вуков споменик':'18.09','Карађорђев парк':'18.13','Београд Центар':'18.15','Нови Београд':'18.20','Тошин бунар':'18.23','Земун':'18.27','Алтина':'18.30','Земунско поље':'18.32','Камендин':'18.34','Батајница':'18.38'}},
+  {id:'8042',hol:'weekday',t:{'Овча':'18.40','Себеш':'18.44','Крњача укр.':'18.48','Крњача мост':'18.50','Панчевачки мост':'18.56','Вуков споменик':'18.59','Карађорђев парк':'19.03','Београд Центар':'19.05','Нови Београд':'19.10','Тошин бунар':'19.13','Земун':'19.16','Алтина':null,'Земунско поље':null,'Камендин':null,'Батајница':null}},
+  {id:'8044',hol:false,t:{'Овча':'19.10','Себеш':'19.14','Крњача укр.':'19.18','Крњача мост':'19.20','Панчевачки мост':'19.26','Вуков споменик':'19.29','Карађорђев парк':'19.33','Београд Центар':'19.35','Нови Београд':'19.40','Тошин бунар':'19.43','Земун':'19.47','Алтина':null,'Земунско поље':null,'Камендин':null,'Батајница':null}},
+  {id:'8046',hol:false,t:{'Овча':'19.40','Себеш':'19.44','Крњача укр.':'19.48','Крњача мост':'19.50','Панчевачки мост':'19.56','Вуков споменик':'19.59','Карађорђев парк':'20.03','Београд Центар':'20.05','Нови Београд':'20.10','Тошин бунар':'20.13','Земун':'20.17','Алтина':'20.20','Земунско поље':'20.22','Камендин':'20.24','Батајница':'20.28'}},
+  {id:'8048',hol:'weekday',t:{'Овча':'20.20','Себеш':'20.24','Крњача укр.':'20.28','Крњача мост':'20.30','Панчевачки мост':'20.36','Вуков споменик':'20.39','Карађорђев парк':'20.43','Београд Центар':'20.45','Нови Београд':'20.50','Тошин бунар':'20.53','Земун':'20.57','Алтина':'21.00','Земунско поље':'21.02','Камендин':'21.04','Батајница':'21.08'}},
+  {id:'8050',hol:false,t:{'Овча':'21.10','Себеш':'21.14','Крњача укр.':'21.18','Крњача мост':'21.20','Панчевачки мост':'21.26','Вуков споменик':'21.29','Карађорђев парк':'21.33','Београд Центар':'21.35','Нови Београд':'21.40','Тошин бунар':'21.43','Земун':'21.47','Алтина':'21.50','Земунско поље':'21.52','Камендин':'21.54','Батајница':'21.58'}},
+  {id:'8340',hol:true, t:{'Овча':'22.35','Себеш':'22.39','Крњача укр.':'22.43','Крњача мост':'22.45','Панчевачки мост':'22.51','Вуков споменик':'22.54','Карађорђев парк':'22.58','Београд Центар':'23.00','Нови Београд':'23.05','Тошин бунар':'23.08','Земун':'23.11','Алтина':null,'Земунско поље':null,'Камендин':null,'Батајница':null}},
+];
+
+const TRAINS_B = [
+  {id:'8001',hol:false,t:{'Батајница':'6.00','Камендин':'6.04','Земунско поље':'6.06','Алтина':'6.08','Земун':'6.12','Тошин бунар':'6.16','Нови Београд':'6.19','Београд Центар':'6.22','Карађорђев парк':'6.27','Вуков споменик':'6.31','Панчевачки мост':'6.35','Крњача мост':'6.39','Крњача укр.':'6.42','Себеш':'6.45','Овча':'6.48'}},
+  {id:'8003',hol:'weekday',t:{'Батајница':'6.30','Камендин':'6.34','Земунско поље':'6.36','Алтина':'6.38','Земун':'6.42','Тошин бунар':'6.46','Нови Београд':'6.49','Београд Центар':'6.52','Карађорђев парк':'6.57','Вуков споменик':'7.01','Панчевачки мост':'7.05','Крњача мост':'7.09','Крњача укр.':'7.12','Себеш':'7.15','Овча':'7.18'}},
+  {id:'8005',hol:false,t:{'Батајница':'7.10','Камендин':'7.14','Земунско поље':'7.16','Алтина':'7.18','Земун':'7.22','Тошин бунар':'7.26','Нови Београд':'7.29','Београд Центар':'7.32','Карађорђев парк':'7.37','Вуков споменик':'7.41','Панчевачки мост':'7.45','Крњача мост':'7.49','Крњача укр.':'7.52','Себеш':'7.55','Овча':'7.58'}},
+  {id:'8007',hol:'weekday',t:{'Батајница':'7.30','Камендин':'7.34','Земунско поље':'7.36','Алтина':'7.38','Земун':'7.42','Тошин бунар':'7.46','Нови Београд':'7.49','Београд Центар':'7.52','Карађорђев парк':'7.57','Вуков споменик':'8.01','Панчевачки мост':'8.05','Крњача мост':'8.09','Крњача укр.':'8.12','Себеш':'8.15','Овча':'8.18'}},
+  {id:'8009',hol:false,t:{'Батајница':'8.00','Камендин':'8.04','Земунско поље':'8.06','Алтина':'8.08','Земун':'8.12','Тошин бунар':'8.16','Нови Београд':'8.19','Београд Центар':'8.22','Карађорђев парк':'8.27','Вуков споменик':'8.31','Панчевачки мост':'8.35','Крњача мост':'8.39','Крњача укр.':'8.42','Себеш':'8.45','Овча':'8.48'}},
+  {id:'8011',hol:'weekday',t:{'Батајница':'8.30','Камендин':'8.34','Земунско поље':'8.36','Алтина':'8.38','Земун':'8.42','Тошин бунар':'8.46','Нови Београд':'8.49','Београд Центар':'8.52','Карађорђев парк':'8.57','Вуков споменик':'9.01','Панчевачки мост':'9.05','Крњача мост':'9.09','Крњача укр.':'9.12','Себеш':'9.15','Овча':'9.18'}},
+  {id:'8013',hol:false,t:{'Батајница':'8.57','Камендин':'9.01','Земунско поље':'9.03','Алтина':'9.05','Земун':'9.18','Тошин бунар':'9.22','Нови Београд':'9.25','Београд Центар':'9.28','Карађорђев парк':'9.33','Вуков споменик':'9.37','Панчевачки мост':'9.41','Крњача мост':'9.45','Крњача укр.':'9.48','Себеш':'9.51','Овча':'9.54'}},
+  {id:'8015',hol:'weekday',t:{'Батајница':'9.30','Камендин':'9.34','Земунско поље':'9.36','Алтина':'9.38','Земун':'9.42','Тошин бунар':'9.46','Нови Београд':'9.49','Београд Центар':'9.52','Карађорђев парк':'9.57','Вуков споменик':'10.01','Панчевачки мост':'10.05','Крњача мост':'10.09','Крњача укр.':'10.12','Себеш':'10.15','Овча':'10.18'}},
+  {id:'8017',hol:false,t:{'Батајница':'10.10','Камендин':'10.14','Земунско поље':'10.16','Алтина':'10.18','Земун':'10.22','Тошин бунар':'10.26','Нови Београд':'10.29','Београд Центар':'10.32','Карађорђев парк':'10.37','Вуков споменик':'10.41','Панчевачки мост':'10.45','Крњача мост':'10.49','Крњача укр.':'10.52','Себеш':'10.55','Овча':'10.58'}},
+  {id:'8019',hol:false,t:{'Батајница':'11.20','Камендин':'11.24','Земунско поље':'11.26','Алтина':'11.28','Земун':'11.32','Тошин бунар':'11.36','Нови Београд':'11.39','Београд Центар':'11.42','Карађорђев парк':'11.47','Вуков споменик':'11.51','Панчевачки мост':'11.55','Крњача мост':'11.59','Крњача укр.':'12.02','Себеш':'12.05','Овча':'12.08'}},
+  {id:'8021',hol:false,t:{'Батајница':'12.00','Камендин':'12.04','Земунско поље':'12.06','Алтина':'12.08','Земун':'12.12','Тошин бунар':'12.16','Нови Београд':'12.19','Београд Центар':'12.22','Карађорђев парк':'12.27','Вуков споменик':'12.31','Панчевачки мост':'12.35','Крњача мост':'12.39','Крњача укр.':'12.42','Себеш':'12.45','Овча':'12.48'}},
+  {id:'8023',hol:false,t:{'Батајница':'13.20','Камендин':'13.24','Земунско поље':'13.26','Алтина':'13.28','Земун':'13.32','Тошин бунар':'13.36','Нови Београд':'13.39','Београд Центар':'13.42','Карађорђев парк':'13.47','Вуков споменик':'13.51','Панчевачки мост':'13.55','Крњача мост':'13.59','Крњача укр.':'14.02','Себеш':'14.05','Овча':'14.08'}},
+  {id:'8025',hol:false,t:{'Батајница':'14.00','Камендин':'14.04','Земунско поље':'14.06','Алтина':'14.08','Земун':'14.12','Тошин бунар':'14.16','Нови Београд':'14.19','Београд Центар':'14.22','Карађорђев парк':'14.27','Вуков споменик':'14.31','Панчевачки мост':'14.35','Крњача мост':'14.39','Крњача укр.':'14.42','Себеш':'14.45','Овча':'14.48'}},
+  {id:'8027',hol:'weekday',t:{'Батајница':'14.30','Камендин':'14.34','Земунско поље':'14.36','Алтина':'14.38','Земун':'14.42','Тошин бунар':'14.46','Нови Београд':'14.49','Београд Центар':'14.52','Карађорђев парк':'14.57','Вуков споменик':'15.01','Панчевачки мост':'15.05','Крњача мост':'15.09','Крњача укр.':'15.12','Себеш':'15.15','Овча':'15.18'}},
+  {id:'8029',hol:false,t:{'Батајница':'15.10','Камендин':'15.14','Земунско поље':'15.16','Алтина':'15.18','Земун':'15.22','Тошин бунар':'15.26','Нови Београд':'15.29','Београд Центар':'15.32','Карађорђев парк':'15.37','Вуков споменик':'15.41','Панчевачки мост':'15.45','Крњача мост':'15.49','Крњача укр.':'15.52','Себеш':'15.55','Овча':'15.58'}},
+  {id:'8031',hol:'weekday',t:{'Батајница':'15.30','Камендин':'15.34','Земунско поље':'15.36','Алтина':'15.38','Земун':'15.42','Тошин бунар':'15.46','Нови Београд':'15.49','Београд Центар':'15.52','Карађорђев парк':'15.57','Вуков споменик':'16.01','Панчевачки мост':'16.05','Крњача мост':'16.09','Крњача укр.':'16.12','Себеш':'16.15','Овча':'16.18'}},
+  {id:'8033',hol:false,t:{'Батајница':'16.00','Камендин':'16.04','Земунско поље':'16.06','Алтина':'16.08','Земун':'16.12','Тошин бунар':'16.16','Нови Београд':'16.19','Београд Центар':'16.22','Карађорђев парк':'16.27','Вуков споменик':'16.31','Панчевачки мост':'16.35','Крњача мост':'16.39','Крњача укр.':'16.42','Себеш':'16.45','Овча':'16.48'}},
+  {id:'8035',hol:'weekday',t:{'Батајница':'16.30','Камендин':'16.34','Земунско поље':'16.36','Алтина':'16.38','Земун':'16.42','Тошин бунар':'16.46','Нови Београд':'16.49','Београд Центар':'16.52','Карађорђев парк':'16.57','Вуков споменик':'17.01','Панчевачки мост':'17.05','Крњача мост':'17.09','Крњача укр.':'17.12','Себеш':'17.15','Овча':'17.18'}},
+  {id:'8037',hol:false,t:{'Батајница':'17.10','Камендин':'17.14','Земунско поље':'17.16','Алтина':'17.18','Земун':'17.22','Тошин бунар':'17.26','Нови Београд':'17.29','Београд Центар':'17.32','Карађорђев парк':'17.37','Вуков споменик':'17.41','Панчевачки мост':'17.45','Крњача мост':'17.49','Крњача укр.':'17.52','Себеш':'17.55','Овча':'17.58'}},
+  {id:'8039',hol:false,t:{'Батајница':'17.30','Камендин':'17.34','Земунско поље':'17.36','Алтина':'17.38','Земун':'17.42','Тошин бунар':'17.46','Нови Београд':'17.49','Београд Центар':'17.52','Карађорђев парк':'17.57','Вуков споменик':'18.01','Панчевачки мост':'18.05','Крњача мост':'18.09','Крњача укр.':'18.12','Себеш':'18.15','Овча':'18.18'}},
+  {id:'8041',hol:false,t:{'Батајница':'18.30','Камендин':'18.34','Земунско поље':'18.36','Алтина':'18.38','Земун':'18.42','Тошин бунар':'18.46','Нови Београд':'18.49','Београд Центар':'18.52','Карађорђев парк':'18.57','Вуков споменик':'19.01','Панчевачки мост':'19.05','Крњача мост':'19.09','Крњача укр.':'19.12','Себеш':'19.15','Овча':'19.18'}},
+  {id:'8043',hol:'weekday',t:{'Батајница':'19.10','Камендин':'19.14','Земунско поље':'19.16','Алтина':'19.18','Земун':'19.22','Тошин бунар':'19.26','Нови Београд':'19.29','Београд Центар':'19.32','Карађорђев парк':'19.37','Вуков споменик':'19.41','Панчевачки мост':'19.45','Крњача мост':'19.49','Крњача укр.':'19.52','Себеш':'19.55','Овча':'19.58'}},
+  {id:'8045',hol:false,t:{'Батајница':'20.00','Камендин':'20.04','Земунско поље':'20.06','Алтина':'20.08','Земун':'20.12','Тошин бунар':'20.16','Нови Београд':'20.19','Београд Центар':'20.22','Карађорђев парк':'20.27','Вуков споменик':'20.31','Панчевачки мост':'20.35','Крњача мост':'20.39','Крњача укр.':'20.42','Себеш':'20.45','Овча':'20.48'}},
+];
+
+// ─── HELPERS ───────────────────────────────────────────────────────────────
+function toMin(t) {
+  if (!t) return null;
+  const [h, m] = t.split('.').map(Number);
+  return h * 60 + m;
+}
+
+function fmt(t) {
+  if (!t) return '—';
+  const [h, m] = t.split('.').map(Number);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+}
+
+function todayISO() { return new Date().toISOString().slice(0,10); }
+function isNoServiceDay(date) {
+  const d = date || new Date();
+  const day = d.getDay(); // 0=Sun, 6=Sat
+  if (day === 0 || day === 6) return true;
+  return HOLIDAYS.has(d.toISOString().slice(0,10));
+}
+function isHoliday() { return HOLIDAYS.has(todayISO()); } // kept for banner only
+function nowMin() { const n = new Date(); return n.getHours()*60+n.getMinutes(); }
+
+function isShortTrain(tr, to) {
+  return tr.t[to] === null || tr.t[to] === undefined;
+}
+
+// ─── STATION LISTS ─────────────────────────────────────────────────────────
+function populateDropdowns() {
+  const f = document.getElementById('fromStation');
+  const t = document.getElementById('toStation');
+  // restore from URL hash or localStorage
+  const saved = getSaved();
+  ALL_UNIQUE.forEach(s => {
+    const oF = document.createElement('option');
+    oF.value = oF.textContent = s;
+    if (saved.from === s) oF.selected = true;
+    f.appendChild(oF);
+
+    const oT = document.createElement('option');
+    oT.value = oT.textContent = s;
+    if (saved.to === s) oT.selected = true;
+    t.appendChild(oT);
+  });
+}
+
+function swapStations() {
+  const f = document.getElementById('fromStation');
+  const t = document.getElementById('toStation');
+  [f.value, t.value] = [t.value, f.value];
+  const btn = document.getElementById('swapBtn');
+  btn.classList.add('spinning');
+  setTimeout(() => btn.classList.remove('spinning'), 300);
+  render();
+}
+
+// ─── DIRECTION DETECTION ───────────────────────────────────────────────────
+function detectDirection(from, to) {
+  const iAf = STATIONS_A.indexOf(from), iAt = STATIONS_A.indexOf(to);
+  if (iAf !== -1 && iAt !== -1 && iAf < iAt) return 'A';
+  const iBf = STATIONS_B.indexOf(from), iBt = STATIONS_B.indexOf(to);
+  if (iBf !== -1 && iBt !== -1 && iBf < iBt) return 'B';
+  return null;
+}
+
+function getTrains(dir, from, to, noService) {
+  const pool = dir === 'A' ? TRAINS_A : TRAINS_B;
+  return pool.filter(tr => {
+    // hol:true    = special holiday-only train (8340)
+    // hol:false = only runs Mon–Fri, not on weekends or holidays
+    // hol:false   = runs every day including weekends
+    if (tr.hol === true && !noService) return false;   // holiday train, not a holiday → skip
+    if (tr.hol === true && noService) return true;     // holiday train, is holiday → include (but check times below)
+    if (tr.hol === 'weekday' && noService) return false; // weekday train, weekend/holiday → skip
+    // hol:false and hol:false on a weekday → always include
+    const depT = tr.t[from];
+    const arrT = tr.t[to];
+    if (!depT) return false;
+    if (!arrT) return false;
+    return toMin(arrT) > toMin(depT);
+  });
+}
+
+// Find first train on the next working day (used when no more trains today)
+function firstTomorrow(dir, from, to) {
+  const pool = dir === 'A' ? TRAINS_A : TRAINS_B;
+  for (let offset = 1; offset <= 7; offset++) {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    d.setHours(0,0,0,0);
+    const ns = isNoServiceDay(d);
+    for (const tr of pool) {
+      if (tr.hol === true && !ns) continue;
+      if (tr.hol === true && ns) { /* include */ }
+      else if (tr.hol === 'weekday' && ns) continue;
+      if (!tr.t[from] || !tr.t[to]) continue;
+      if (toMin(tr.t[to]) > toMin(tr.t[from])) {
+        const dayNames = ['недеља','понедељак','уторак','среда','четвртак','петак','субота'];
+        return { tr, dayLabel: offset === 1 ? 'сутра' : dayNames[d.getDay()] };
+      }
+    }
+  }
+  return null;
+}
+
+// ─── PERSISTENCE ───────────────────────────────────────────────────────────
+function getSaved() {
+  try {
+    const h = location.hash.slice(1);
+    if (h) {
+      const p = new URLSearchParams(h);
+      return { from: p.get('od') || '', to: p.get('do') || '' };
+    }
+    const raw = localStorage.getItem('bgvoz_route');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return { from: '', to: '' };
+}
+
+function saveRoute(from, to) {
+  try {
+    localStorage.setItem('bgvoz_route', JSON.stringify({from, to}));
+    if (from && to) {
+      const p = new URLSearchParams();
+      p.set('od', from); p.set('do', to);
+      history.replaceState(null, '', '#' + p.toString());
+    } else {
+      history.replaceState(null, '', location.pathname);
+    }
+  } catch(e) {}
+}
+
+// ─── CLOCK ─────────────────────────────────────────────────────────────────
+function updateClock() {
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+}
+
+// ─── INTERMEDIATE STOPS ────────────────────────────────────────────────────
+function getIntermediateStops(dir, from, to) {
+  const stations = dir === 'A' ? STATIONS_A : STATIONS_B;
+  const iFrom = stations.indexOf(from);
+  const iTo   = stations.indexOf(to);
+  if (iFrom === -1 || iTo === -1 || iTo <= iFrom + 1) return [];
+  return stations.slice(iFrom + 1, iTo);
+}
+
+function renderRouteDiagram(tr, from, to, midStops) {
+  const allStops = [from, ...midStops.filter(s => tr.t[s] != null), to];
+  let html = '';
+  allStops.forEach((s, i) => {
+    const isFirst    = i === 0;
+    const isLast     = i === allStops.length - 1;
+    const isEndpoint = isFirst || isLast;
+    const t = tr.t[s];
+    html += `<div class="dep-route-stop">
+      <div class="dep-route-node-col">
+        ${!isFirst ? '<div class="route-seg"></div>' : '<div class="route-seg-spacer"></div>'}
+        <div class="route-node${isEndpoint ? ' endpoint' : ''}"></div>
+        ${!isLast ? '<div class="route-seg"></div>' : '<div class="route-seg-spacer"></div>'}
+      </div>
+      <span class="dep-route-stop-name${isEndpoint ? ' endpoint' : ''}">${s}</span>
+      <span class="dep-route-stop-time${isEndpoint ? ' endpoint' : ''}">${fmt(t)}</span>
+    </div>`;
+  });
+  return `<div class="dep-route-diagram">${html}</div>`;
+}
+
+// ─── RENDER ────────────────────────────────────────────────────────────────
+let cdTimer = null;
+
+function render() {
+  const from = document.getElementById('fromStation').value;
+  const to   = document.getElementById('toStation').value;
+  const res  = document.getElementById('results');
+  const nosB = document.getElementById('noServiceBanner');
+
+  nosB.classList.remove('visible');
+  if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+
+  saveRoute(from, to);
+
+  if (!from || !to) {
+    res.innerHTML = homeScreen();
+    return;
+  }
+  if (from === to) {
+    res.innerHTML = emptyState('↩', 'Иста станица', 'Полазна и одредишна станица не смеју бити исте.');
+    return;
+  }
+
+  const dir = detectDirection(from, to);
+  if (!dir) {
+    res.innerHTML = emptyState('🔄', 'Неважећи смер', 'За овај смер нема директне линије. Замените станице.');
+    return;
+  }
+
+  const holiday = isHoliday();
+  const noService = isNoServiceDay();
+  const trains = getTrains(dir, from, to, noService);
+
+  if (!trains.length) {
+    nosB.classList.add('visible');
+    res.innerHTML = emptyState('⛔', 'Нема возова', 'Нема возова за овај правац данас.');
+    return;
+  }
+
+  const nm = nowMin();
+  const dirLabel = dir === 'A' ? 'Овча → Батајница' : 'Батајница → Овча';
+  const future = trains.filter(tr => toMin(tr.t[from]) >= nm);
+  const next   = future[0] || null;
+
+  let html = '';
+
+  // ── NEXT CARD ──
+  if (next) {
+    const dep = next.t[from];
+    const arr = next.t[to];
+    const diff = toMin(dep) - nm;
+    const isShort = !arr;
+    html += `
+    <div class="next-card visible">
+      <div class="next-eyebrow">${from}</div>
+      <div class="next-main">
+        <div class="next-left">
+          <div class="next-dep-time">${fmt(dep)}</div>
+          <div class="next-route">${dirLabel}</div>
+        </div>
+        <div class="next-right">
+          <div class="next-countdown" id="cdNum">${Math.max(0,diff)}</div>
+          <div class="next-countdown-label">мин. до поласка</div>
+        </div>
+      </div>
+      <div class="next-divider"></div>
+      <div class="next-arr-row">
+        <span class="next-arr-label">${to}</span>
+        <span class="next-arr-time">${fmt(arr)}</span>
+        <span class="next-train-badge">${next.id}</span>
+      </div>
+    </div>`;
+  }
+
+  // ── NO MORE + TOMORROW ──
+  if (!future.length) {
+    const tom = firstTomorrow(dir, from, to);
+    if (tom) {
+      html += `
+      <div class="tomorrow-card">
+        <div class="tomorrow-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="5" width="18" height="16" rx="2.5" stroke="var(--accent)" stroke-width="1.6"/>
+            <path d="M8 3V7M16 3V7" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M3 10H21" stroke="var(--accent)" stroke-width="1.6"/>
+          </svg>
+        </div>
+        <div class="tomorrow-text">
+          <div class="tomorrow-label">${tom.dayLabel} · Први воз</div>
+          <div class="tomorrow-time">${fmt(tom.tr.t[from])} → ${fmt(tom.tr.t[to])}</div>
+        </div>
+      </div>`;
+    }
+    html += `<div class="no-more">Нема више полазака данас</div>`;
+  }
+
+  // ── UPCOMING LIST ──
+  if (future.length) {
+    const midStops = getIntermediateStops(dir, from, to);
+    html += `<div class="section-header" style="margin-top:4px">Предстојећи поласци</div>
+    <div class="dep-list-card">`;
+    future.forEach((tr, i) => {
+      const dep = tr.t[from];
+      const arr = tr.t[to];
+      if (!arr) return;
+      const isNext = i === 0;
+      const minsAway = toMin(dep) - nm;
+      html += `<div class="dep-row ${isNext ? 'is-next' : ''}">
+        <div class="dep-row-main">
+          <div class="dep-track">
+            <div class="dep-dot ${isNext ? 'upcoming' : ''}"></div>
+          </div>
+          <div class="dep-times">
+            <div class="dep-dep">${fmt(dep)}</div>
+            <div class="dep-arr">→ ${to} у ${fmt(arr)}</div>
+          </div>
+          <div class="dep-right">
+            <div class="dep-train">${tr.id}</div>
+            ${isNext ? `<div class="dep-min-away">${minsAway} мин.</div>` : ''}
+          </div>
+        </div>
+        ${renderRouteDiagram(tr, from, to, midStops)}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  res.innerHTML = html;
+
+  // countdown
+  if (next) {
+    function updateCd() {
+      const d = toMin(next.t[from]) - nowMin();
+      const el = document.getElementById('cdNum');
+      if (el) el.textContent = Math.max(0, d);
+    }
+    updateCd();
+    cdTimer = setInterval(updateCd, 30000);
+  }
+}
+
+// ─── EMPTY STATES ──────────────────────────────────────────────────────────
+function emptyState(icon, title, sub) {
+  return `<div class="empty">
+    <div class="empty-icon-wrap" style="font-size:36px">${icon}</div>
+    <div class="empty-title">${title}</div>
+    <div class="empty-sub">${sub}</div>
+  </div>`;
+}
+
+function homeScreen() {
+  return `<div class="empty">
+    <div class="empty-icon-wrap">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="72" height="72" rx="18" fill="var(--accent)"/>
+        <!-- pantograph base -->
+        <rect x="32" y="8" width="8" height="4" rx="2" fill="white" opacity="0.9"/>
+        <!-- pantograph connector -->
+        <circle cx="36" cy="14" r="3" fill="white" opacity="0.9"/>
+        <!-- train body -->
+        <rect x="16" y="13" width="40" height="38" rx="7" fill="#2563C0"/>
+        <!-- left window -->
+        <rect x="19" y="18" width="13" height="11" rx="3" fill="var(--accent)"/>
+        <!-- right window -->
+        <rect x="40" y="18" width="13" height="11" rx="3" fill="var(--accent)"/>
+        <!-- diagonal stripe white background -->
+        <path d="M16 35 Q36 29 56 35 L56 42 Q36 36 16 42 Z" fill="white" opacity="0.95"/>
+        <!-- diagonal stripe blue overlay (chevron) -->
+        <path d="M16 37 Q36 31.5 56 37 L56 39 Q36 33.5 16 39 Z" fill="#2563C0" opacity="0.4"/>
+        <!-- lower body -->
+        <rect x="16" y="42" width="40" height="9" rx="3" fill="#1A4FA0"/>
+        <!-- left buffer housing -->
+        <rect x="18" y="49" width="11" height="8" rx="3" fill="#1A3A6B"/>
+        <!-- right buffer housing -->
+        <rect x="43" y="49" width="11" height="8" rx="3" fill="#1A3A6B"/>
+        <!-- coupler center -->
+        <rect x="31" y="51" width="10" height="6" rx="2" fill="#1A3A6B"/>
+        <!-- left buffer -->
+        <rect x="19" y="51" width="4" height="4" rx="1.5" fill="white" opacity="0.5"/>
+        <!-- right buffer -->
+        <rect x="49" y="51" width="4" height="4" rx="1.5" fill="white" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="empty-title">БГ:воз</div>
+    <div class="empty-sub">Изаберите полазну и одредишну станицу да видите ред вожње</div>
+    <div class="empty-credit" style="margin-top:16px">важи од 18.02.2026. до 12.12.2026. године</div>
+    <div class="empty-credit" style="margin-top:4px">by: miki93</div>
+  </div>`;
+}
+
+// ─── RESET ─────────────────────────────────────────────────────────────────
+function resetToHome() {
+  document.getElementById('fromStation').value = '';
+  document.getElementById('toStation').value = '';
+  if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+  document.getElementById('noServiceBanner').classList.remove('visible');
+  saveRoute('', '');
+  document.getElementById('results').innerHTML = homeScreen();
+}
+
+// ─── INIT ──────────────────────────────────────────────────────────────────
+populateDropdowns();
+updateClock();
+setInterval(updateClock, 10000);
+setInterval(render, 60000);
+
+document.getElementById('fromStation').addEventListener('change', render);
+document.getElementById('toStation').addEventListener('change', render);
+
+// auto-render if saved route exists
+const { from: sf, to: st } = getSaved();
+if (sf && st) {
+  render();
+} else {
+  document.getElementById('results').innerHTML = homeScreen();
+}
+
+// ─── PWA MANIFEST ────────────────────────────────────────────────────────────
+const _manifest = {
+  name: 'БГ:воз',
+  short_name: 'БГ:воз',
+  description: 'Ред вожње БГ:ВОЗ Батајница-Овча',
+  start_url: '.',
+  display: 'standalone',
+  background_color: '#1A3A6B',
+  theme_color: '#1A3A6B',
+  orientation: 'portrait',
+  icons: [{
+    src: 'icon.png',
+    sizes: '1024x1024',
+    type: 'image/png',
+    purpose: 'any maskable'
+  }]
+};
+const _manifestBlob = new Blob([JSON.stringify(_manifest)], {type: 'application/json'});
+const _manifestUrl = URL.createObjectURL(_manifestBlob);
+const _manifestLink = document.createElement('link');
+_manifestLink.rel = 'manifest';
+_manifestLink.href = _manifestUrl;
+document.head.appendChild(_manifestLink);
+
+// ─── SERVICE WORKER (PWA offline support) ─────────────────────────────────
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'bgvoz-v1';
+    const FONTS = [
+      'https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..500;9..600;9..700&display=swap'
+    ];
+    self.addEventListener('install', e => {
+      e.waitUntil(
+        caches.open(CACHE).then(c => c.addAll(FONTS).catch(() => {}))
+      );
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(keys =>
+        Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+      ));
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+          if (e.request.url.includes('fonts')) {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+          }
+          return res;
+        }).catch(() => caches.match(e.request)))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+</script>
+</body>
+</html>
