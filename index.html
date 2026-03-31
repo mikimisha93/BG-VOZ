@@ -25,7 +25,6 @@
             overflow: hidden;
         }
 
-        /* GLASSMORPHISM */
         .glass-panel {
             background: var(--glass);
             backdrop-filter: blur(20px);
@@ -51,7 +50,7 @@
         }
         .screen.active { display: flex; flex-direction: column; }
 
-        /* LANDING PAGE (1/3, 2/3, 3/3 split) */
+        /* LANDING PAGE */
         #landing { display: none; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
         #landing.active { display: flex; }
         
@@ -70,6 +69,21 @@
         }
         option { background: var(--gsp-blue); color: white; }
 
+        /* TODAY / TOMORROW TOGGLE */
+        .day-toggle {
+            display: flex; gap: 10px; margin-bottom: 20px;
+        }
+        .day-btn {
+            flex: 1; padding: 14px; font-size: 14px; font-weight: 700;
+            cursor: pointer; text-align: center; border-radius: 16px;
+            background: var(--glass); border: 1px solid var(--glass-border);
+            color: white; transition: 0.2s;
+        }
+        .day-btn.active {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+        }
+
         /* PIDS MONITOR */
         .pids-container { margin-top: 10px; }
         .pids-table { width: 100%; border-collapse: collapse; font-family: 'DM Mono', monospace; }
@@ -85,10 +99,18 @@
         .past { opacity: 0.3; filter: grayscale(1); }
 
         .stop-row { display: flex; gap: 15px; font-size: 14px; margin-bottom: 12px; position: relative; align-items: center; }
-        .stop-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); z-index: 2; }
+        .stop-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); z-index: 2; flex-shrink: 0; }
         .stop-dot.reached { background: #FFFFFF; box-shadow: 0 0 8px #FFF; }
         .stop-dot.current { background: #4ADE80; box-shadow: 0 0 12px #4ADE80; transform: scale(1.2); }
         .stop-line { position: absolute; left: 4px; top: 15px; height: 100%; width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
+
+        .transfer-badge {
+            display: inline-block; background: rgba(74,222,128,0.2); border: 1px solid rgba(74,222,128,0.5);
+            border-radius: 8px; padding: 3px 8px; font-size: 10px; color: #4ADE80; margin-top: 4px;
+        }
+        .no-results {
+            text-align: center; padding: 40px 20px; opacity: 0.5; font-size: 15px; line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -109,12 +131,22 @@
 
     <div id="monitor" class="screen">
         <div class="section-title">СТАНИЧНИ МОНИТОР</div>
+        <!-- Today/Tomorrow toggle for monitor -->
+        <div class="day-toggle">
+            <div class="day-btn active" id="mon-today-btn" onclick="setMonitorDay('today')">ДАНАС</div>
+            <div class="day-btn" id="mon-tomorrow-btn" onclick="setMonitorDay('tomorrow')">СУТРА</div>
+        </div>
         <select id="monStation" onchange="loadPIDS()"><option value="">Изаберите станицу</option></select>
         <div id="pidsOutput"></div>
     </div>
 
     <div id="planner" class="screen">
         <div class="section-title">ПЛАНИРАЈ ПУТОВАЊЕ</div>
+        <!-- Today/Tomorrow toggle for planner -->
+        <div class="day-toggle">
+            <div class="day-btn active" id="plan-today-btn" onclick="setPlannerDay('today')">ДАНАС</div>
+            <div class="day-btn" id="plan-tomorrow-btn" onclick="setPlannerDay('tomorrow')">СУТРА</div>
+        </div>
         <select id="planFrom" onchange="runPlanner()"><option value="">Полазак</option></select>
         <select id="planTo" onchange="runPlanner()"><option value="">Долазак</option></select>
         <div id="planResults"></div>
@@ -133,28 +165,89 @@
     </div>
 
     <script>
-        const STATIONS_L1 = ['Батајница', 'Камендин', 'Земунско поље', 'Алтина', 'Земун', 'Тошин бунар', 'Нови Београд', 'Београд Центар', 'Карађорђев парк', 'Вуков споменик', 'Панчевачки мост', 'Крњача мост', 'Крњача', 'Себеш', 'Овча'];
-        const STATIONS_L2 = ['Овча', 'Себеш', 'Крњача', 'Крњача мост', 'Панчевачки мост', 'Вуков споменик', 'Карађорђев парк', 'Београд Центар', 'Нови Београд', 'Тошин бунар', 'Земун', 'Раковица', 'Кнежевац', 'Кијево', 'Ресник', 'Бела река', 'Барајево', 'Барајево Центар', 'Велики Борак', 'Лесковац Колубарски', 'Степојевац', 'Вреоци', 'Лазаревац'];
-        const ALL_STATIONS = [...new Set([...STATIONS_L1, ...STATIONS_L2])].sort();
-
+        // ─────────────────────────────────────────────
+        // STATE
+        // ─────────────────────────────────────────────
         let allTrains = [];
+        let monitorDay = 'today';   // 'today' | 'tomorrow'
+        let plannerDay = 'today';
 
+        // ─────────────────────────────────────────────
+        // INIT
+        // ─────────────────────────────────────────────
         async function init() {
             try {
                 const res = await fetch('trains.json');
                 allTrains = await res.json();
                 populatePickers();
-            } catch (e) { console.error("Could not load trains.json"); }
+            } catch (e) {
+                console.error("Could not load trains.json", e);
+            }
         }
 
         function populatePickers() {
-            const picks = ['monStation', 'planFrom', 'planTo'];
-            picks.forEach(p => {
-                const el = document.getElementById(p);
+            // Derive all unique stations from the actual JSON data
+            const stationSet = new Set();
+            allTrains.forEach(t => t.stops.forEach(s => stationSet.add(s.station)));
+            const ALL_STATIONS = [...stationSet].sort();
+
+            ['monStation', 'planFrom', 'planTo'].forEach(id => {
+                const el = document.getElementById(id);
                 ALL_STATIONS.forEach(s => el.add(new Option(s, s)));
             });
         }
 
+        // ─────────────────────────────────────────────
+        // DATE HELPERS
+        // ─────────────────────────────────────────────
+
+        /**
+         * Returns true if the given JS Date is a weekend (Saturday=6 or Sunday=0).
+         */
+        function isWeekend(date) {
+            const day = date.getDay();
+            return day === 0 || day === 6;
+        }
+
+        /**
+         * Returns the Date object for today or tomorrow.
+         */
+        function getTargetDate(dayKey) {
+            const d = new Date();
+            if (dayKey === 'tomorrow') d.setDate(d.getDate() + 1);
+            return d;
+        }
+
+        /**
+         * Filter trains by whether they run on the target date.
+         * Weekday trains have runs_on_weekends = false (or undefined).
+         * Weekend trains have runs_on_weekends = true.
+         * We show a train if:
+         *   - Target is a weekend AND runs_on_weekends === true
+         *   - Target is a weekday AND runs_on_weekends !== true (covers false or undefined)
+         */
+        function trainsForDay(dayKey) {
+            const targetDate = getTargetDate(dayKey);
+            const weekend = isWeekend(targetDate);
+            return allTrains.filter(t => {
+                if (weekend) return t.runs_on_weekends === true;
+                return t.runs_on_weekends !== true;
+            });
+        }
+
+        /**
+         * "Now" reference time.
+         * - For today: current HH:MM.
+         * - For tomorrow: "00:00" so all trains appear (no past filtering by clock).
+         */
+        function getNowTime(dayKey) {
+            if (dayKey === 'tomorrow') return '00:00';
+            return new Date().toTimeString().slice(0, 5);
+        }
+
+        // ─────────────────────────────────────────────
+        // NAVIGATION
+        // ─────────────────────────────────────────────
         function switchScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -170,242 +263,288 @@
         }
 
         function openMonitor() { switchScreen('monitor'); }
-        function openPlanner() { switchScreen('planner'); }
+        function openPlanner()  { switchScreen('planner'); }
 
-        // MONITOR PIDS LOGIC
+        // ─────────────────────────────────────────────
+        // DAY TOGGLE HANDLERS
+        // ─────────────────────────────────────────────
+        function setMonitorDay(day) {
+            monitorDay = day;
+            document.getElementById('mon-today-btn').classList.toggle('active', day === 'today');
+            document.getElementById('mon-tomorrow-btn').classList.toggle('active', day === 'tomorrow');
+            loadPIDS();
+        }
+
+        function setPlannerDay(day) {
+            plannerDay = day;
+            document.getElementById('plan-today-btn').classList.toggle('active', day === 'today');
+            document.getElementById('plan-tomorrow-btn').classList.toggle('active', day === 'tomorrow');
+            runPlanner();
+        }
+
+        // ─────────────────────────────────────────────
+        // MONITOR — PIDS
+        // ─────────────────────────────────────────────
         function loadPIDS() {
             const station = document.getElementById('monStation').value;
-            if(!station) return;
-            const now = new Date().toTimeString().slice(0,5);
-            
-            const directions = [...new Set(allTrains.map(t => t.direction))];
-            let results = [];
+            if (!station) return;
 
-            directions.forEach(dir => {
-                // Rule: If station is the end destination, exclude
-                if (station === dir) return;
+            const now = getNowTime(monitorDay);
+            const trains = trainsForDay(monitorDay);
 
-                const next = allTrains
-                    .filter(t => t.direction === dir)
-                    .filter(t => t.stops.some(s => s.station === station && s.departure >= now))
-                    .sort((a,b) => {
-                        const tA = a.stops.find(s => s.station === station).departure;
-                        const tB = b.stops.find(s => s.station === station).departure;
-                        return tA.localeCompare(tB);
-                    })[0];
+            // Group by direction, show next departure per direction
+            const directionMap = {};
+            trains.forEach(t => {
+                const stop = t.stops.find(s => s.station === station);
+                if (!stop) return;
+                // Skip if this station IS the terminal of this train
+                if (station === t.direction) return;
+                // Skip past departures (only for today)
+                if (monitorDay === 'today' && stop.departure < now) return;
 
-                if(next) results.push({
-                    id: next.train_id,
-                    dir: next.direction,
-                    time: next.stops.find(s => s.station === station).departure
-                });
+                const key = t.direction;
+                if (!directionMap[key] || stop.departure < directionMap[key].time) {
+                    directionMap[key] = { id: t.train_id, dir: t.direction, time: stop.departure, line: t.line };
+                }
             });
 
-            if(results.length === 0) {
-                document.getElementById('pidsOutput').innerHTML = `<p style="text-align:center; margin-top:20px; opacity:0.5;">Нема планираних полазака.</p>`;
+            const results = Object.values(directionMap).sort((a, b) => a.time.localeCompare(b.time));
+
+            if (results.length === 0) {
+                document.getElementById('pidsOutput').innerHTML =
+                    `<p class="no-results">Нема планираних полазака${monitorDay === 'tomorrow' ? ' сутра' : ''}.</p>`;
                 return;
             }
 
-            let html = `<div class="pids-container"><table class="pids-table"><tr class="pids-row"><th>ВОЗ</th><th>СМЕР</th><th>ВРЕМЕ</th></tr>`;
+            let html = `<div class="pids-container"><table class="pids-table">
+                <tr class="pids-row"><th>ВОЗ</th><th>СМЕР</th><th>ЛИНИЈА</th><th>ВРЕМЕ</th></tr>`;
             results.forEach(r => {
-                html += `<tr class="pids-row"><td>${r.id}</td><td>${r.dir}</td><td style="color:#4ADE80; font-weight:700;">${r.time}</td></tr>`;
+                html += `<tr class="pids-row">
+                    <td>${r.id}</td>
+                    <td>${r.dir}</td>
+                    <td style="font-size:11px; opacity:0.6;">${r.line || ''}</td>
+                    <td style="color:#4ADE80; font-weight:700;">${r.time}</td>
+                </tr>`;
             });
             document.getElementById('pidsOutput').innerHTML = html + `</table></div>`;
         }
 
-       // --- NEW TRANSFER & PLANNER LOGIC ---
+        // ─────────────────────────────────────────────
+        // PLANNER
+        // ─────────────────────────────────────────────
+        function runPlanner() {
+            const from = document.getElementById('planFrom').value;
+            const to   = document.getElementById('planTo').value;
+            if (!from || !to || from === to) return;
 
-// Hubs where Line 1 and Line 2 meet
-const TRANSFER_HUBS = ['Београд Центар', 'Карађорђев парк', 'Вуков споменик', 'Панчевачки мост', 'Нови Београд', 'Земун'];
+            const now    = getNowTime(plannerDay);
+            const trains = trainsForDay(plannerDay);
 
-function runPlanner() {
-    const from = document.getElementById('planFrom').value;
-    const to = document.getElementById('planTo').value;
-    if (!from || !to || from === to) return;
+            // 1. Direct connections
+            const direct = findDirectTrains(from, to, trains, now);
 
-    const now = new Date().toTimeString().slice(0, 5);
-    
-    // 1. Direct Search
-    let connections = findDirectTrains(from, to);
+            // 2. Transfer connections (cross-line or same-line with required change)
+            const transfers = findTransferConnections(from, to, trains, now);
 
-    // 2. Dynamic Transfer Search (Any shared station becomes a hub)
-    const transferOptions = findDynamicTransfers(from, to, now);
-    connections = [...connections, ...transferOptions];
+            // Merge, deduplicate by depTime+arrTime, sort by arrival
+            const seen = new Set();
+            const all = [...direct, ...transfers].filter(c => {
+                const key = `${c.depTime}|${c.arrTime}|${c.type}`;
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            }).sort((a, b) => a.depTime.localeCompare(b.depTime));
 
-    // Sort all options by arrival time so the user sees the fastest route first
-    connections.sort((a, b) => a.arrTime.localeCompare(b.arrTime));
-
-    renderPlan(connections, now);
-}
-
-function findDynamicTransfers(from, to, now) {
-    let routes = [];
-
-    // Find all trains that stop at the Origin
-    const originTrains = allTrains.filter(t => t.stops.some(s => s.station === from));
-    
-    // Find all trains that stop at the Destination
-    const destTrains = allTrains.filter(t => t.stops.some(s => s.station === to));
-
-    originTrains.forEach(t1 => {
-        const fromIdx = t1.stops.findIndex(s => s.station === from);
-        
-        destTrains.forEach(t2 => {
-            if (t1.train_id === t2.train_id) return; // Skip if it's the same train
-
-            // Find ALL common stations between these two specific trains
-            // that occur AFTER the 'from' station and BEFORE the 'to' station
-            const t1Stations = t1.stops.slice(fromIdx).map(s => s.station);
-            const toIdx = t2.stops.findIndex(s => s.station === to);
-            const t2Stations = t2.stops.slice(0, toIdx + 1).map(s => s.station);
-
-            const commonHubs = t1Stations.filter(s => t2Stations.includes(s));
-
-            commonHubs.forEach(hub => {
-                const arrHub = t1.stops.find(s => s.station === hub).departure;
-                const depHub = t2.stops.find(s => s.station === hub).departure;
-                
-                const wait = diffMinutes(arrHub, depHub);
-
-                // Transfer window: 3 to 60 minutes
-                if (wait >= 3 && wait <= 60) {
-                    routes.push({
-                        type: 'transfer',
-                        hub: hub,
-                        leg1: t1,
-                        leg2: t2,
-                        depTime: t1.stops[fromIdx].departure,
-                        arrTime: t2.stops[toIdx].departure,
-                        from, to
-                    });
-                }
-            });
-        });
-    });
-
-    // Remove duplicate routes (same dep/arr times) to keep UI clean
-    return routes.filter((v, i, a) => a.findIndex(t => (t.depTime === v.depTime && t.arrTime === v.arrTime)) === i);
-}
-
-// Keep your existing diffMinutes, renderPlan, and renderStops functions!
-
-function findTransferConnections(from, to) {
-    let possible = [];
-
-    TRANSFER_HUBS.forEach(hub => {
-        // Leg 1: Origin to Hub
-        const leg1Options = allTrains.filter(t => {
-            const fi = t.stops.findIndex(s => s.station === from);
-            const hi = t.stops.findIndex(s => s.station === hub);
-            return fi !== -1 && hi !== -1 && fi < hi;
-        });
-
-        leg1Options.forEach(t1 => {
-            const arrHub = t1.stops.find(s => s.station === hub).departure;
-
-            // Leg 2: Hub to Destination
-            const leg2Options = allTrains.filter(t2 => {
-                if (t1.train_id === t2.train_id) return false; 
-                const hi = t2.stops.findIndex(s => s.station === hub);
-                const ti = t2.stops.findIndex(s => s.station === to);
-                return hi !== -1 && ti !== -1 && hi < ti;
-            });
-
-            leg2Options.forEach(t2 => {
-                const depHub = t2.stops.find(s => s.station === hub).departure;
-                const wait = diffMinutes(arrHub, depHub);
-
-                // Validation: Wait time between 3 and 60 minutes
-                if (wait >= 3 && wait <= 60) {
-                    possible.push({
-                        type: 'transfer',
-                        hub: hub,
-                        leg1: t1,
-                        leg2: t2,
-                        depTime: t1.stops.find(s => s.station === from).departure,
-                        arrTime: t2.stops.find(s => s.station === to).departure,
-                        from, to
-                    });
-                }
-            });
-        });
-    });
-
-    // Sort by earliest departure and return top 10
-    return possible.sort((a, b) => a.depTime.localeCompare(b.depTime)).slice(0, 10);
-}
-
-function diffMinutes(t1, t2) {
-    const [h1, m1] = t1.split(':').map(Number);
-    const [h2, m2] = t2.split(':').map(Number);
-    return (h2 * 60 + m2) - (h1 * 60 + m1);
-}
-
-function renderPlan(connections, now) {
-    const container = document.getElementById('planResults');
-    if (connections.length === 0) {
-        container.innerHTML = `<p style="text-align:center; padding:20px; opacity:0.5;">Нема пронађених веза.</p>`;
-        return;
-    }
-
-    container.innerHTML = connections.map((c, i) => {
-        const isPast = c.depTime < now;
-        
-        if (c.type === 'direct') {
-            return `
-            <div class="glass-panel result-card ${isPast ? 'past' : ''}">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div><span style="font-family:'DM Mono'">${c.depTime}</span> → <span style="font-family:'DM Mono'">${c.arrTime}</span></div>
-                    <div style="font-size:10px; opacity:0.5;">№ ${c.train.train_id}</div>
-                </div>
-                <div class="card-details">
-                    ${renderStops(c.train, c.from, c.to, now)}
-                </div>
-            </div>`;
-        } else {
-            return `
-            <div class="glass-panel result-card ${isPast ? 'past' : ''}">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div>
-                        <span style="font-family:'DM Mono'">${c.depTime}</span> → <span style="font-family:'DM Mono'">${c.arrTime}</span>
-                        <div style="font-size:10px; color:#4ADE80; margin-top:2px;">ПРЕСЕДАЊЕ: ${c.hub}</div>
-                    </div>
-                    <div style="font-size:10px; opacity:0.5; text-align:right;">№ ${c.leg1.train_id}<br>№ ${c.leg2.train_id}</div>
-                </div>
-                <div class="card-details">
-                    <p style="font-size:11px; margin-bottom:10px; opacity:0.6;">ВОЗ 1: ${c.leg1.direction}</p>
-                    ${renderStops(c.leg1, c.from, c.hub, now)}
-                    <div style="height:1px; background:rgba(255,255,255,0.2); margin:15px 0;"></div>
-                    <p style="font-size:11px; margin-bottom:10px; opacity:0.6;">ВОЗ 2: ${c.leg2.direction}</p>
-                    ${renderStops(c.leg2, c.hub, c.to, now)}
-                </div>
-            </div>`;
+            renderPlan(all, now);
         }
-    }).join('');
-}
 
-function renderStops(train, start, end, now) {
-    const sIdx = train.stops.findIndex(s => s.station === start);
-    const eIdx = train.stops.findIndex(s => s.station === end);
-    const relevant = train.stops.slice(sIdx, eIdx + 1);
+        // ── Direct: same train covers both stations in the right order ──
+        function findDirectTrains(from, to, trains, now) {
+            const results = [];
+            trains.forEach(t => {
+                const fi = t.stops.findIndex(s => s.station === from);
+                const ti = t.stops.findIndex(s => s.station === to);
+                // Both stops exist, origin comes before destination
+                if (fi === -1 || ti === -1 || fi >= ti) return;
 
-    return relevant.map((s, idx) => {
-        let dotClass = s.departure < now ? 'reached' : '';
-        return `
-        <div class="stop-row">
-            <div class="stop-dot ${dotClass}"></div>
-            ${idx < relevant.length - 1 ? '<div class="stop-line"></div>' : ''}
-            <div style="flex:1; font-size:13px;">${s.station}</div>
-            <div style="font-family:'DM Mono'; opacity:0.5;">${s.departure}</div>
-        </div>`;
-    }).join('');
-}
+                const depTime = t.stops[fi].departure;
+                const arrTime = t.stops[ti].departure;
+
+                // Skip past trains (today only)
+                if (plannerDay === 'today' && depTime < now) return;
+
+                results.push({ type: 'direct', train: t, depTime, arrTime, from, to });
+            });
+            return results.sort((a, b) => a.depTime.localeCompare(b.depTime));
+        }
+
+        // ── Transfer: find any shared station between a train from Origin
+        //    and a train to Destination, with a sensible wait time ──
+        function findTransferConnections(from, to, trains, now) {
+            const results = [];
+
+            // Trains that serve the origin station
+            const leg1Candidates = trains.filter(t =>
+                t.stops.some(s => s.station === from)
+            );
+
+            // Trains that serve the destination station
+            const leg2Candidates = trains.filter(t =>
+                t.stops.some(s => s.station === to)
+            );
+
+            leg1Candidates.forEach(t1 => {
+                const fromIdx = t1.stops.findIndex(s => s.station === from);
+                const depTime = t1.stops[fromIdx].departure;
+
+                // Skip past departures (today only)
+                if (plannerDay === 'today' && depTime < now) return;
+
+                // Stations on t1 AFTER the origin (potential transfer points)
+                const t1StationsAfterOrigin = t1.stops.slice(fromIdx + 1);
+
+                leg2Candidates.forEach(t2 => {
+                    // Must be a different train
+                    if (t1.train_id === t2.train_id) return;
+
+                    const toIdx = t2.stops.findIndex(s => s.station === to);
+
+                    // Stations on t2 BEFORE the destination (potential transfer points)
+                    const t2StationsBeforeDest = t2.stops.slice(0, toIdx);
+
+                    // Find the earliest valid transfer hub
+                    for (const s1 of t1StationsAfterOrigin) {
+                        // Does t2 also stop here, before the destination?
+                        const s2 = t2StationsBeforeDest.find(s => s.station === s1.station);
+                        if (!s2) continue;
+
+                        const arrHub = s1.departure;   // arrive at hub on t1
+                        const depHub = s2.departure;   // depart hub on t2
+                        const wait   = diffMinutes(arrHub, depHub);
+
+                        // Transfer window: 2 to 90 minutes
+                        if (wait >= 2 && wait <= 90) {
+                            results.push({
+                                type: 'transfer',
+                                hub: s1.station,
+                                leg1: t1,
+                                leg2: t2,
+                                depTime,
+                                arrTime: t2.stops[toIdx].departure,
+                                from,
+                                to
+                            });
+                            // Only use the first (earliest) valid hub per t1+t2 pair
+                            break;
+                        }
+                    }
+                });
+            });
+
+            return results.sort((a, b) => a.depTime.localeCompare(b.depTime)).slice(0, 15);
+        }
+
+        // ─────────────────────────────────────────────
+        // HELPERS
+        // ─────────────────────────────────────────────
+        function diffMinutes(t1, t2) {
+            const [h1, m1] = t1.split(':').map(Number);
+            const [h2, m2] = t2.split(':').map(Number);
+            return (h2 * 60 + m2) - (h1 * 60 + m1);
+        }
+
+        // ─────────────────────────────────────────────
+        // RENDER
+        // ─────────────────────────────────────────────
+        function renderPlan(connections, now) {
+            const container = document.getElementById('planResults');
+            if (connections.length === 0) {
+                container.innerHTML = `<p class="no-results">Нема пронађених веза.<br><span style="font-size:12px;">Покушајте са другом станицом или другим даном.</span></p>`;
+                return;
+            }
+
+            container.innerHTML = connections.map(c => {
+                const isPast = plannerDay === 'today' && c.depTime < now;
+
+                if (c.type === 'direct') {
+                    const duration = diffMinutes(c.depTime, c.arrTime);
+                    return `
+                    <div class="glass-panel result-card ${isPast ? 'past' : ''}">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div>
+                                <span style="font-family:'DM Mono'">${c.depTime}</span>
+                                <span style="opacity:0.4; margin:0 4px;">→</span>
+                                <span style="font-family:'DM Mono'">${c.arrTime}</span>
+                                <div style="font-size:11px; opacity:0.5; margin-top:3px;">${duration} мин · ${c.train.line || ''}</div>
+                            </div>
+                            <div style="font-size:10px; opacity:0.5; text-align:right;">
+                                № ${c.train.train_id}<br>
+                                <span style="color:#4ADE80">ДИРЕКТНО</span>
+                            </div>
+                        </div>
+                        <div class="card-details">
+                            ${renderStops(c.train, c.from, c.to, now)}
+                        </div>
+                    </div>`;
+                } else {
+                    const duration = diffMinutes(c.depTime, c.arrTime);
+                    const wait = diffMinutes(
+                        c.leg1.stops.find(s => s.station === c.hub).departure,
+                        c.leg2.stops.find(s => s.station === c.hub).departure
+                    );
+                    return `
+                    <div class="glass-panel result-card ${isPast ? 'past' : ''}">
+                        <div class="card-header" onclick="toggleCard(this)">
+                            <div>
+                                <span style="font-family:'DM Mono'">${c.depTime}</span>
+                                <span style="opacity:0.4; margin:0 4px;">→</span>
+                                <span style="font-family:'DM Mono'">${c.arrTime}</span>
+                                <div style="font-size:11px; margin-top:3px;">
+                                    <span class="transfer-badge">⇄ ПРЕСЕДАЊЕ: ${c.hub} (чекање ${wait} мин)</span>
+                                </div>
+                                <div style="font-size:10px; opacity:0.4; margin-top:3px;">${duration} мин укупно</div>
+                            </div>
+                            <div style="font-size:10px; opacity:0.5; text-align:right;">
+                                № ${c.leg1.train_id}<br>№ ${c.leg2.train_id}
+                            </div>
+                        </div>
+                        <div class="card-details">
+                            <p style="font-size:11px; margin-bottom:10px; opacity:0.6;">ВОЗ 1 → ${c.leg1.direction} (${c.leg1.line || ''})</p>
+                            ${renderStops(c.leg1, c.from, c.hub, now)}
+                            <div style="background:rgba(74,222,128,0.15); border:1px solid rgba(74,222,128,0.3); border-radius:10px; padding:10px 14px; margin:14px 0; font-size:12px;">
+                                ⇄ Преседање на <strong>${c.hub}</strong> · чекање ${wait} мин
+                            </div>
+                            <p style="font-size:11px; margin-bottom:10px; opacity:0.6;">ВОЗ 2 → ${c.leg2.direction} (${c.leg2.line || ''})</p>
+                            ${renderStops(c.leg2, c.hub, c.to, now)}
+                        </div>
+                    </div>`;
+                }
+            }).join('');
+        }
+
+        function renderStops(train, start, end, now) {
+            const sIdx = train.stops.findIndex(s => s.station === start);
+            const eIdx = train.stops.findIndex(s => s.station === end);
+            if (sIdx === -1 || eIdx === -1) return '';
+            const relevant = train.stops.slice(sIdx, eIdx + 1);
+
+            return relevant.map((s, idx) => {
+                const dotClass = s.departure <= now ? 'reached' : '';
+                return `
+                <div class="stop-row">
+                    <div class="stop-dot ${dotClass}"></div>
+                    ${idx < relevant.length - 1 ? '<div class="stop-line"></div>' : ''}
+                    <div style="flex:1; font-size:13px;">${s.station}</div>
+                    <div style="font-family:'DM Mono'; opacity:0.5;">${s.departure}</div>
+                </div>`;
+            }).join('');
+        }
 
         function toggleCard(header) {
             const details = header.nextElementSibling;
             const isOpen = details.classList.contains('open');
             document.querySelectorAll('.card-details').forEach(d => d.classList.remove('open'));
-            if(!isOpen) details.classList.add('open');
+            if (!isOpen) details.classList.add('open');
         }
 
         init();
