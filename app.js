@@ -53,10 +53,8 @@ function render() {
 
   trains.forEach(t => {
 
-    // find BOTH Arr/Dep versions
     const stop = t.stops.find(s =>
-      cleanStation(s.station) === station &&
-      s.station.includes("(Dep)") // 👈 only show departures
+      cleanStation(s.station) === station
     );
 
     if (stop) {
