@@ -1,310 +1,50 @@
 <!DOCTYPE html>
-<html lang="sr">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>БГ:воз</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Train PWA</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 
-<style>
-:root{
-  --glass: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.15);
-  --text: #fff;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  font-family: Inter, sans-serif;
-  background: linear-gradient(180deg,#1c1c1e,#000);
-  color:var(--text);
-  height:100vh;
-  overflow:hidden;
-}
-
-/* SCREENS */
-.screen{
-  display:none;
-  height:100%;
-  overflow-y:auto;
-  padding:20px 16px 100px;
-}
-.screen.active{display:block;}
-
-/* GLASS */
-.glass{
-  background: var(--glass);
-  backdrop-filter: blur(25px);
-  border:1px solid var(--border);
-  border-radius:20px;
-}
-
-/* NAV */
-.nav{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:20px;
-  padding:12px 20px;
-  border-radius:30px;
-  backdrop-filter: blur(30px);
-  background:rgba(255,255,255,0.1);
-}
-
-.nav button{
-  background:none;border:none;color:white;font-size:14px;opacity:0.5;
-}
-.nav button.active{opacity:1;}
-
-/* TITLE */
-.title{
-  font-size:22px;
-  font-weight:600;
-  margin-bottom:16px;
-}
-
-/* INPUTS */
-select{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  background:var(--glass);
-  border:1px solid var(--border);
-  color:white;
-  margin-bottom:12px;
-}
-
-/* CARDS */
-.card{
-  padding:16px;
-  margin-bottom:10px;
-  cursor:pointer;
-}
-
-.card-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.card-details{
-  max-height:0;
-  overflow:hidden;
-  transition:0.35s ease;
-}
-
-.card.open .card-details{
-  max-height:1000px;
-  margin-top:12px;
-}
-
-/* STOPS */
-.stop{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:8px;
-  font-size:14px;
-}
-
-.dot{
-  width:8px;height:8px;border-radius:50%;
-  margin-right:8px;
-  background:#888;
-}
-
-.reached{background:#fff;}
-.current{background:#4ade80;}
-</style>
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
+  <div id="app" class="bg-animated-gradient">
 
-<div id="home" class="screen active">
-  <div class="title">БГ:воз</div>
-  <div class="glass card" onclick="openScreen('monitor')">Станични монитор</div>
-  <div class="glass card" onclick="openScreen('planner')">Планирај путовање</div>
-</div>
-
-<div id="monitor" class="screen">
-  <div class="title">Станични монитор</div>
-  <select id="monStation"></select>
-  <div id="pids"></div>
-</div>
-
-<div id="planner" class="screen">
-  <div class="title">Планирај путовање</div>
-  <select id="from"></select>
-  <select id="to"></select>
-  <div id="results"></div>
-</div>
-
-<div class="nav glass">
-  <button onclick="openScreen('home')" id="nav-home">Home</button>
-  <button onclick="openScreen('monitor')" id="nav-monitor">Monitor</button>
-  <button onclick="openScreen('planner')" id="nav-planner">Planner</button>
-</div>
-
-<script>
-let trains=[];
-let stationMap={};
-let stationList=[];
-
-async function init(){
-  trains = await (await fetch('trains.json')).json();
-
-  // PREPROCESS (⚡ big optimization)
-  trains.forEach(t=>{
-    t.stops.forEach((s,i)=>{
-      if(!stationMap[s.station]) stationMap[s.station]=[];
-      stationMap[s.station].push({train:t,index:i});
-      if(!stationList.includes(s.station)) stationList.push(s.station);
-    });
-  });
-
-  stationList.sort();
-
-  fillSelect('monStation');
-  fillSelect('from');
-  fillSelect('to');
-}
-
-function fillSelect(id){
-  const el=document.getElementById(id);
-  el.innerHTML='<option value="">Изабери</option>';
-  stationList.forEach(s=>el.add(new Option(s,s)));
-}
-
-/* NAV */
-function openScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById('nav-'+id)?.classList.add('active');
-}
-
-/* TIME */
-function now(){ return new Date().toTimeString().slice(0,5); }
-function diff(a,b){
-  const [h1,m1]=a.split(':').map(Number);
-  const [h2,m2]=b.split(':').map(Number);
-  return h2*60+m2-(h1*60+m1);
-}
-
-/* PIDS (⚡ uses index) */
-document.getElementById('monStation').onchange=()=>{
-  const st=monStation.value;
-  if(!st) return;
-
-  const list=stationMap[st]||[];
-  const current=now();
-
-  let best={};
-
-  list.forEach(({train,index})=>{
-    if(index===train.stops.length-1) return;
-
-    const dep=train.stops[index].departure;
-    if(dep<current) return;
-
-    const dir=train.stops.at(-1).station;
-
-    if(!best[dir] || dep < best[dir].time){
-      best[dir]={train, time:dep, dir};
-    }
-  });
-
-  const res=Object.values(best).sort((a,b)=>a.time.localeCompare(b.time));
-
-  pids.innerHTML=res.map(r=>`
-    <div class="glass card">
-      ${r.train.train_id} → ${r.dir}
-      <div style="opacity:.6">${r.time}</div>
+    <!-- Screens -->
+    <div id="home" class="screen active">
+      <h1>Train App</h1>
+      <button onclick="showScreen('pids')">Station Board</button>
+      <button onclick="showScreen('planner')">Planner</button>
     </div>
-  `).join('');
-};
 
-/* PLANNER */
-document.getElementById('to').onchange=run;
-document.getElementById('from').onchange=run;
-
-function run(){
-  const A=from.value;
-  const B=to.value;
-  if(!A||!B||A===B) return;
-
-  const current=now();
-  let routes=[];
-
-  // DIRECT (⚡ using index)
-  (stationMap[A]||[]).forEach(({train,index})=>{
-    const destIndex=train.stops.findIndex(s=>s.station===B);
-    if(destIndex>index){
-      routes.push([train]);
-    }
-  });
-
-  // TRANSFER (optimized)
-  (stationMap[A]||[]).forEach(({train:t1,index:i1})=>{
-    t1.stops.slice(i1+1).forEach(mid=>{
-      (stationMap[mid.station]||[]).forEach(({train:t2,index:i2})=>{
-        const end=t2.stops.findIndex(s=>s.station===B);
-        if(end>i2){
-          const wait=diff(mid.departure,t2.stops[i2].departure);
-          if(wait>=3 && wait<=30){
-            routes.push([t1,t2]);
-          }
-        }
-      });
-    });
-  });
-
-  render(routes,current,A,B);
-}
-
-function render(routes,current,A,B){
-  results.innerHTML=routes.map(r=>{
-    const dep=r[0].stops.find(s=>s.station===A).departure;
-    const arr=r.at(-1).stops.find(s=>s.station===B).departure;
-
-    return `
-    <div class="glass card" onclick="this.classList.toggle('open')">
-      <div class="card-header">
-        <div>${dep} → ${arr}</div>
-        <div>${r.length===1?'директно':'преседање'}</div>
-      </div>
-      <div class="card-details">
-        ${r.map(t=>renderStops(t,current)).join('<hr>')}
-      </div>
+    <div id="pids" class="screen">
+      <h2>Station Board</h2>
+      <select id="stationSelect"></select>
+      <div id="departures"></div>
     </div>
-    `;
-  }).join('');
-}
 
-/* TRAIN POSITION */
-function renderStops(train,current){
-  return train.stops.map((s,i)=>{
-    let cls='';
-    if(s.departure<current) cls='reached';
-    if(i>0 && train.stops[i-1].departure<=current && s.departure>current){
-      cls='current';
-    }
-
-    return `
-    <div class="stop">
-      <div><span class="dot ${cls}"></span>${s.station}</div>
-      <div>${s.departure}</div>
+    <div id="planner" class="screen">
+      <h2>Route Planner</h2>
+      <select id="from"></select>
+      <select id="to"></select>
+      <button onclick="planRoute()">Search</button>
+      <div id="results"></div>
     </div>
-    `;
-  }).join('');
-}
 
-init();
-</script>
+    <!-- Navigation -->
+    <nav>
+      <button onclick="showScreen('home')">Home</button>
+      <button onclick="showScreen('pids')">PIDS</button>
+      <button onclick="showScreen('planner')">Planner</button>
+    </nav>
 
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
