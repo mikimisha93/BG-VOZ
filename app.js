@@ -1,71 +1,81 @@
 let trains = [];
 let stations = new Set();
 
-/* Load JSON */
+/* LOAD DATA */
 async function loadData() {
-  const res = await fetch('./data/trains.json');
+  const res = await fetch('./trains.json'); // simpler path
   const data = await res.json();
 
-  trains = data.map(train => ({
-    ...train,
-    stops: normalizeStops(train.stops)
-  }));
+  trains = data.map(t => convertTrain(t));
 
   trains.forEach(t => {
     t.stops.forEach(s => stations.add(s.station));
   });
 
   populateSelectors();
+
+  // auto render first station
+  renderPIDS();
 }
 
-/* Normalize ARR/DEP */
-function normalizeStops(stops) {
-  const map = {};
+/* 🔥 CONVERT YOUR JSON FORMAT */
+function convertTrain(train) {
+  const stops = [];
 
-  stops.forEach(s => {
-    let name = s.station
+  for (let i = 0; i < train.stanice.length; i++) {
+    const rawName = train.stanice[i];
+    const time = train.vreme[i];
+
+    let name = rawName
       .replace(" (Arr)", "")
       .replace(" (Dep)", "");
 
-    if (!map[name]) {
-      map[name] = { station: name };
+    let existing = stops.find(s => s.station === name);
+
+    if (!existing) {
+      existing = { station: name };
+      stops.push(existing);
     }
 
-    if (s.station.includes("(Arr)")) {
-      map[name].arrival = s.time;
-    } else if (s.station.includes("(Dep)")) {
-      map[name].departure = s.time;
+    if (rawName.includes("(Arr)")) {
+      existing.arrival = time;
+    } else if (rawName.includes("(Dep)")) {
+      existing.departure = time;
     } else {
-      map[name].arrival = s.time;
-      map[name].departure = s.time;
+      existing.arrival = time;
+      existing.departure = time;
     }
-  });
+  }
 
-  return Object.values(map);
+  return {
+    line: train.linija || "",
+    destination: stops[stops.length - 1]?.station,
+    stops
+  };
 }
 
-/* UI Navigation */
+/* NAVIGATION */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-/* Populate dropdowns */
+/* DROPDOWNS */
 function populateSelectors() {
   const stationSelect = document.getElementById("stationSelect");
   const from = document.getElementById("from");
   const to = document.getElementById("to");
 
-  stations.forEach(s => {
-    stationSelect.innerHTML += `<option>${s}</option>`;
-    from.innerHTML += `<option>${s}</option>`;
-    to.innerHTML += `<option>${s}</option>`;
-  });
+  const sorted = Array.from(stations).sort();
 
-  stationSelect.onchange = renderPIDS;
+  sorted.forEach(s => {
+    stationSelect.innerHTML += `<option value="${s}">${s}</option>`;
+    from.innerHTML += `<option value="${s}">${s}</option>`;
+    to.innerHTML += `<option value="${s}">${s}</option>`;
+  });
 }
 
-/* PIDS */
+/* 🚉 PIDS */
 function renderPIDS() {
   const station = document.getElementById("stationSelect").value;
   const container = document.getElementById("departures");
@@ -78,8 +88,7 @@ function renderPIDS() {
     if (stop && stop.departure) {
       container.innerHTML += `
         <div class="glass pids-text">
-          ${train.line || ''} → ${train.destination || ''}
-          <br/>
+          ${train.line} → ${train.destination}<br/>
           ${stop.departure}
         </div>
       `;
@@ -87,7 +96,7 @@ function renderPIDS() {
   });
 }
 
-/* Planner */
+/* 🧭 PLANNER */
 function planRoute() {
   const from = document.getElementById("from").value;
   const to = document.getElementById("to").value;
@@ -102,18 +111,19 @@ function planRoute() {
     if (fromStop && toStop) {
       container.innerHTML += `
         <div class="glass">
-          ${train.line || ''} <br/>
-          ${from} (${fromStop.departure}) → ${to} (${toStop.arrival})
+          ${train.line}<br/>
+          ${from} (${fromStop.departure || "-"}) → 
+          ${to} (${toStop.arrival || "-"})
         </div>
       `;
     }
   });
 }
 
-/* Init */
+/* INIT */
 loadData();
 
-/* Register Service Worker */
+/* SW */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+  navigator.serviceWorker.register('./service-worker.js');
 }
