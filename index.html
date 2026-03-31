@@ -225,31 +225,69 @@ function runPlanner() {
 
     const now = new Date().toTimeString().slice(0, 5);
     
-    // 1. Try Direct Search
+    // 1. Direct Search
     let connections = findDirectTrains(from, to);
 
-    // 2. If no direct trains found, perform Transfer Search
-    if (connections.length === 0) {
-        connections = findTransferConnections(from, to);
-    }
+    // 2. Dynamic Transfer Search (Any shared station becomes a hub)
+    const transferOptions = findDynamicTransfers(from, to, now);
+    connections = [...connections, ...transferOptions];
+
+    // Sort all options by arrival time so the user sees the fastest route first
+    connections.sort((a, b) => a.arrTime.localeCompare(b.arrTime));
 
     renderPlan(connections, now);
 }
 
-function findDirectTrains(from, to) {
-    return allTrains.filter(t => {
-        const fi = t.stops.findIndex(s => s.station === from);
-        const ti = t.stops.findIndex(s => s.station === to);
-        return fi !== -1 && ti !== -1 && fi < ti;
-    }).map(t => ({
-        type: 'direct',
-        train: t,
-        depTime: t.stops.find(s => s.station === from).departure,
-        arrTime: t.stops.find(s => s.station === to).departure,
-        from,
-        to
-    }));
+function findDynamicTransfers(from, to, now) {
+    let routes = [];
+
+    // Find all trains that stop at the Origin
+    const originTrains = allTrains.filter(t => t.stops.some(s => s.station === from));
+    
+    // Find all trains that stop at the Destination
+    const destTrains = allTrains.filter(t => t.stops.some(s => s.station === to));
+
+    originTrains.forEach(t1 => {
+        const fromIdx = t1.stops.findIndex(s => s.station === from);
+        
+        destTrains.forEach(t2 => {
+            if (t1.train_id === t2.train_id) return; // Skip if it's the same train
+
+            // Find ALL common stations between these two specific trains
+            // that occur AFTER the 'from' station and BEFORE the 'to' station
+            const t1Stations = t1.stops.slice(fromIdx).map(s => s.station);
+            const toIdx = t2.stops.findIndex(s => s.station === to);
+            const t2Stations = t2.stops.slice(0, toIdx + 1).map(s => s.station);
+
+            const commonHubs = t1Stations.filter(s => t2Stations.includes(s));
+
+            commonHubs.forEach(hub => {
+                const arrHub = t1.stops.find(s => s.station === hub).departure;
+                const depHub = t2.stops.find(s => s.station === hub).departure;
+                
+                const wait = diffMinutes(arrHub, depHub);
+
+                // Transfer window: 3 to 60 minutes
+                if (wait >= 3 && wait <= 60) {
+                    routes.push({
+                        type: 'transfer',
+                        hub: hub,
+                        leg1: t1,
+                        leg2: t2,
+                        depTime: t1.stops[fromIdx].departure,
+                        arrTime: t2.stops[toIdx].departure,
+                        from, to
+                    });
+                }
+            });
+        });
+    });
+
+    // Remove duplicate routes (same dep/arr times) to keep UI clean
+    return routes.filter((v, i, a) => a.findIndex(t => (t.depTime === v.depTime && t.arrTime === v.arrTime)) === i);
 }
+
+// Keep your existing diffMinutes, renderPlan, and renderStops functions!
 
 function findTransferConnections(from, to) {
     let possible = [];
