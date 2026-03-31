@@ -213,63 +213,155 @@
             document.getElementById('pidsOutput').innerHTML = html + `</table></div>`;
         }
 
-        // PLANNER LOGIC
-        function runPlanner() {
-            const from = document.getElementById('planFrom').value;
-            const to = document.getElementById('toStation')?.value || document.getElementById('planTo').value;
-            if(!from || !to || from === to) return;
+       // --- NEW TRANSFER & PLANNER LOGIC ---
 
-            const now = new Date().toTimeString().slice(0,5);
-            
-            const direct = allTrains.filter(t => {
-                const fi = t.stops.findIndex(s => s.station === from);
-                const ti = t.stops.findIndex(s => s.station === to);
-                return fi !== -1 && ti !== -1 && fi < ti;
+// Hubs where Line 1 and Line 2 meet
+const TRANSFER_HUBS = ['Београд Центар', 'Карађорђев парк', 'Вуков споменик', 'Панчевачки мост', 'Нови Београд', 'Земун'];
+
+function runPlanner() {
+    const from = document.getElementById('planFrom').value;
+    const to = document.getElementById('planTo').value;
+    if (!from || !to || from === to) return;
+
+    const now = new Date().toTimeString().slice(0, 5);
+    
+    // 1. Try Direct Search
+    let connections = findDirectTrains(from, to);
+
+    // 2. If no direct trains found, perform Transfer Search
+    if (connections.length === 0) {
+        connections = findTransferConnections(from, to);
+    }
+
+    renderPlan(connections, now);
+}
+
+function findDirectTrains(from, to) {
+    return allTrains.filter(t => {
+        const fi = t.stops.findIndex(s => s.station === from);
+        const ti = t.stops.findIndex(s => s.station === to);
+        return fi !== -1 && ti !== -1 && fi < ti;
+    }).map(t => ({
+        type: 'direct',
+        train: t,
+        depTime: t.stops.find(s => s.station === from).departure,
+        arrTime: t.stops.find(s => s.station === to).departure,
+        from,
+        to
+    }));
+}
+
+function findTransferConnections(from, to) {
+    let possible = [];
+
+    TRANSFER_HUBS.forEach(hub => {
+        // Leg 1: Origin to Hub
+        const leg1Options = allTrains.filter(t => {
+            const fi = t.stops.findIndex(s => s.station === from);
+            const hi = t.stops.findIndex(s => s.station === hub);
+            return fi !== -1 && hi !== -1 && fi < hi;
+        });
+
+        leg1Options.forEach(t1 => {
+            const arrHub = t1.stops.find(s => s.station === hub).departure;
+
+            // Leg 2: Hub to Destination
+            const leg2Options = allTrains.filter(t2 => {
+                if (t1.train_id === t2.train_id) return false; 
+                const hi = t2.stops.findIndex(s => s.station === hub);
+                const ti = t2.stops.findIndex(s => s.station === to);
+                return hi !== -1 && ti !== -1 && hi < ti;
             });
 
-            renderResults(direct, now, from, to);
-        }
+            leg2Options.forEach(t2 => {
+                const depHub = t2.stops.find(s => s.station === hub).departure;
+                const wait = diffMinutes(arrHub, depHub);
 
-        function renderResults(trains, now, from, to) {
-            const container = document.getElementById('planResults');
-            if(trains.length === 0) {
-                container.innerHTML = `<p style="text-align:center; margin-top:20px; opacity:0.5;">Нема директних возова. Проверите преседања на Прокопу.</p>`;
-                return;
-            }
+                // Validation: Wait time between 3 and 60 minutes
+                if (wait >= 3 && wait <= 60) {
+                    possible.push({
+                        type: 'transfer',
+                        hub: hub,
+                        leg1: t1,
+                        leg2: t2,
+                        depTime: t1.stops.find(s => s.station === from).departure,
+                        arrTime: t2.stops.find(s => s.station === to).departure,
+                        from, to
+                    });
+                }
+            });
+        });
+    });
 
-            container.innerHTML = trains.map(t => {
-                const depTime = t.stops.find(s => s.station === from).departure;
-                const arrTime = t.stops.find(s => s.station === to).departure;
-                const isPast = depTime < now;
-                
-                return `
-                <div class="glass-panel result-card ${isPast ? 'past' : ''}">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <span style="font-family:'DM Mono'; font-size:18px;">${depTime}</span> 
-                            <span style="opacity:0.3;">→</span> 
-                            <span style="font-family:'DM Mono'; font-size:18px; opacity:0.8;">${arrTime}</span>
-                        </div>
-                        <div style="font-size:11px; opacity:0.5; font-family:'DM Mono'">№ ${t.train_id}</div>
+    // Sort by earliest departure and return top 10
+    return possible.sort((a, b) => a.depTime.localeCompare(b.depTime)).slice(0, 10);
+}
+
+function diffMinutes(t1, t2) {
+    const [h1, m1] = t1.split(':').map(Number);
+    const [h2, m2] = t2.split(':').map(Number);
+    return (h2 * 60 + m2) - (h1 * 60 + m1);
+}
+
+function renderPlan(connections, now) {
+    const container = document.getElementById('planResults');
+    if (connections.length === 0) {
+        container.innerHTML = `<p style="text-align:center; padding:20px; opacity:0.5;">Нема пронађених веза.</p>`;
+        return;
+    }
+
+    container.innerHTML = connections.map((c, i) => {
+        const isPast = c.depTime < now;
+        
+        if (c.type === 'direct') {
+            return `
+            <div class="glass-panel result-card ${isPast ? 'past' : ''}">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div><span style="font-family:'DM Mono'">${c.depTime}</span> → <span style="font-family:'DM Mono'">${c.arrTime}</span></div>
+                    <div style="font-size:10px; opacity:0.5;">№ ${c.train.train_id}</div>
+                </div>
+                <div class="card-details">
+                    ${renderStops(c.train, c.from, c.to, now)}
+                </div>
+            </div>`;
+        } else {
+            return `
+            <div class="glass-panel result-card ${isPast ? 'past' : ''}">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div>
+                        <span style="font-family:'DM Mono'">${c.depTime}</span> → <span style="font-family:'DM Mono'">${c.arrTime}</span>
+                        <div style="font-size:10px; color:#4ADE80; margin-top:2px;">ПРЕСЕДАЊЕ: ${c.hub}</div>
                     </div>
-                    <div class="card-details">
-                        ${t.stops.map((s, idx) => {
-                            let dotClass = '';
-                            if (s.departure < now) dotClass = 'reached';
-                            if (idx > 0 && t.stops[idx-1].departure <= now && s.departure > now) dotClass = 'current';
-                            
-                            return `
-                            <div class="stop-row">
-                                <div class="stop-dot ${dotClass}"></div>
-                                ${idx < t.stops.length - 1 ? '<div class="stop-line"></div>' : ''}
-                                <div style="flex:1; ${s.station === from || s.station === to ? 'font-weight:700' : 'opacity:0.7'}">${s.station}</div>
-                                <div style="font-family: 'DM Mono'; font-size:12px; opacity: 0.5;">${s.departure}</div>
-                            </div>`;
-                        }).join('')}
-                    </div>
-                </div>`;
-            }).join('');
+                    <div style="font-size:10px; opacity:0.5; text-align:right;">№ ${c.leg1.train_id}<br>№ ${c.leg2.train_id}</div>
+                </div>
+                <div class="card-details">
+                    <p style="font-size:11px; margin-bottom:10px; opacity:0.6;">ВОЗ 1: ${c.leg1.direction}</p>
+                    ${renderStops(c.leg1, c.from, c.hub, now)}
+                    <div style="height:1px; background:rgba(255,255,255,0.2); margin:15px 0;"></div>
+                    <p style="font-size:11px; margin-bottom:10px; opacity:0.6;">ВОЗ 2: ${c.leg2.direction}</p>
+                    ${renderStops(c.leg2, c.hub, c.to, now)}
+                </div>
+            </div>`;
         }
+    }).join('');
+}
+
+function renderStops(train, start, end, now) {
+    const sIdx = train.stops.findIndex(s => s.station === start);
+    const eIdx = train.stops.findIndex(s => s.station === end);
+    const relevant = train.stops.slice(sIdx, eIdx + 1);
+
+    return relevant.map((s, idx) => {
+        let dotClass = s.departure < now ? 'reached' : '';
+        return `
+        <div class="stop-row">
+            <div class="stop-dot ${dotClass}"></div>
+            ${idx < relevant.length - 1 ? '<div class="stop-line"></div>' : ''}
+            <div style="flex:1; font-size:13px;">${s.station}</div>
+            <div style="font-family:'DM Mono'; opacity:0.5;">${s.departure}</div>
+        </div>`;
+    }).join('');
+}
 
         function toggleCard(header) {
             const details = header.nextElementSibling;
