@@ -1,46 +1,107 @@
-body {
+/* RESET */
+* {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+body {
   font-family: "Inter", sans-serif;
   background: black;
   color: white;
   overflow: hidden;
 }
 
-/* Screens */
+/* APP CONTAINER */
+#app {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* SCREENS (FIXES YOUR BUG) */
 .screen {
+  position: absolute;
+  inset: 0;
   display: none;
   padding: 20px;
+  overflow-y: auto;
 }
+
 .screen.active {
   display: block;
 }
 
-/* Navigation */
+/* NAVIGATION */
 nav {
   position: fixed;
   bottom: 0;
+  height: 60px;
   width: 100%;
   display: flex;
-}
-nav button {
-  flex: 1;
-  padding: 15px;
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-/* Glass */
+nav button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 14px;
+}
+
+/* HEADINGS */
+h1, h2 {
+  margin-bottom: 20px;
+}
+
+/* BUTTONS */
+button {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+/* SELECT */
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: none;
+}
+
+/* GLASS EFFECT */
 .glass {
   backdrop-filter: blur(20px);
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.2);
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
 }
 
-/* Gradient */
+/* DARK GLASS */
+.glass-dark {
+  backdrop-filter: blur(30px);
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* PIDS TEXT */
+.pids-text {
+  color: #ffcc00;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
+  font-family: monospace;
+}
+
+/* BACKGROUND GRADIENT */
 .bg-animated-gradient {
   height: 100vh;
   background: linear-gradient(-45deg, #0a192f, #4a0e0e, #1a365d, #742a2a);
@@ -48,14 +109,17 @@ nav button {
   animation: gradient 15s ease infinite;
 }
 
+/* GRADIENT ANIMATION */
 @keyframes gradient {
   0% { background-position: 0% }
   50% { background-position: 100% }
   100% { background-position: 0% }
 }
 
-/* PIDS text */
-.pids-text {
-  color: #ffcc00;
-  font-family: monospace;
+/* SCROLL FIX */
+.screen::-webkit-scrollbar {
+  display: none;
+}
+.screen {
+  scrollbar-width: none;
 }
