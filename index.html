@@ -1,27 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Train App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="style.css">
+<title>BG VOZ</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+/* BACKGROUND */
+.bg {
+  min-height: 100vh;
+  padding: 20px;
+
+  background: linear-gradient(-45deg, #0a192f, #4a0e0e, #1a365d, #742a2a);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% }
+  50% { background-position: 100% }
+  100% { background-position: 0% }
+}
+
+/* UI */
+.container {
+  max-width: 500px;
+  margin: auto;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.card {
+  background: rgba(0,0,0,0.5);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.time {
+  color: #ffcc00;
+  font-family: monospace;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="bg-animated-gradient">
+<div class="bg">
+  <div class="container">
 
-    <div class="container">
-      <h1>🚆 Train Departures</h1>
+    <h2>🚆 BG VOZ</h2>
 
-      <select id="stationSelect"></select>
+    <select id="station"></select>
 
-      <div id="output"></div>
-    </div>
+    <div id="list"></div>
 
   </div>
+</div>
 
-  <script src="app.js"></script>
+<script>
+let trains = [];
+let stations = new Set();
+
+/* LOAD JSON */
+fetch('trains.json')
+  .then(r => r.json())
+  .then(data => {
+    trains = data;
+
+    // collect stations
+    trains.forEach(t => {
+      t.stops.forEach(s => {
+        let name = clean(s.station);
+        stations.add(name);
+      });
+    });
+
+    init();
+  });
+
+/* CLEAN station names */
+function clean(name) {
+  return name.replace(" (Arr)", "").replace(" (Dep)", "");
+}
+
+/* INIT UI */
+function init() {
+  const sel = document.getElementById("station");
+
+  [...stations].sort().forEach(s => {
+    sel.innerHTML += `<option>${s}</option>`;
+  });
+
+  sel.onchange = render;
+
+  sel.value = [...stations][0];
+  render();
+}
+
+/* RENDER */
+function render() {
+  const station = document.getElementById("station").value;
+  const list = document.getElementById("list");
+
+  list.innerHTML = "";
+
+  trains.forEach(t => {
+
+    // find stop
+    const stop = t.stops.find(s =>
+      clean(s.station) === station
+    );
+
+    if (stop) {
+      list.innerHTML += `
+        <div class="card">
+          <div>${t.line} → ${t.direction}</div>
+          <div class="time">${stop.departure}</div>
+        </div>
+      `;
+    }
+  });
+}
+</script>
+
 </body>
 </html>
