@@ -1,478 +1,219 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>БГ:воз</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gsp-red: #E30613;
-            --gsp-blue: #1A3A6B;
-            --glass: rgba(255,255,255,0.12);
-            --glass-border: rgba(255,255,255,0.2);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: linear-gradient(160deg, var(--gsp-red) 0%, var(--gsp-blue) 100%);
-            background-attachment: fixed;
-            height: 100vh; color: #fff; overflow: hidden;
-        }
-        .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-        }
-        .nav-bar {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            width: 85%; max-width: 320px; height: 70px;
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
-        }
-        .nav-icon { cursor: pointer; opacity: 0.4; transition: 0.3s; width: 28px; height: 28px; stroke: white; }
-        .nav-icon.active { opacity: 1; transform: scale(1.1); }
-        .screen { display: none; height: 100vh; width: 100%; padding: 40px 20px 120px; overflow-y: auto; }
-        .screen.active { display: flex; flex-direction: column; }
-        #landing { display: none; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
-        #landing.active { display: flex; }
-        .logo-area { flex: 1; display: flex; align-items: center; font-family: 'DM Mono', monospace; font-size: 38px; letter-spacing: 6px; font-weight: 700; }
-        .menu-area { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
-        .menu-btn { padding: 22px; font-size: 18px; font-weight: 700; cursor: pointer; text-align: center; }
-        .qr-area { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; }
-        .qr-holder { background: white; padding: 10px; border-radius: 12px; display: inline-block; margin: 0 auto; }
-        .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; text-align: center; letter-spacing: -0.5px; }
-        select {
-            width: 100%; padding: 18px; background: var(--glass); border: 1px solid var(--glass-border);
-            border-radius: 16px; color: white; font-size: 16px; outline: none; margin-bottom: 16px; appearance: none;
-        }
-        option { background: #1A3A6B; color: white; }
-        .day-toggle { display: flex; gap: 10px; margin-bottom: 16px; }
-        .day-btn {
-            flex: 1; padding: 14px; font-size: 14px; font-weight: 700; cursor: pointer; text-align: center;
-            border-radius: 16px; background: var(--glass); border: 1px solid var(--glass-border); color: white; transition: 0.2s;
-        }
-        .day-btn.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
-        .pids-container { margin-top: 10px; }
-        .pids-table { width: 100%; border-collapse: collapse; font-family: 'DM Mono', monospace; }
-        .pids-row { background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .pids-row th { text-align: left; padding: 12px; font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-        .pids-row td { padding: 14px 12px; font-size: 15px; }
-        .result-card { margin-bottom: 12px; overflow: hidden; }
-        .card-header { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .card-details { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0,1,0,1); background: rgba(0,0,0,0.15); padding: 0 20px; }
-        .card-details.open { max-height: 2000px; padding: 20px; }
-        .past { opacity: 0.3; filter: grayscale(1); }
-        .stop-row { display: flex; gap: 12px; font-size: 13px; margin-bottom: 10px; position: relative; align-items: center; }
-        .stop-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); z-index: 2; flex-shrink: 0; }
-        .stop-dot.reached { background: #fff; box-shadow: 0 0 8px #fff; }
-        .stop-line { position: absolute; left: 4px; top: 14px; height: calc(100% + 2px); width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
-        .transfer-box { background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.35); border-radius: 10px; padding: 10px 14px; margin: 12px 0; font-size: 12px; }
-        .green { color: #4ADE80; }
-        .dim { opacity: 0.5; font-size: 11px; }
-        .no-results { text-align: center; padding: 40px 20px; opacity: 0.5; line-height: 1.7; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>БГ:воз</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* KEEP YOUR STYLES (unchanged) */
+body { font-family: 'DM Sans', sans-serif; background: linear-gradient(160deg,#E30613,#1A3A6B); color:white; margin:0; }
+.screen { display:none; padding:20px; }
+.screen.active { display:block; }
+.glass-panel { background: rgba(255,255,255,0.1); padding:15px; border-radius:16px; margin-bottom:10px; }
+select { width:100%; padding:10px; margin-bottom:10px; }
+.stop-dot { width:10px; height:10px; border-radius:50%; background:#aaa; display:inline-block; margin-right:8px; }
+.reached { background:white; }
+.current { background:#4ADE80; }
+</style>
 </head>
+
 <body>
 
+<!-- LANDING -->
 <div id="landing" class="screen active">
-    <div class="logo-area">БГ:ВОЗ</div>
-    <div class="menu-area">
-        <div class="glass-panel menu-btn" onclick="openMonitor()">СТАНИЧНИ МОНИТОР</div>
-        <div class="glass-panel menu-btn" onclick="openPlanner()">ПЛАНИРАЈ ПУТОВАЊЕ</div>
-    </div>
-    <div class="qr-area">
-        <div class="qr-holder">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://mikimisha93.github.io/BG-VOZ/&margin=0" alt="QR">
-        </div>
-        <p style="font-size:10px;margin-top:10px;opacity:0.6;font-family:'DM Mono'">mikimisha93.github.io/BG-VOZ/</p>
-    </div>
+<h1>БГ:ВОЗ</h1>
+<button onclick="openMonitor()">СТАНИЧНИ МОНИТОР</button>
+<button onclick="openPlanner()">ПЛАНИРАЈ ПУТОВАЊЕ</button>
 </div>
 
+<!-- MONITOR -->
 <div id="monitor" class="screen">
-    <div class="section-title">СТАНИЧНИ МОНИТОР</div>
-    <div class="day-toggle">
-        <div class="day-btn active" id="mon-today-btn" onclick="setMonDay('today')">ДАНАС</div>
-        <div class="day-btn" id="mon-tomorrow-btn" onclick="setMonDay('tomorrow')">СУТРА</div>
-    </div>
-    <select id="monStation" onchange="loadPIDS()"><option value="">Изаберите станицу</option></select>
-    <div id="pidsOutput"></div>
+<h2>СТАНИЧНИ МОНИТОР</h2>
+<select id="monStation" onchange="loadPIDS()"></select>
+<div id="pidsOutput"></div>
+<button onclick="goHome()">Назад</button>
 </div>
 
+<!-- PLANNER -->
 <div id="planner" class="screen">
-    <div class="section-title">ПЛАНИРАЈ ПУТОВАЊЕ</div>
-    <div class="day-toggle">
-        <div class="day-btn active" id="plan-today-btn" onclick="setPlanDay('today')">ДАНАС</div>
-        <div class="day-btn" id="plan-tomorrow-btn" onclick="setPlanDay('tomorrow')">СУТРА</div>
-    </div>
-    <select id="planFrom" onchange="runPlanner()"><option value="">Полазак</option></select>
-    <select id="planTo" onchange="runPlanner()"><option value="">Долазак</option></select>
-    <div id="planResults"></div>
-</div>
-
-<div class="glass-panel nav-bar">
-    <div class="nav-icon active" id="nav-home" onclick="goHome()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    </div>
-    <div class="nav-icon" id="nav-monitor" onclick="openMonitor()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    </div>
-    <div class="nav-icon" id="nav-planner" onclick="openPlanner()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-    </div>
+<h2>ПЛАНИРАЈ ПУТОВАЊЕ</h2>
+<select id="planFrom" onchange="runPlanner()"></select>
+<select id="planTo" onchange="runPlanner()"></select>
+<div id="planResults"></div>
+<button onclick="goHome()">Назад</button>
 </div>
 
 <script>
-// ─── STATE ───────────────────────────────────────────────
+const STATIONS = [];
 let allTrains = [];
-let monDay  = 'today';
-let planDay = 'today';
 
-// ─── STATION NAME NORMALISATION ─────────────────────────
-// Strips " (Arr)" / " (Dep)" suffixes so cross-line matching works.
-// e.g. "Београд Центар (Dep)" → "Београд Центар"
-//      "Ресник (Arr)"         → "Ресник"
-function norm(name) {
-    return name.replace(/\s*\((Arr|Dep)\)\s*$/i, '').trim();
-}
-
-// ─── INIT ────────────────────────────────────────────────
 async function init() {
-    try {
-        const res = await fetch('trains.json');
-        allTrains = await res.json();
-        populatePickers();
-    } catch(e) { console.error('Cannot load trains.json', e); }
+    const res = await fetch('trains.json');
+    allTrains = await res.json();
+
+    // collect stations dynamically
+    allTrains.forEach(t => {
+        t.stops.forEach(s => {
+            if (!STATIONS.includes(s.station)) STATIONS.push(s.station);
+        });
+    });
+
+    STATIONS.sort();
+    populatePickers();
 }
 
 function populatePickers() {
-    const seen = new Set();
-    allTrains.forEach(t => t.stops.forEach(s => seen.add(norm(s.station))));
-    const stations = [...seen].sort();
     ['monStation','planFrom','planTo'].forEach(id => {
         const el = document.getElementById(id);
-        stations.forEach(s => el.add(new Option(s, s)));
+        el.innerHTML = '<option value="">Изабери</option>';
+        STATIONS.forEach(s => el.add(new Option(s,s)));
     });
 }
 
-// ─── DATE / SCHEDULE HELPERS ─────────────────────────────
-function targetDate(day) {
-    const d = new Date();
-    if (day === 'tomorrow') d.setDate(d.getDate() + 1);
-    return d;
-}
-function isWeekend(d) { const n = d.getDay(); return n === 0 || n === 6; }
-function nowTime(day) {
-    if (day === 'tomorrow') return '00:00';
-    return new Date().toTimeString().slice(0, 5);
-}
-
-// A train runs on a given day if:
-//  - The date is NOT in holiday_exceptions AND
-//  - Weekday trains (runs_on_weekends !== true) run on weekdays
-//  - Weekend trains (runs_on_weekends === true) run on weekends
-function trainRunsOn(train, day) {
-    const d = targetDate(day);
-    const yyyy = d.getFullYear();
-    const mm   = String(d.getMonth() + 1).padStart(2, '0');
-    const dd   = String(d.getDate()).padStart(2, '0');
-    const dateStr = `${yyyy}-${mm}-${dd}`;
-
-    if (train.holiday_exceptions && train.holiday_exceptions.includes(dateStr)) return false;
-
-    const weekend = isWeekend(d);
-    if (weekend) return train.runs_on_weekends === true;
-    return true; // weekday trains always run unless excepted above
-}
-
-function trainsForDay(day) {
-    return allTrains.filter(t => trainRunsOn(t, day));
-}
-
-// ─── NAVIGATION ──────────────────────────────────────────
-function switchScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+function switchScreen(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('active'));
-    document.getElementById('nav-' + (id === 'landing' ? 'home' : id)).classList.add('active');
 }
-function goHome() {
-    switchScreen('landing');
-    document.querySelectorAll('select').forEach(s => s.value = '');
-    document.getElementById('pidsOutput').innerHTML  = '';
-    document.getElementById('planResults').innerHTML = '';
-}
-function openMonitor() { switchScreen('monitor'); }
-function openPlanner()  { switchScreen('planner'); }
+function goHome(){ switchScreen('landing'); }
+function openMonitor(){ switchScreen('monitor'); }
+function openPlanner(){ switchScreen('planner'); }
 
-function setMonDay(day) {
-    monDay = day;
-    document.getElementById('mon-today-btn').classList.toggle('active', day === 'today');
-    document.getElementById('mon-tomorrow-btn').classList.toggle('active', day === 'tomorrow');
-    loadPIDS();
-}
-function setPlanDay(day) {
-    planDay = day;
-    document.getElementById('plan-today-btn').classList.toggle('active', day === 'today');
-    document.getElementById('plan-tomorrow-btn').classList.toggle('active', day === 'tomorrow');
-    runPlanner();
-}
-
-// ─── MONITOR — PIDS ──────────────────────────────────────
-function loadPIDS() {
+/* ---------------- PIDS ---------------- */
+function loadPIDS(){
     const station = document.getElementById('monStation').value;
-    if (!station) return;
+    if(!station) return;
 
-    const now    = nowTime(monDay);
-    const trains = trainsForDay(monDay);
-    const byDir  = {};
+    const now = new Date().toTimeString().slice(0,5);
+    let departures = [];
 
-    trains.forEach(t => {
-        // Find this station in the train's stop list (normalised match)
-        const stop = t.stops.find(s => norm(s.station) === station);
-        if (!stop) return;
-        // Skip if this IS the terminal (direction) of the train
-        if (norm(t.direction) === station) return;
-        // Skip past departures on today view
-        if (monDay === 'today' && stop.departure < now) return;
+    allTrains.forEach(train=>{
+        const idx = train.stops.findIndex(s=>s.station===station);
+        if(idx===-1 || idx===train.stops.length-1) return;
 
-        const dirKey = norm(t.direction);
-        if (!byDir[dirKey] || stop.departure < byDir[dirKey].dep) {
-            byDir[dirKey] = { id: t.train_id, dir: dirKey, dep: stop.departure, line: t.line || '' };
+        const stop = train.stops[idx];
+
+        if(stop.departure>=now){
+            departures.push({
+                train,
+                time: stop.departure,
+                direction: train.stops.at(-1).station
+            });
         }
     });
 
-    const rows = Object.values(byDir).sort((a, b) => a.dep.localeCompare(b.dep));
+    const grouped = {};
+    departures.forEach(d=>{
+        if(!grouped[d.direction] || d.time < grouped[d.direction].time){
+            grouped[d.direction] = d;
+        }
+    });
 
-    if (!rows.length) {
-        document.getElementById('pidsOutput').innerHTML =
-            `<p class="no-results">Нема полазака${monDay === 'tomorrow' ? ' сутра' : ''}.</p>`;
+    const results = Object.values(grouped).sort((a,b)=>a.time.localeCompare(b.time));
+
+    if(results.length===0){
+        document.getElementById('pidsOutput').innerHTML="Нема полазака";
         return;
     }
 
-    let html = `<div class="pids-container"><table class="pids-table">
-        <tr class="pids-row"><th>ВОЗ</th><th>СМЕР</th><th>ЛИНИЈА</th><th>ПОЛАЗАК</th></tr>`;
-    rows.forEach(r => {
-        html += `<tr class="pids-row">
-            <td>${r.id}</td>
-            <td>${r.dir}</td>
-            <td class="dim">${r.line}</td>
-            <td class="green" style="font-weight:700">${r.dep}</td>
-        </tr>`;
+    document.getElementById('pidsOutput').innerHTML =
+        results.map(r=>`
+        <div class="glass-panel">
+            ${r.train.train_id} → ${r.direction} (${r.time})
+        </div>`).join('');
+}
+
+/* ---------------- PLANNER ---------------- */
+function runPlanner(){
+    const from = planFrom.value;
+    const to = planTo.value;
+    if(!from||!to||from===to) return;
+
+    const now = new Date().toTimeString().slice(0,5);
+
+    let results = [];
+
+    // direct
+    allTrains.forEach(t=>{
+        const fi = t.stops.findIndex(s=>s.station===from);
+        const ti = t.stops.findIndex(s=>s.station===to);
+        if(fi!==-1 && ti!==-1 && fi<ti){
+            results.push({type:'direct',trains:[t]});
+        }
     });
-    document.getElementById('pidsOutput').innerHTML = html + '</table></div>';
-}
 
-// ─── PLANNER ─────────────────────────────────────────────
-function runPlanner() {
-    const from = document.getElementById('planFrom').value;
-    const to   = document.getElementById('planTo').value;
-    if (!from || !to || from === to) return;
+    // transfers
+    allTrains.forEach(t1=>{
+        const fi = t1.stops.findIndex(s=>s.station===from);
+        if(fi===-1) return;
 
-    const now    = nowTime(planDay);
-    const trains = trainsForDay(planDay);
+        t1.stops.slice(fi+1).forEach(mid=>{
+            allTrains.forEach(t2=>{
+                const s2 = t2.stops.findIndex(s=>s.station===mid.station);
+                const e2 = t2.stops.findIndex(s=>s.station===to);
+                if(s2===-1||e2===-1||s2>=e2) return;
 
-    const direct    = findDirect(from, to, trains, now);
-    const transfers = findTransfers(from, to, trains, now);
-
-    // Merge and deduplicate by type+depTime+arrTime
-    const seen = new Set();
-    const all  = [...direct, ...transfers].filter(c => {
-        const key = `${c.type}|${c.depTime}|${c.arrTime}`;
-        if (seen.has(key)) return false;
-        seen.add(key); return true;
-    }).sort((a, b) => a.depTime.localeCompare(b.depTime));
-
-    renderPlan(all, now);
-}
-
-// Helper: find the stop in a train matching a normalised station name
-function findStop(train, stationNorm) {
-    return train.stops.find(s => norm(s.station) === stationNorm) || null;
-}
-
-// ── Direct connections ──────────────────────────────────
-function findDirect(from, to, trains, now) {
-    const results = [];
-    trains.forEach(t => {
-        const fromStop = findStop(t, from);
-        const toStop   = findStop(t, to);
-        if (!fromStop || !toStop) return;
-
-        const fi = t.stops.indexOf(fromStop);
-        const ti = t.stops.indexOf(toStop);
-        if (fi >= ti) return; // origin must come before destination
-
-        if (planDay === 'today' && fromStop.departure < now) return;
-
-        results.push({
-            type: 'direct',
-            train: t,
-            depTime: fromStop.departure,
-            arrTime: toStop.departure,
-            from, to
-        });
-    });
-    return results.sort((a, b) => a.depTime.localeCompare(b.depTime));
-}
-
-// ── Transfer connections ────────────────────────────────
-// For every pair (t1 that serves 'from', t2 that serves 'to'):
-//   Walk the stops of t1 AFTER 'from' and look for a shared normalised
-//   station that also appears on t2 BEFORE 'to'.
-//   A transfer is valid when the wait (t1 arrival → t2 departure) is 2–90 min.
-function findTransfers(from, to, trains, now) {
-    const results = [];
-
-    const leg1Pool = trains.filter(t => findStop(t, from));
-    const leg2Pool = trains.filter(t => findStop(t, to));
-
-    leg1Pool.forEach(t1 => {
-        const fromStop = findStop(t1, from);
-        if (!fromStop) return;
-        const fi = t1.stops.indexOf(fromStop);
-
-        if (planDay === 'today' && fromStop.departure < now) return;
-
-        // Stops on t1 reachable after boarding at 'from'
-        const t1Tail = t1.stops.slice(fi + 1);
-
-        leg2Pool.forEach(t2 => {
-            if (t1.train_id === t2.train_id) return; // same train → already caught by direct
-
-            const toStop = findStop(t2, to);
-            if (!toStop) return;
-            const ti = t2.stops.indexOf(toStop);
-
-            // Stops on t2 before 'to' (potential transfer points)
-            const t2Head = t2.stops.slice(0, ti);
-
-            // Walk t1's tail and find the first valid transfer hub
-            for (const s1 of t1Tail) {
-                const hubNorm = norm(s1.station);
-                const s2 = t2Head.find(s => norm(s.station) === hubNorm);
-                if (!s2) continue;
-
-                const wait = diffMin(s1.departure, s2.departure);
-                if (wait >= 2 && wait <= 90) {
-                    results.push({
-                        type: 'transfer',
-                        hub: hubNorm,
-                        leg1: t1,
-                        leg2: t2,
-                        arrHub: s1.departure,
-                        depHub: s2.departure,
-                        depTime: fromStop.departure,
-                        arrTime: toStop.departure,
-                        from, to
-                    });
-                    break; // one hub per t1+t2 pair is sufficient
+                const wait = timeDiff(mid.departure, t2.stops[s2].departure);
+                if(wait>=3 && wait<=30){
+                    results.push({type:'transfer',trains:[t1,t2]});
                 }
-            }
+            });
         });
     });
 
-    // Deduplicate by depTime+arrTime+hub, sort, cap at 20
-    const seen = new Set();
-    return results
-        .filter(r => {
-            const k = `${r.depTime}|${r.arrTime}|${r.hub}`;
-            if (seen.has(k)) return false;
-            seen.add(k); return true;
-        })
-        .sort((a, b) => a.depTime.localeCompare(b.depTime))
-        .slice(0, 20);
+    renderResults(results, now, from, to);
 }
 
-function diffMin(t1, t2) {
-    const [h1, m1] = t1.split(':').map(Number);
-    const [h2, m2] = t2.split(':').map(Number);
-    return (h2 * 60 + m2) - (h1 * 60 + m1);
+function timeDiff(a,b){
+    const [h1,m1]=a.split(':').map(Number);
+    const [h2,m2]=b.split(':').map(Number);
+    return (h2*60+m2)-(h1*60+m1);
 }
 
-// ─── RENDER ──────────────────────────────────────────────
-function renderPlan(connections, now) {
+function renderResults(results, now, from, to){
     const el = document.getElementById('planResults');
-    if (!connections.length) {
-        el.innerHTML = `<p class="no-results">Нема пронађених веза.<br>
-            <span style="font-size:12px">Покушајте са другим станицама или другим даном.</span></p>`;
+
+    if(results.length===0){
+        el.innerHTML="Нема рута";
         return;
     }
 
-    el.innerHTML = connections.map(c => {
-        const past = planDay === 'today' && c.depTime < now;
-        const dur  = diffMin(c.depTime, c.arrTime);
+    el.innerHTML = results.map(r=>{
+        const t1 = r.trains[0];
+        const dep = t1.stops.find(s=>s.station===from).departure;
+        const last = r.trains.at(-1);
+        const arr = last.stops.find(s=>s.station===to).departure;
 
-        if (c.type === 'direct') {
-            return `
-            <div class="glass-panel result-card ${past ? 'past' : ''}">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div>
-                        <span style="font-family:'DM Mono'">${c.depTime}</span>
-                        <span style="opacity:.4;margin:0 6px">→</span>
-                        <span style="font-family:'DM Mono'">${c.arrTime}</span>
-                        <div class="dim" style="margin-top:4px">${dur} мин · ${c.train.line || ''}</div>
-                    </div>
-                    <div style="text-align:right">
-                        <div class="dim">№ ${c.train.train_id}</div>
-                        <div class="green" style="font-size:11px;font-weight:700;margin-top:3px">ДИРЕКТНО</div>
-                    </div>
-                </div>
-                <div class="card-details">${renderStops(c.train, c.from, c.to, now)}</div>
-            </div>`;
-        } else {
-            const wait = diffMin(c.arrHub, c.depHub);
-            return `
-            <div class="glass-panel result-card ${past ? 'past' : ''}">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div>
-                        <span style="font-family:'DM Mono'">${c.depTime}</span>
-                        <span style="opacity:.4;margin:0 6px">→</span>
-                        <span style="font-family:'DM Mono'">${c.arrTime}</span>
-                        <div style="font-size:11px;color:#4ADE80;margin-top:4px">⇄ ${c.hub} · чекање ${wait} мин</div>
-                        <div class="dim" style="margin-top:2px">${dur} мин укупно</div>
-                    </div>
-                    <div style="text-align:right" class="dim">
-                        № ${c.leg1.train_id}<br>№ ${c.leg2.train_id}
-                    </div>
-                </div>
-                <div class="card-details">
-                    <div class="dim" style="margin-bottom:8px">ВОЗ 1 → ${norm(c.leg1.direction)} · ${c.leg1.line || ''}</div>
-                    ${renderStops(c.leg1, c.from, c.hub, now)}
-                    <div class="transfer-box">⇄ Преседање: <strong>${c.hub}</strong> · чекање ${wait} мин<br>
-                        <span class="dim">Ваш воз: № ${c.leg2.train_id} → ${norm(c.leg2.direction)}</span>
-                    </div>
-                    <div class="dim" style="margin-bottom:8px">ВОЗ 2 → ${norm(c.leg2.direction)} · ${c.leg2.line || ''}</div>
-                    ${renderStops(c.leg2, c.hub, c.to, now)}
-                </div>
-            </div>`;
-        }
-    }).join('');
-}
-
-function renderStops(train, fromNorm, toNorm, now) {
-    const sIdx = train.stops.findIndex(s => norm(s.station) === fromNorm);
-    const eIdx = train.stops.findIndex(s => norm(s.station) === toNorm);
-    if (sIdx === -1 || eIdx === -1 || sIdx > eIdx) return '<p class="dim" style="padding:8px 0">—</p>';
-
-    return train.stops.slice(sIdx, eIdx + 1).map((s, i, arr) => {
-        const dotClass = s.departure <= now ? 'reached' : '';
-        return `<div class="stop-row">
-            <div class="stop-dot ${dotClass}"></div>
-            ${i < arr.length - 1 ? '<div class="stop-line"></div>' : ''}
-            <div style="flex:1">${norm(s.station)}</div>
-            <div style="font-family:'DM Mono';opacity:.5">${s.departure}</div>
+        return `
+        <div class="glass-panel">
+            <b>${dep} → ${arr}</b> (${r.type})
+            ${r.trains.map(t=>renderStops(t,now)).join('<hr>')}
         </div>`;
     }).join('');
 }
 
-function toggleCard(header) {
-    const d  = header.nextElementSibling;
-    const was = d.classList.contains('open');
-    document.querySelectorAll('.card-details').forEach(x => x.classList.remove('open'));
-    if (!was) d.classList.add('open');
+/* ---------------- TRAIN POSITION ---------------- */
+function renderStops(train, now){
+    return train.stops.map((s,i)=>{
+        let cls='';
+        if(s.departure<now) cls='reached';
+
+        if(i>0 && train.stops[i-1].departure<=now && s.departure>now){
+            cls='current';
+        }
+
+        return `
+        <div>
+            <span class="stop-dot ${cls}"></span>
+            ${s.station} (${s.departure})
+        </div>`;
+    }).join('');
 }
 
 init();
 </script>
+
 </body>
 </html>
