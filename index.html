@@ -1,197 +1,284 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>БГ:воз - Информациони систем</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>БГ:воз</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gsp-red: #E30613;
+            --gsp-blue: #1A3A6B;
+            --glass: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text: #FFFFFF;
+        }
 
-<style>
-:root {
-    --bg: #F2F2F7; --surface: #FFFFFF; --surface2: #E5E5EA;
-    --accent: #1A3A6B; --accent-light: #2563C0;
-    --label: #0A0A0F; --label3: rgba(10,10,15,0.42);
-    --sep: rgba(10,10,15,0.08); --green: #1A8C4E;
-    --radius: 16px; --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-    :root { --bg: #08080F; --surface: #111118; --surface2: #1C1C1E; --label: #F0F0F8; --sep: rgba(240,240,248,0.07); --accent: #2563C0; }
-}
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: 'DM Sans', sans-serif; 
+            background: linear-gradient(160deg, var(--gsp-red) 0%, var(--gsp-blue) 100%);
+            background-attachment: fixed;
+            height: 100vh;
+            color: var(--text);
+            overflow: hidden;
+        }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: var(--sans); background: var(--bg); color: var(--label); padding-bottom: 40px; }
+        /* GLASSMORPHISM */
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+        }
 
-/* NAV */
-.nav-bar { position: sticky; top: 0; z-index: 200; background: var(--accent); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; color: white; }
-.nav-title { font-family: var(--mono); font-size: 18px; font-weight: 500; }
-.nav-time { font-family: var(--mono); opacity: 0.8; }
+        /* NAVIGATION BAR */
+        .nav-bar {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            width: 85%; max-width: 320px; height: 70px;
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 1000;
+        }
+        .nav-icon { cursor: pointer; opacity: 0.4; transition: 0.3s; width: 28px; height: 28px; stroke: white; }
+        .nav-icon.active { opacity: 1; transform: scale(1.1); }
 
-/* LINE SELECTOR */
-.line-selector { display: flex; background: var(--surface2); margin: 16px; padding: 4px; border-radius: 12px; gap: 4px; }
-.line-btn { flex: 1; border: none; padding: 10px; border-radius: 8px; font-family: var(--sans); font-weight: 600; font-size: 13px; cursor: pointer; background: transparent; color: var(--label3); transition: all 0.2s; }
-.line-btn.active { background: var(--surface); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        /* SCREENS */
+        .screen { 
+            display: none; height: 100vh; width: 100%; 
+            padding: 40px 20px 120px; overflow-y: auto; 
+        }
+        .screen.active { display: flex; flex-direction: column; }
 
-.content { padding: 0 16px; max-width: 480px; margin: 0 auto; }
+        /* LANDING PAGE (1/3, 2/3, 3/3 split) */
+        #landing { display: none; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
+        #landing.active { display: flex; }
+        
+        .logo-area { flex: 1; display: flex; align-items: center; font-family: 'DM Mono', monospace; font-size: 38px; letter-spacing: 6px; font-weight: 700; }
+        .menu-area { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+        .menu-btn { padding: 22px; font-size: 18px; font-weight: 700; cursor: pointer; text-align: center; }
+        .qr-area { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; }
+        .qr-holder { background: white; padding: 10px; border-radius: 12px; display: inline-block; margin: 0 auto; }
 
-/* PICKER */
-.picker-card { background: var(--surface); border-radius: var(--radius); margin-bottom: 16px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-.picker-row { display: flex; align-items: center; padding: 12px 16px; gap: 12px; border-bottom: 1px solid var(--sep); }
-.picker-row:last-child { border-bottom: none; }
-.picker-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--label3); margin-bottom: 2px; }
-select { width: 100%; border: none; background: transparent; font-family: var(--sans); font-size: 16px; color: var(--label); outline: none; cursor: pointer; appearance: none; }
+        /* INPUTS */
+        .section-title { font-size: 22px; font-weight: 700; margin-bottom: 25px; text-align: center; letter-spacing: -0.5px; }
+        select {
+            width: 100%; padding: 18px; background: var(--glass); border: 1px solid var(--glass-border);
+            border-radius: 16px; color: white; font-size: 16px; outline: none; margin-bottom: 20px;
+            appearance: none;
+        }
+        option { background: var(--gsp-blue); color: white; }
 
-.swap-btn { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 50%; background: var(--bg); border: 2px solid var(--sep); display: flex; align-items: center; justify-content: center; z-index: 10; }
+        /* PIDS MONITOR */
+        .pids-container { margin-top: 10px; }
+        .pids-table { width: 100%; border-collapse: collapse; font-family: 'DM Mono', monospace; }
+        .pids-row { background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .pids-row th { text-align: left; padding: 12px; font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+        .pids-row td { padding: 18px 12px; font-size: 15px; }
 
-/* NEXT CARD */
-.next-card { background: var(--accent); color: white; border-radius: var(--radius); padding: 20px; margin-bottom: 16px; display: none; position: relative; }
-.next-card.visible { display: block; }
-.next-time { font-family: var(--mono); font-size: 44px; line-height: 1; }
-.next-countdown { position: absolute; right: 20px; top: 20px; text-align: right; font-family: var(--mono); }
+        /* TRIP PLANNER RESULTS */
+        .result-card { margin-bottom: 12px; overflow: hidden; transition: 0.3s; }
+        .card-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .card-details { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); background: rgba(0,0,0,0.15); }
+        .card-details.open { max-height: 2000px; padding: 20px; }
+        .past { opacity: 0.3; filter: grayscale(1); }
 
-/* LIST */
-.dep-list { background: var(--surface); border-radius: var(--radius); overflow: hidden; }
-.dep-row { display: flex; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--sep); }
-.dep-row.past { opacity: 0.35; filter: grayscale(1); }
-.dep-time { font-family: var(--mono); font-size: 18px; font-weight: 500; }
-.dep-dest { font-size: 12px; color: var(--label3); }
-.dep-id { font-family: var(--mono); font-size: 11px; color: var(--label3); background: var(--bg); padding: 2px 6px; border-radius: 4px; align-self: center; }
-</style>
+        .stop-row { display: flex; gap: 15px; font-size: 14px; margin-bottom: 12px; position: relative; align-items: center; }
+        .stop-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); z-index: 2; }
+        .stop-dot.reached { background: #FFFFFF; box-shadow: 0 0 8px #FFF; }
+        .stop-dot.current { background: #4ADE80; box-shadow: 0 0 12px #4ADE80; transform: scale(1.2); }
+        .stop-line { position: absolute; left: 4px; top: 15px; height: 100%; width: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
+    </style>
 </head>
 <body>
 
-<div class="nav-bar">
-    <div class="nav-title">БГ:ВОЗ</div>
-    <div class="nav-time" id="clock">00:00</div>
-</div>
-
-<div class="line-selector">
-    <button class="line-btn active" id="btn-L1" onclick="setLine('BG:voz 1')">ЛИНИЈА 1</button>
-    <button class="line-btn" id="btn-L2" onclick="setLine('BG:voz 2')">ЛИНИЈА 2</button>
-</div>
-
-<div class="content">
-    <div class="picker-card">
-        <div class="picker-row">
-            <div style="flex:1">
-                <div class="picker-label">Полазак</div>
-                <select id="fromStation"><option>Учитавање...</option></select>
-            </div>
+    <div id="landing" class="screen active">
+        <div class="logo-area">БГ:ВОЗ</div>
+        <div class="menu-area">
+            <div class="glass-panel menu-btn" onclick="openMonitor()">СТАНИЧНИ МОНИТОР</div>
+            <div class="glass-panel menu-btn" onclick="openPlanner()">ПЛАНИРАЈ ПУТОВАЊЕ</div>
         </div>
-        <button class="swap-btn" onclick="swap()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 10l5-5 5 5M17 14l-5 5-5-5"/></svg></button>
-        <div class="picker-row">
-            <div style="flex:1">
-                <div class="picker-label">Долазак</div>
-                <select id="toStation"><option>Учитавање...</option></select>
+        <div class="qr-area">
+            <div class="qr-holder">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://mikimisha93.github.io/BG-VOZ/&margin=0" alt="QR Link">
             </div>
+            <p style="font-size: 10px; margin-top: 10px; opacity: 0.6; font-family: 'DM Mono'">mikimisha93.github.io/BG-VOZ/</p>
         </div>
     </div>
 
-    <div id="nextCard" class="next-card">
-        <div class="next-time" id="nxTime">--:--</div>
-        <div style="font-size: 13px; opacity: 0.7; margin-top: 4px;" id="nxDest">---</div>
-        <div class="next-countdown"><span style="font-size: 24px;" id="nxMin">--</span><br><span style="font-size: 9px; opacity: 0.5;">МИН</span></div>
+    <div id="monitor" class="screen">
+        <div class="section-title">СТАНИЧНИ МОНИТОР</div>
+        <select id="monStation" onchange="loadPIDS()"><option value="">Изаберите станицу</option></select>
+        <div id="pidsOutput"></div>
     </div>
 
-    <div id="results" class="dep-list"></div>
-</div>
+    <div id="planner" class="screen">
+        <div class="section-title">ПЛАНИРАЈ ПУТОВАЊЕ</div>
+        <select id="planFrom" onchange="runPlanner()"><option value="">Полазак</option></select>
+        <select id="planTo" onchange="runPlanner()"><option value="">Долазак</option></select>
+        <div id="planResults"></div>
+    </div>
 
-<script>
-const ROUTES = {
-    'BG:voz 1': ['Батајница', 'Камендин', 'Земунско поље', 'Алтина', 'Земун', 'Тошин бунар', 'Нови Београд', 'Београд Центар', 'Карађорђев парк', 'Вуков споменик', 'Панчевачки мост', 'Крњача мост', 'Крњача', 'Себеш', 'Овча'],
-    'BG:voz 2': ['Овча', 'Себеш', 'Крњача', 'Крњача мост', 'Панчевачки мост', 'Вуков споменик', 'Карађорђев парк', 'Београд Центар', 'Нови Београд', 'Тошин бунар', 'Земун', 'Раковица', 'Кнежевац', 'Кијево', 'Ресник', 'Бела река', 'Барајево', 'Барајево Центар', 'Велики Борак', 'Лесковац Колубарски', 'Степојевац', 'Вреоци', 'Лазаревац']
-};
-
-let allTrains = [];
-let currentLine = 'BG:voz 1';
-
-async function init() {
-    try {
-        const res = await fetch('trains.json');
-        allTrains = await res.json();
-        setLine('BG:voz 1');
-        startClock();
-        document.getElementById('fromStation').onchange = update;
-        document.getElementById('toStation').onchange = update;
-    } catch (e) { console.error("Data load failed"); }
-}
-
-function setLine(line) {
-    currentLine = line;
-    document.querySelectorAll('.line-btn').forEach(b => b.classList.toggle('active', b.innerText.includes(line.slice(-1))));
-    
-    const fromS = document.getElementById('fromStation');
-    const toS = document.getElementById('toStation');
-    fromS.innerHTML = toS.innerHTML = '<option value="">Изаберите станицу</option>';
-    
-    const stations = line === 'BG:voz 1' ? ROUTES['BG:voz 1'] : ROUTES['BG:voz 2'];
-    stations.forEach(s => {
-        fromS.add(new Option(s, s));
-        toS.add(new Option(s, s));
-    });
-    update();
-}
-
-function update() {
-    const from = document.getElementById('fromStation').value;
-    const to = document.getElementById('toStation').value;
-    if(!from || !to || from === to) return;
-
-    const now = new Date();
-    const curTime = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-
-    const filtered = allTrains.filter(t => {
-        if(t.line !== currentLine) return false;
-        const fi = t.stops.findIndex(s => s.station === from);
-        const ti = t.stops.findIndex(s => s.station === to);
-        return fi !== -1 && ti !== -1 && fi < ti;
-    }).map(t => {
-        const fs = t.stops.find(s => s.station === from);
-        const ts = t.stops.find(s => s.station === to);
-        return { id: t.train_id, dep: fs.departure, arr: ts.departure, dest: t.direction, past: fs.departure < curTime };
-    }).sort((a,b) => a.dep.localeCompare(b.dep));
-
-    render(filtered, curTime);
-}
-
-function render(trains, nowStr) {
-    const container = document.getElementById('results');
-    const next = trains.find(t => !t.past);
-    
-    if (next) {
-        document.getElementById('nextCard').classList.add('visible');
-        document.getElementById('nxTime').innerText = next.dep;
-        document.getElementById('nxDest').innerText = `Смер: ${next.dest}`;
-        const [nh, nm] = nowStr.split(':').map(Number);
-        const [th, tm] = next.dep.split(':').map(Number);
-        document.getElementById('nxMin').innerText = (th * 60 + tm) - (nh * 60 + nm);
-    } else {
-        document.getElementById('nextCard').classList.remove('visible');
-    }
-
-    container.innerHTML = trains.length ? trains.map(t => `
-        <div class="dep-row ${t.past ? 'past' : ''}">
-            <div>
-                <div class="dep-time">${t.dep}</div>
-                <div class="dep-dest">Стиже у ${t.arr} · ${t.dest}</div>
-            </div>
-            <div class="dep-id">№ ${t.id}</div>
+    <div class="glass-panel nav-bar">
+        <div class="nav-icon active" id="nav-home" onclick="goHome()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </div>
-    `).join('') : '<div style="padding:40px; text-align:center; color:var(--label3)">Нема возова за ову релацију.</div>';
-}
+        <div class="nav-icon" id="nav-monitor" onclick="openMonitor()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="nav-icon" id="nav-planner" onclick="openPlanner()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+    </div>
 
-function swap() {
-    const f = document.getElementById('fromStation'), t = document.getElementById('toStation');
-    [f.value, t.value] = [t.value, f.value];
-    update();
-}
+    <script>
+        const STATIONS_L1 = ['Батајница', 'Камендин', 'Земунско поље', 'Алтина', 'Земун', 'Тошин бунар', 'Нови Београд', 'Београд Центар', 'Карађорђев парк', 'Вуков споменик', 'Панчевачки мост', 'Крњача мост', 'Крњача', 'Себеш', 'Овча'];
+        const STATIONS_L2 = ['Овча', 'Себеш', 'Крњача', 'Крњача мост', 'Панчевачки мост', 'Вуков споменик', 'Карађорђев парк', 'Београд Центар', 'Нови Београд', 'Тошин бунар', 'Земун', 'Раковица', 'Кнежевац', 'Кијево', 'Ресник', 'Бела река', 'Барајево', 'Барајево Центар', 'Велики Борак', 'Лесковац Колубарски', 'Степојевац', 'Вреоци', 'Лазаревац'];
+        const ALL_STATIONS = [...new Set([...STATIONS_L1, ...STATIONS_L2])].sort();
 
-function startClock() {
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString('sr-RS', {hour:'2-digit', minute:'2-digit'});
-    }, 1000);
-}
+        let allTrains = [];
 
-init();
-</script>
+        async function init() {
+            try {
+                const res = await fetch('trains.json');
+                allTrains = await res.json();
+                populatePickers();
+            } catch (e) { console.error("Could not load trains.json"); }
+        }
+
+        function populatePickers() {
+            const picks = ['monStation', 'planFrom', 'planTo'];
+            picks.forEach(p => {
+                const el = document.getElementById(p);
+                ALL_STATIONS.forEach(s => el.add(new Option(s, s)));
+            });
+        }
+
+        function switchScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('active'));
+            document.getElementById('nav-' + (id === 'landing' ? 'home' : id)).classList.add('active');
+        }
+
+        function goHome() {
+            switchScreen('landing');
+            document.querySelectorAll('select').forEach(s => s.value = "");
+            document.getElementById('pidsOutput').innerHTML = "";
+            document.getElementById('planResults').innerHTML = "";
+        }
+
+        function openMonitor() { switchScreen('monitor'); }
+        function openPlanner() { switchScreen('planner'); }
+
+        // MONITOR PIDS LOGIC
+        function loadPIDS() {
+            const station = document.getElementById('monStation').value;
+            if(!station) return;
+            const now = new Date().toTimeString().slice(0,5);
+            
+            const directions = [...new Set(allTrains.map(t => t.direction))];
+            let results = [];
+
+            directions.forEach(dir => {
+                // Rule: If station is the end destination, exclude
+                if (station === dir) return;
+
+                const next = allTrains
+                    .filter(t => t.direction === dir)
+                    .filter(t => t.stops.some(s => s.station === station && s.departure >= now))
+                    .sort((a,b) => {
+                        const tA = a.stops.find(s => s.station === station).departure;
+                        const tB = b.stops.find(s => s.station === station).departure;
+                        return tA.localeCompare(tB);
+                    })[0];
+
+                if(next) results.push({
+                    id: next.train_id,
+                    dir: next.direction,
+                    time: next.stops.find(s => s.station === station).departure
+                });
+            });
+
+            if(results.length === 0) {
+                document.getElementById('pidsOutput').innerHTML = `<p style="text-align:center; margin-top:20px; opacity:0.5;">Нема планираних полазака.</p>`;
+                return;
+            }
+
+            let html = `<div class="pids-container"><table class="pids-table"><tr class="pids-row"><th>ВОЗ</th><th>СМЕР</th><th>ВРЕМЕ</th></tr>`;
+            results.forEach(r => {
+                html += `<tr class="pids-row"><td>${r.id}</td><td>${r.dir}</td><td style="color:#4ADE80; font-weight:700;">${r.time}</td></tr>`;
+            });
+            document.getElementById('pidsOutput').innerHTML = html + `</table></div>`;
+        }
+
+        // PLANNER LOGIC
+        function runPlanner() {
+            const from = document.getElementById('planFrom').value;
+            const to = document.getElementById('toStation')?.value || document.getElementById('planTo').value;
+            if(!from || !to || from === to) return;
+
+            const now = new Date().toTimeString().slice(0,5);
+            
+            const direct = allTrains.filter(t => {
+                const fi = t.stops.findIndex(s => s.station === from);
+                const ti = t.stops.findIndex(s => s.station === to);
+                return fi !== -1 && ti !== -1 && fi < ti;
+            });
+
+            renderResults(direct, now, from, to);
+        }
+
+        function renderResults(trains, now, from, to) {
+            const container = document.getElementById('planResults');
+            if(trains.length === 0) {
+                container.innerHTML = `<p style="text-align:center; margin-top:20px; opacity:0.5;">Нема директних возова. Проверите преседања на Прокопу.</p>`;
+                return;
+            }
+
+            container.innerHTML = trains.map(t => {
+                const depTime = t.stops.find(s => s.station === from).departure;
+                const arrTime = t.stops.find(s => s.station === to).departure;
+                const isPast = depTime < now;
+                
+                return `
+                <div class="glass-panel result-card ${isPast ? 'past' : ''}">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-family:'DM Mono'; font-size:18px;">${depTime}</span> 
+                            <span style="opacity:0.3;">→</span> 
+                            <span style="font-family:'DM Mono'; font-size:18px; opacity:0.8;">${arrTime}</span>
+                        </div>
+                        <div style="font-size:11px; opacity:0.5; font-family:'DM Mono'">№ ${t.train_id}</div>
+                    </div>
+                    <div class="card-details">
+                        ${t.stops.map((s, idx) => {
+                            let dotClass = '';
+                            if (s.departure < now) dotClass = 'reached';
+                            if (idx > 0 && t.stops[idx-1].departure <= now && s.departure > now) dotClass = 'current';
+                            
+                            return `
+                            <div class="stop-row">
+                                <div class="stop-dot ${dotClass}"></div>
+                                ${idx < t.stops.length - 1 ? '<div class="stop-line"></div>' : ''}
+                                <div style="flex:1; ${s.station === from || s.station === to ? 'font-weight:700' : 'opacity:0.7'}">${s.station}</div>
+                                <div style="font-family: 'DM Mono'; font-size:12px; opacity: 0.5;">${s.departure}</div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function toggleCard(header) {
+            const details = header.nextElementSibling;
+            const isOpen = details.classList.contains('open');
+            document.querySelectorAll('.card-details').forEach(d => d.classList.remove('open'));
+            if(!isOpen) details.classList.add('open');
+        }
+
+        init();
+    </script>
 </body>
 </html>
