@@ -1,47 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Train PWA</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Train App</title>
 
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div id="app" class="bg-animated-gradient">
 
-    <!-- Screens -->
-    <div id="home" class="screen active">
-      <h1>Train App</h1>
-      <button onclick="showScreen('pids')">Station Board</button>
-      <button onclick="showScreen('planner')">Planner</button>
-    </div>
+  <div class="bg-animated-gradient">
 
-    <div id="pids" class="screen">
-      <h2>Station Board</h2>
+    <div class="container">
+      <h1>🚆 Train Departures</h1>
+
       <select id="stationSelect"></select>
-      <div id="departures"></div>
-    </div>
 
-    <div id="planner" class="screen">
-      <h2>Route Planner</h2>
-      <select id="from"></select>
-      <select id="to"></select>
-      <button onclick="planRoute()">Search</button>
-      <div id="results"></div>
+      <div id="output"></div>
     </div>
-
-    <!-- Navigation -->
-    <nav>
-      <button onclick="showScreen('home')">Home</button>
-      <button onclick="showScreen('pids')">PIDS</button>
-      <button onclick="showScreen('planner')">Planner</button>
-    </nav>
 
   </div>
 
