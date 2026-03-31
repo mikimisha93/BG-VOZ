@@ -29,29 +29,73 @@ body {
   100% { background-position: 0% }
 }
 
-/* UI */
+/* CONTAINER */
 .container {
-  max-width: 500px;
+  max-width: 600px;
   margin: auto;
 }
 
+/* HEADER */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* SELECT */
 select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 20px;
   border-radius: 10px;
+  border: none;
+  font-size: 16px;
 }
 
-.card {
+/* BOARD */
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ROW */
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px;
+  border-radius: 12px;
+
   background: rgba(0,0,0,0.5);
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
+  backdrop-filter: blur(10px);
 }
 
+/* LEFT SIDE */
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+/* LINE */
+.line {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* DESTINATION */
+.dest {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* TIME */
 .time {
+  font-size: 22px;
+  font-weight: bold;
   color: #ffcc00;
   font-family: monospace;
+  text-shadow: 0 0 8px rgba(255,204,0,0.6);
 }
 </style>
 </head>
