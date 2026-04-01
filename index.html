@@ -270,7 +270,11 @@ init();
                 renderResults(false); 
             } 
         }
-
+        function diffMin(t1, t2) {
+    const [h1,m1] = t1.split(':').map(Number);
+    const [h2,m2] = t2.split(':').map(Number);
+    return (h2*60+m2)-(h1*60+m1);
+}
         function renderResults(showPast) {
     const container = document.getElementById('plan-results');
     const from = document.getElementById('od-picker').value;
@@ -321,12 +325,6 @@ init();
             }
         });
     });
-
-    function diffMin(t1, t2) {
-        const [h1,m1] = t1.split(':').map(Number);
-        const [h2,m2] = t2.split(':').map(Number);
-        return (h2*60+m2)-(h1*60+m1);
-    }
 
     // Merge and deduplicate
     const seen = new Set();
