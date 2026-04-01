@@ -204,6 +204,46 @@ option { background:#111827; color:white; }
 .card-dep { font-family:var(--mono); font-size:1.35rem; font-weight:700; color:var(--yellow); }
 .card-right { padding-left:16px; }
 .card-dest { font-size:1.1rem; font-weight:700; }
+/* 1. This hides the link until the JavaScript turns it on */
+.prev-link {
+    display: none; 
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.75rem;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+}
+
+/* 2. This hides the train details (itinerary) so cards start small */
+.itinerary {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* 3. This opens the card when you click it */
+.result-card.expanded .itinerary {
+    max-height: 800px; 
+    border-top: 1px solid var(--glass-border);
+}
+
+/* 4. This styles the dots inside the expanded cards */
+.itin-stop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 20px;
+}
+.stop-dot { width: 8px; height: 8px; border-radius: 50%; }
+.past-dot { background: var(--l1); opacity: 0.5; }
+.current-dot { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+.future-dot { background: var(--green); 
+    
+}
 
 /* ── NAV BAR ── */
 .nav-bar {
@@ -537,10 +577,19 @@ function swapStations() {
 
 function onPickersChange() {
     const from = document.getElementById('plan-from').value;
-    const to   = document.getElementById('plan-to').value;
-    if (!from || !to || from === to) return;
-    document.getElementById('prev-link').style.display = 'block';
-    renderPlanResults(false);
+    const to = document.getElementById('plan-to').value;
+    
+    // If we have both stations and they aren't the same...
+    if (from && to && from !== to) {
+        // SHOW the link
+        document.getElementById('prev-link').style.display = 'block';
+        // RUN the search
+        renderPlanResults(false);
+    } else {
+        // HIDE the link if selection is cleared
+        document.getElementById('prev-link').style.display = 'none';
+        document.getElementById('plan-results').innerHTML = '';
+    }
 }
 
 // ── Find direct trains on selected line ──
