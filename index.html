@@ -1,56 +1,372 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>БГ:воз</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-blur: blur(25px);
+            --accent-yellow: #FFD700;
+            --accent-green: #4ade80;
+            --accent-red: #ff4b4b;
+            --text-main: #FFFFFF;
+            --font-ios: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
 
-<title>BG VOZ</title>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-<style>
+        body {
+            font-family: var(--font-ios);
+            color: var(--text-main);
+            height: 100vh; width: 100vw; overflow: hidden;
+            background: linear-gradient(-45deg, #050a14, #3a0a0a, #0a1428, #140514);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .glass { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); }
+
+        /* --- SCREEN MANAGEMENT --- */
+        .page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s; 
+            padding-bottom: 120px;
+            visibility: hidden;
+        }
+
+        #landing-page { z-index: 10; opacity: 1; visibility: visible; }
+        #monitor-page, #plan-page { z-index: 20; transform: translateY(100%); }
+        
+        .active-up { transform: translateY(0) !important; visibility: visible !important; }
+        .fade-out { opacity: 0; pointer-events: none; }
+
+        /* --- LANDING --- */
+        .top-section { margin-top: 8vh; text-align: center; flex-shrink: 0; }
+        .modern-train-icon { width: 48px; height: 48px; margin-bottom: 10px; }
+        h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; text-transform: uppercase; }
+        .center-section { width: 100%; padding: 30px 32px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; }
+        .btn-large { width: 100%; padding: 22px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.08em; color: white; text-align: center; border-radius: 20px; cursor: pointer; transition: transform 0.1s; border: 1px solid var(--glass-border); background: var(--glass-bg); }
+        .btn-large:active { transform: scale(0.96); }
+
+        .qr-container { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 10px; padding-bottom: 40px; }
+        .qr-card { padding: 12px; border-radius: 22px; background: rgba(255, 255, 255, 0.05); }
+        .qr-card img { width: 120px; height: 120px; border-radius: 12px; background: white; padding: 8px; display: block; }
+        .share-text { font-size: 0.85rem; opacity: 0.6; cursor: pointer; padding: 5px 15px; }
+
+        /* --- TITLES & SELECTS --- */
+        .monitor-title-spacer { margin-top: 8vh; width: 100%; text-align: center; padding: 0 25px; margin-bottom: 20px; }
+        .monitor-title-spacer h2 { font-size: 1.4rem; font-weight: 600; opacity: 0.9; }
+        .styled-select { width: 100%; padding: 18px; border-radius: 15px; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; font-size: 1rem; outline: none; appearance: none; }
+
+        /* --- PIDS MONITOR --- */
+        .pids-display { width: calc(100% - 30px); background: #000; border-radius: 8px; border: 2px solid #333; padding: 12px 0; display: flex; flex-direction: column; }
+        .pids-header { display: grid; grid-template-columns: 70px 1fr 70px; padding: 0 15px 8px 15px; border-bottom: 1px solid #333; font-size: 0.75rem; font-weight: bold; color: #FFF; text-transform: uppercase; letter-spacing: 1px; }
+        .pids-header span:nth-child(2) { text-align: center; }
+        .pids-header span:nth-child(3) { text-align: right; }
+        .pids-row { display: grid; grid-template-columns: 70px 1fr 70px; padding: 12px 15px; border-bottom: 1px solid #111; font-family: var(--font-mono); align-items: baseline; }
+        .pids-row .pids-voz { color: #FFF; font-size: 0.8rem; }
+        .pids-row .pids-smer { color: var(--accent-yellow); font-size: 1.05rem; text-align: center; font-weight: bold; }
+        .pids-row .pids-vreme { color: var(--accent-yellow); font-size: 1.05rem; text-align: right; font-weight: bold; }
+
+        /* --- PLAN PAGE --- */
+        .plan-input-container { display: flex; align-items: center; width: 100%; padding: 0 25px; gap: 15px; margin-bottom: 10px; }
+        .picker-stack { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+        .switch-btn { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: 50%; font-size: 1.4rem; cursor: pointer; border: 1px solid var(--glass-border); transition: 0.2s; }
+        .switch-btn:active { transform: rotate(180deg) scale(0.9); }
+        .prethodno-link { font-size: 0.8rem; color: var(--accent-yellow); margin: 5px 0 15px; cursor: pointer; display: none; text-align: center; width: 100%; }
+        
+        /* --- PLAN RESULTS (FIXED ALIGNMENT) --- */
+        .results-container { width: calc(100% - 40px); flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
+        .result-card { border-radius: 18px; overflow: hidden; width: 100%; transition: 0.3s; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); }
+        .result-main { padding: 20px; display: grid; grid-template-columns: 85px 1fr; align-items: center; cursor: pointer; }
+        
+        .res-left { display: flex; flex-direction: column; gap: 2px; border-right: 1px solid rgba(255,255,255,0.1); }
+        .res-center { padding-left: 20px; display: flex; flex-direction: column; gap: 2px; align-items: flex-start; text-align: left; }
+        
+        .res-time { font-size: 1.4rem; font-weight: 800; color: var(--accent-yellow); font-family: var(--font-mono); line-height: 1; }
+        .res-train-no { font-size: 0.75rem; font-family: var(--font-mono); opacity: 0.6; color: #FFF; }
+        
+        .res-dest-name { font-size: 1.3rem; font-weight: 700; color: #FFF; letter-spacing: -0.02em; line-height: 1.1; }
+        .res-route-info { font-size: 0.85rem; color: #FFF; opacity: 0.7; }
+
+        .itinerary { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: rgba(0,0,0,0.2); }
+        .result-card.expanded .itinerary { max-height: 600px; padding: 20px; }
+        .itin-step { position: relative; padding-left: 25px; padding-bottom: 15px; border-left: 2px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; font-size: 0.9rem; }
+        .itin-step::before { content: ''; position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #444; }
+        .transfer-row {
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    border-left: 3px solid var(--accent-yellow);
+}
+.wait-time {
+    font-size: 0.8rem;
+    color: var(--accent-green);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+        /* --- NAV BAR --- */
+        .nav-bar { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); width: calc(100% - 60px); max-width: 360px; height: 70px; display: flex; justify-content: space-around; align-items: center; border-radius: 35px; z-index: 9999; }
+        .nav-item { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .nav-item svg { width: 26px; height: 26px; fill: white; opacity: 0.4; transition: 0.3s; pointer-events: none; }
+        .nav-item.active svg { opacity: 1; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
+    </style>
+</head>
 <body>
 
-<div class="bg">
-
-  <!-- LANDING SCREEN -->
-  <div id="landing" class="screen active">
-
-    <!-- TOP -->
-    <div class="top">
-      <div class="train-icon">🚆</div>
-      <div class="title">БГ:воз</div>
+    <div id="landing-page" class="page">
+        <header class="top-section">
+            <svg class="modern-train-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M7 22 L7 18 M17 22 L17 18" opacity="0.5"/><rect x="5" y="2" width="14" height="16" rx="3" /><line x1="5" y1="12" x2="19" y2="12" /><circle cx="9" cy="15" r="1" fill="white" /><circle cx="15" cy="15" r="1" fill="white" /></svg>
+            <h1>БГ:воз</h1>
+        </header>
+        <main class="center-section">
+            <div class="btn-large" onclick="openMonitor()">СТАНИЧНИ МОНИТОР</div>
+            <div class="btn-large" onclick="openPlan()">ПЛАНИРАЈ ПУТОВАЊЕ</div>
+        </main>
+        <div class="qr-container">
+            <div class="glass qr-card"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://mikimisha93.github.io/BG-VOZ/&color=000&margin=5" alt="QR"></div>
+            <div class="share-text" onclick="copyUrl()">Подели линк</div>
+        </div>
     </div>
 
-    <!-- CENTER -->
-    <div class="center">
-      <button class="main-btn">СТАНИЧНИ МОНИТОР</button>
-      <button class="main-btn">ПЛАНИРАЈ ПУТОВАЊЕ</button>
+    <div id="monitor-page" class="page glass">
+        <div class="monitor-title-spacer"><h2>Станични монитор</h2></div>
+        <div style="width: 100%; padding: 0 25px; margin-bottom: 25px;">
+            <select id="station-picker" class="styled-select" onchange="generatePIDS(this.value)">
+                <option value="" disabled selected>Изаберите станицу...</option>
+                <option value="vukov">Вуков Споменик</option>
+                <option value="prokop">Прокоп</option>
+                <option value="nbg">Нови Београд</option>
+                <option value="zemun">Земун</option>
+            </select>
+        </div>
+        <div id="pids-container" class="pids-display" style="display: none; margin: 0 15px;">
+            <div class="pids-header"><span>Voz</span><span>Smer</span><span>Vreme</span></div>
+            <div id="pids-body"></div>
+        </div>
     </div>
 
-    <!-- BOTTOM -->
-    <div class="bottom">
-      <div class="qr-card">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://mikimisha93.github.io/BG-VOZ/" />
-        <button onclick="copyLink()">Подели</button>
-      </div>
+    <div id="plan-page" class="page glass">
+        <div class="monitor-title-spacer"><h2>Планирај путовање</h2></div>
+        <div class="plan-input-container">
+            <div class="picker-stack">
+                <select id="od-picker" class="styled-select" onchange="checkPlan()"><option value="" disabled selected>Од:</option><option>Земун</option><option>НБГ</option><option>Прокоп</option><option>Вуков Споменик</option></select>
+                <select id="do-picker" class="styled-select" onchange="checkPlan()"><option value="" disabled selected>До:</option><option>Земун</option><option>НБГ</option><option>Прокоп</option><option>Вуков Споменик</option></select>
+            </div>
+            <div class="switch-btn" onclick="swapPlan()">⇄</div>
+        </div>
+        <div id="prethodno" class="prethodno-link" onclick="renderResults(true)">Прикажи претходне поласке</div>
+        <div id="plan-results" class="results-container"></div>
     </div>
 
-  </div>
-
-  <!-- NAVBAR -->
-  <div class="navbar">
-    <div>🏠</div>
-    <div>⏱</div>
-    <div>🧭</div>
-  </div>
-
-</div>
+    <nav class="nav-bar glass">
+        <div id="nav-home" class="nav-item active" onclick="handleNav('home', this)"><svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg></div>
+        <div id="nav-clock" class="nav-item" onclick="handleNav('monitor', this)"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg></div>
+        <div id="nav-map" class="nav-item" onclick="handleNav('plan', this)"><svg viewBox="0 0 24 24"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z" /></svg></div>
+    </nav>
 
 <script>
-function copyLink() {
-  navigator.clipboard.writeText("https://mikimisha93.github.io/BG-VOZ/");
-  alert("Линк копиран!");
-}
-</script>
+    // Global variable to store your trains
+    let BG_VOZ_DATABASE = [];
 
+    // 1. DATA LOADING - Runs immediately
+    async function loadData() {
+        try {
+            // Fetching your trains.json
+            const response = await fetch('trains.json');
+            if (!response.ok) throw new Error("JSON not found");
+            BG_VOZ_DATABASE = await response.json();
+            console.log("Database Loaded: " + BG_VOZ_DATABASE.length + " trains");
+        } catch (err) {
+            console.error("Load failed:", err);
+            // Fallback: If fetch fails (like opening file locally), buttons still work but show error
+        }
+    }
+    loadData();
+
+    // 2. NAVIGATION - Always clickable
+    function handleNav(dest, el) {
+        // Reset pages
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active-up'));
+        document.getElementById('landing-page').classList.remove('fade-out');
+
+        // Reset nav icons
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        if (el) el.classList.add('active');
+
+        // Switch Screen
+        if (dest === 'monitor') {
+            document.getElementById('monitor-page').classList.add('active-up');
+            document.getElementById('landing-page').classList.add('fade-out');
+        } else if (dest === 'plan') {
+            document.getElementById('plan-page').classList.add('active-up');
+            document.getElementById('landing-page').classList.add('fade-out');
+        }
+    }
+
+    // 3. MONITOR LOGIC
+    function generatePIDS(stationName) {
+        const body = document.getElementById('pids-body');
+        const container = document.getElementById('pids-container');
+        container.style.display = 'flex';
+        
+        if (BG_VOZ_DATABASE.length === 0) {
+            body.innerHTML = "<div class='pids-row'>Utitavanje podataka...</div>";
+            return;
+        }
+
+        const matches = BG_VOZ_DATABASE.filter(t => t.stops.some(s => s.station === stationName));
+        
+        if (matches.length === 0) {
+            body.innerHTML = "<div class='pids-row'>Nema planiranih polazaka.</div>";
+            return;
+        }
+
+        body.innerHTML = matches.slice(0, 12).map(t => {
+            const stop = t.stops.find(s => s.station === stationName);
+            return `
+                <div class="pids-row">
+                    <span class="pids-voz">${t.train_id}</span>
+                    <span class="pids-smer">${t.direction.toUpperCase()}</span>
+                    <span class="pids-vreme">${stop.departure}</span>
+                </div>`;
+        }).join('');
+    }
+
+    // 4. PLANNER LOGIC
+    function checkPlan() { 
+        const od = document.getElementById('od-picker').value; 
+        const doo = document.getElementById('do-picker').value; 
+        if (od && doo) renderResults(); 
+    }
+
+    function renderResults() {
+        const container = document.getElementById('plan-results');
+        const odVal = document.getElementById('od-picker').value;
+        const doVal = document.getElementById('do-picker').value;
+        container.innerHTML = "";
+
+        if (BG_VOZ_DATABASE.length === 0) {
+            container.innerHTML = "Učitavanje baze...";
+            return;
+        }
+
+        // Direct search
+        let direct = BG_VOZ_DATABASE.filter(t => {
+            const sIdx = t.stops.findIndex(s => s.station === odVal);
+            const eIdx = t.stops.findIndex(s => s.station === doVal);
+            return sIdx !== -1 && eIdx !== -1 && sIdx < eIdx;
+        });
+
+        if (direct.length > 0) {
+            direct.forEach(t => displayCard(container, t, odVal, doVal));
+        } else {
+            // Transfer Logic
+            findTransfers(container, odVal, doVal);
+        }
+    }
+
+    function findTransfers(container, start, end) {
+        const junction = "Карађорђев парк"; // Junction station from your JSON
+        
+        let leg1 = BG_VOZ_DATABASE.filter(t => {
+            const sIdx = t.stops.findIndex(s => s.station === start);
+            const jIdx = t.stops.findIndex(s => s.station === junction);
+            return sIdx !== -1 && jIdx !== -1 && sIdx < jIdx;
+        });
+
+        let leg2 = BG_VOZ_DATABASE.filter(t => {
+            const jIdx = t.stops.findIndex(s => s.station === junction);
+            const eIdx = t.stops.findIndex(s => s.station === end);
+            return jIdx !== -1 && eIdx !== -1 && jIdx < eIdx;
+        });
+
+        leg1.forEach(t1 => {
+            const arrJunct = t1.stops.find(s => s.station === junction).departure;
+            const t2 = leg2.find(cand => {
+                const depJunct = cand.stops.find(s => s.station === junction).departure;
+                const wait = calcWait(arrJunct, depJunct);
+                return wait >= 3 && wait <= 60;
+            });
+            if (t2) displayTransferCard(container, t1, t2, start, junction, end);
+        });
+
+        if (container.innerHTML === "") {
+            container.innerHTML = "<div style='text-align:center; padding:20px;'>Nema direktnih polazaka ni presedanja.</div>";
+        }
+    }
+
+    function displayCard(container, train, start, end) {
+        const depTime = train.stops.find(s => s.station === start).departure;
+        const sIdx = train.stops.findIndex(s => s.station === start);
+        const eIdx = train.stops.findIndex(s => s.station === end);
+        const itin = train.stops.slice(sIdx, eIdx + 1);
+
+        const card = document.createElement('div');
+        card.className = "result-card";
+        card.onclick = function() { this.classList.toggle('expanded'); };
+        card.innerHTML = `
+            <div class="result-main">
+                <div class="res-left"><div class="res-time">${depTime}</div><div class="res-train-no">${train.train_id}</div></div>
+                <div class="res-center">
+                    <div class="res-dest-name">${train.direction.toUpperCase()}</div>
+                    <div class="res-route-info">${start} — ${end}</div>
+                </div>
+            </div>
+            <div class="itinerary">
+                ${itin.map(s => `<div class="itin-step"><span>${s.station}</span><span>${s.departure}</span></div>`).join('')}
+            </div>`;
+        container.appendChild(card);
+    }
+
+    function displayTransferCard(container, t1, t2, start, mid, end) {
+        const dep1 = t1.stops.find(s => s.station === start).departure;
+        const arrM = t1.stops.find(s => s.station === mid).departure;
+        const depM = t2.stops.find(s => s.station === mid).departure;
+        const arrE = t2.stops.find(s => s.station === end).departure;
+
+        const card = document.createElement('div');
+        card.className = "result-card";
+        card.onclick = function() { this.classList.toggle('expanded'); };
+        card.innerHTML = `
+            <div class="result-main">
+                <div class="res-left"><div class="res-time">${dep1}</div><div class="res-train-no">MIX</div></div>
+                <div class="res-center">
+                    <div class="res-dest-name">${end.toUpperCase()} <span style="background:var(--accent-red); padding:2px 4px; border-radius:4px; font-size:0.6rem;">PRESEDANJE</span></div>
+                    <div class="res-route-info">${start} ➔ ${mid} ➔ ${end}</div>
+                </div>
+            </div>
+            <div class="itinerary">
+                <div style="padding:10px; color:var(--accent-yellow); font-size:0.8rem; text-align:center;">Sačekajte ${calcWait(arrM, depM)} min u stanici ${mid}</div>
+                <div class="itin-step"><span>${start}</span><span>${dep1}</span></div>
+                <div class="itin-step"><span>${mid} (Dolazak)</span><span>${arrM}</span></div>
+                <div class="itin-step"><span>${mid} (Odlazak)</span><span>${depM}</span></div>
+                <div class="itin-step"><span>${end}</span><span>${arrE}</span></div>
+            </div>`;
+        container.appendChild(card);
+    }
+
+    function calcWait(s, e) {
+        const [h1, m1] = s.split(':').map(Number);
+        const [h2, m2] = e.split(':').map(Number);
+        return (h2 * 60 + m2) - (h1 * 60 + m1);
+    }
+
+    function swapPlan() {
+        const od = document.getElementById('od-picker');
+        const doo = document.getElementById('do-picker');
+        const temp = od.value; od.value = doo.value; doo.value = temp;
+        checkPlan();
+    }
+</script>
 </body>
 </html>
