@@ -32,7 +32,6 @@
 
         .glass { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); }
 
-        /* --- SCREEN MANAGEMENT --- */
         .page {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center;
@@ -47,7 +46,6 @@
         .active-up { transform: translateY(0) !important; visibility: visible !important; }
         .fade-out { opacity: 0; pointer-events: none; }
 
-        /* --- LANDING --- */
         .top-section { margin-top: 8vh; text-align: center; flex-shrink: 0; }
         .modern-train-icon { width: 48px; height: 48px; margin-bottom: 10px; }
         h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; text-transform: uppercase; }
@@ -60,12 +58,10 @@
         .qr-card img { width: 120px; height: 120px; border-radius: 12px; background: white; padding: 8px; display: block; }
         .share-text { font-size: 0.85rem; opacity: 0.6; cursor: pointer; padding: 5px 15px; }
 
-        /* --- TITLES & SELECTS --- */
         .monitor-title-spacer { margin-top: 8vh; width: 100%; text-align: center; padding: 0 25px; margin-bottom: 20px; }
         .monitor-title-spacer h2 { font-size: 1.4rem; font-weight: 600; opacity: 0.9; }
-        .styled-select { width: 100%; padding: 18px; border-radius: 15px; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; font-size: 1rem; outline: none; appearance: none; }
+        .styled-select { width: 100%; padding: 18px; border-radius: 15px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: white; font-size: 1rem; outline: none; appearance: none; }
 
-        /* --- PIDS MONITOR --- */
         .pids-display { width: calc(100% - 30px); background: #000; border-radius: 8px; border: 2px solid #333; padding: 12px 0; display: flex; flex-direction: column; }
         .pids-header { display: grid; grid-template-columns: 70px 1fr 70px; padding: 0 15px 8px 15px; border-bottom: 1px solid #333; font-size: 0.75rem; font-weight: bold; color: #FFF; text-transform: uppercase; letter-spacing: 1px; }
         .pids-header span:nth-child(2) { text-align: center; }
@@ -75,46 +71,25 @@
         .pids-row .pids-smer { color: var(--accent-yellow); font-size: 1.05rem; text-align: center; font-weight: bold; }
         .pids-row .pids-vreme { color: var(--accent-yellow); font-size: 1.05rem; text-align: right; font-weight: bold; }
 
-        /* --- PLAN PAGE --- */
         .plan-input-container { display: flex; align-items: center; width: 100%; padding: 0 25px; gap: 15px; margin-bottom: 10px; }
         .picker-stack { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
         .switch-btn { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: 50%; font-size: 1.4rem; cursor: pointer; border: 1px solid var(--glass-border); transition: 0.2s; }
-        .switch-btn:active { transform: rotate(180deg) scale(0.9); }
-        .prethodno-link { font-size: 0.8rem; color: var(--accent-yellow); margin: 5px 0 15px; cursor: pointer; display: none; text-align: center; width: 100%; }
         
-        /* --- PLAN RESULTS (FIXED ALIGNMENT) --- */
         .results-container { width: calc(100% - 40px); flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
         .result-card { border-radius: 18px; overflow: hidden; width: 100%; transition: 0.3s; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); }
         .result-main { padding: 20px; display: grid; grid-template-columns: 85px 1fr; align-items: center; cursor: pointer; }
-        
         .res-left { display: flex; flex-direction: column; gap: 2px; border-right: 1px solid rgba(255,255,255,0.1); }
         .res-center { padding-left: 20px; display: flex; flex-direction: column; gap: 2px; align-items: flex-start; text-align: left; }
-        
         .res-time { font-size: 1.4rem; font-weight: 800; color: var(--accent-yellow); font-family: var(--font-mono); line-height: 1; }
         .res-train-no { font-size: 0.75rem; font-family: var(--font-mono); opacity: 0.6; color: #FFF; }
-        
-        .res-dest-name { font-size: 1.3rem; font-weight: 700; color: #FFF; letter-spacing: -0.02em; line-height: 1.1; }
-        .res-route-info { font-size: 0.85rem; color: #FFF; opacity: 0.7; }
+        .res-dest-name { font-size: 1.1rem; font-weight: 700; color: #FFF; letter-spacing: -0.02em; line-height: 1.1; }
+        .res-route-info { font-size: 0.8rem; color: #FFF; opacity: 0.7; }
 
         .itinerary { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: rgba(0,0,0,0.2); }
         .result-card.expanded .itinerary { max-height: 600px; padding: 20px; }
         .itin-step { position: relative; padding-left: 25px; padding-bottom: 15px; border-left: 2px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; font-size: 0.9rem; }
         .itin-step::before { content: ''; position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #444; }
-        .transfer-row {
-    background: rgba(255, 215, 0, 0.1);
-    border-radius: 8px;
-    padding: 10px;
-    margin: 10px 0;
-    border-left: 3px solid var(--accent-yellow);
-}
-.wait-time {
-    font-size: 0.8rem;
-    color: var(--accent-green);
-    font-weight: bold;
-    margin-bottom: 5px;
-}
 
-        /* --- NAV BAR --- */
         .nav-bar { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); width: calc(100% - 60px); max-width: 360px; height: 70px; display: flex; justify-content: space-around; align-items: center; border-radius: 35px; z-index: 9999; }
         .nav-item { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .nav-item svg { width: 26px; height: 26px; fill: white; opacity: 0.4; transition: 0.3s; pointer-events: none; }
@@ -129,8 +104,8 @@
             <h1>БГ:воз</h1>
         </header>
         <main class="center-section">
-            <div class="btn-large" onclick="openMonitor()">СТАНИЧНИ МОНИТОР</div>
-            <div class="btn-large" onclick="openPlan()">ПЛАНИРАЈ ПУТОВАЊЕ</div>
+            <div class="btn-large" onclick="handleNav('monitor', document.getElementById('nav-clock'))">СТАНИЧНИ МОНИТОР</div>
+            <div class="btn-large" onclick="handleNav('plan', document.getElementById('nav-map'))">ПЛАНИРАЈ ПУТОВАЊЕ</div>
         </main>
         <div class="qr-container">
             <div class="glass qr-card"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://mikimisha93.github.io/BG-VOZ/&color=000&margin=5" alt="QR"></div>
@@ -143,10 +118,15 @@
         <div style="width: 100%; padding: 0 25px; margin-bottom: 25px;">
             <select id="station-picker" class="styled-select" onchange="generatePIDS(this.value)">
                 <option value="" disabled selected>Изаберите станицу...</option>
-                <option value="vukov">Вуков Споменик</option>
-                <option value="prokop">Прокоп</option>
-                <option value="nbg">Нови Београд</option>
-                <option value="zemun">Земун</option>
+                <option>Батајница</option>
+                <option>Земун</option>
+                <option>Нови Београд</option>
+                <option>Београд Центар (Dep)</option>
+                <option>Карађорђев парк</option>
+                <option>Вуков споменик</option>
+                <option>Панчевачки мост</option>
+                <option>Овча</option>
+                <option>Ресник</option>
             </select>
         </div>
         <div id="pids-container" class="pids-display" style="display: none; margin: 0 15px;">
@@ -159,12 +139,33 @@
         <div class="monitor-title-spacer"><h2>Планирај путовање</h2></div>
         <div class="plan-input-container">
             <div class="picker-stack">
-                <select id="od-picker" class="styled-select" onchange="checkPlan()"><option value="" disabled selected>Од:</option><option>Земун</option><option>НБГ</option><option>Прокоп</option><option>Вуков Споменик</option></select>
-                <select id="do-picker" class="styled-select" onchange="checkPlan()"><option value="" disabled selected>До:</option><option>Земун</option><option>НБГ</option><option>Прокоп</option><option>Вуков Споменик</option></select>
+                <select id="od-picker" class="styled-select" onchange="checkPlan()">
+                    <option value="" disabled selected>Од:</option>
+                    <option>Батајница</option>
+                    <option>Земун</option>
+                    <option>Нови Београд</option>
+                    <option>Београд Центар (Dep)</option>
+                    <option>Карађорђев парк</option>
+                    <option>Вуков споменик</option>
+                    <option>Панчевачки мост</option>
+                    <option>Овча</option>
+                    <option>Ресник</option>
+                </select>
+                <select id="do-picker" class="styled-select" onchange="checkPlan()">
+                    <option value="" disabled selected>До:</option>
+                    <option>Батајница</option>
+                    <option>Земун</option>
+                    <option>Нови Београд</option>
+                    <option>Београд Центар (Dep)</option>
+                    <option>Карађорђев парк</option>
+                    <option>Вуков споменик</option>
+                    <option>Панчевачки мост</option>
+                    <option>Овча</option>
+                    <option>Ресник</option>
+                </select>
             </div>
             <div class="switch-btn" onclick="swapPlan()">⇄</div>
         </div>
-        <div id="prethodno" class="prethodno-link" onclick="renderResults(true)">Прикажи претходне поласке</div>
         <div id="plan-results" class="results-container"></div>
     </div>
 
@@ -175,74 +176,61 @@
     </nav>
 
 <script>
-    // Global variable to store your trains
     let BG_VOZ_DATABASE = [];
 
-    // 1. DATA LOADING - Runs immediately
+    // 1. DATA LOADING
     async function loadData() {
         try {
-            // Fetching your trains.json
             const response = await fetch('trains.json');
-            if (!response.ok) throw new Error("JSON not found");
+            if (!response.ok) throw new Error("JSON file not found");
             BG_VOZ_DATABASE = await response.json();
-            console.log("Database Loaded: " + BG_VOZ_DATABASE.length + " trains");
+            console.log("Database Loaded:", BG_VOZ_DATABASE.length, "trains");
         } catch (err) {
-            console.error("Load failed:", err);
-            // Fallback: If fetch fails (like opening file locally), buttons still work but show error
+            console.error("Failed to load trains.json:", err);
         }
     }
     loadData();
 
-    // 2. NAVIGATION - Always clickable
+    // 2. NAVIGATION
     function handleNav(dest, el) {
-        // Reset pages
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-up'));
         document.getElementById('landing-page').classList.remove('fade-out');
-
-        // Reset nav icons
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         if (el) el.classList.add('active');
 
-        // Switch Screen
         if (dest === 'monitor') {
             document.getElementById('monitor-page').classList.add('active-up');
             document.getElementById('landing-page').classList.add('fade-out');
         } else if (dest === 'plan') {
             document.getElementById('plan-page').classList.add('active-up');
             document.getElementById('landing-page').classList.add('fade-out');
+        } else if (dest === 'home') {
+            document.getElementById('landing-page').classList.remove('fade-out');
         }
     }
 
-    // 3. MONITOR LOGIC
+    // 3. MONITOR
     function generatePIDS(stationName) {
         const body = document.getElementById('pids-body');
-        const container = document.getElementById('pids-container');
-        container.style.display = 'flex';
+        document.getElementById('pids-container').style.display = 'flex';
         
         if (BG_VOZ_DATABASE.length === 0) {
-            body.innerHTML = "<div class='pids-row'>Utitavanje podataka...</div>";
+            body.innerHTML = "<div class='pids-row'>Učitavanje...</div>";
             return;
         }
 
         const matches = BG_VOZ_DATABASE.filter(t => t.stops.some(s => s.station === stationName));
-        
-        if (matches.length === 0) {
-            body.innerHTML = "<div class='pids-row'>Nema planiranih polazaka.</div>";
-            return;
-        }
-
-        body.innerHTML = matches.slice(0, 12).map(t => {
+        body.innerHTML = matches.slice(0, 10).map(t => {
             const stop = t.stops.find(s => s.station === stationName);
-            return `
-                <div class="pids-row">
-                    <span class="pids-voz">${t.train_id}</span>
-                    <span class="pids-smer">${t.direction.toUpperCase()}</span>
-                    <span class="pids-vreme">${stop.departure}</span>
-                </div>`;
+            return `<div class="pids-row">
+                <span class="pids-voz">${t.train_id}</span>
+                <span class="pids-smer">${t.direction.toUpperCase()}</span>
+                <span class="pids-vreme">${stop.departure}</span>
+            </div>`;
         }).join('');
     }
 
-    // 4. PLANNER LOGIC
+    // 4. PLANNER
     function checkPlan() { 
         const od = document.getElementById('od-picker').value; 
         const doo = document.getElementById('do-picker').value; 
@@ -256,11 +244,10 @@
         container.innerHTML = "";
 
         if (BG_VOZ_DATABASE.length === 0) {
-            container.innerHTML = "Učitavanje baze...";
+            container.innerHTML = "Učitavanje baze podataka...";
             return;
         }
 
-        // Direct search
         let direct = BG_VOZ_DATABASE.filter(t => {
             const sIdx = t.stops.findIndex(s => s.station === odVal);
             const eIdx = t.stops.findIndex(s => s.station === doVal);
@@ -270,20 +257,17 @@
         if (direct.length > 0) {
             direct.forEach(t => displayCard(container, t, odVal, doVal));
         } else {
-            // Transfer Logic
-            findTransfers(container, odVal, doVal);
+            findTransferRoutes(container, odVal, doVal);
         }
     }
 
-    function findTransfers(container, start, end) {
-        const junction = "Карађорђев парк"; // Junction station from your JSON
-        
+    function findTransferRoutes(container, start, end) {
+        const junction = "Карађорђев парк";
         let leg1 = BG_VOZ_DATABASE.filter(t => {
             const sIdx = t.stops.findIndex(s => s.station === start);
             const jIdx = t.stops.findIndex(s => s.station === junction);
             return sIdx !== -1 && jIdx !== -1 && sIdx < jIdx;
         });
-
         let leg2 = BG_VOZ_DATABASE.filter(t => {
             const jIdx = t.stops.findIndex(s => s.station === junction);
             const eIdx = t.stops.findIndex(s => s.station === end);
@@ -291,17 +275,17 @@
         });
 
         leg1.forEach(t1 => {
-            const arrJunct = t1.stops.find(s => s.station === junction).departure;
+            const arr = t1.stops.find(s => s.station === junction).departure;
             const t2 = leg2.find(cand => {
-                const depJunct = cand.stops.find(s => s.station === junction).departure;
-                const wait = calcWait(arrJunct, depJunct);
+                const dep = cand.stops.find(s => s.station === junction).departure;
+                const wait = calcWait(arr, dep);
                 return wait >= 3 && wait <= 60;
             });
             if (t2) displayTransferCard(container, t1, t2, start, junction, end);
         });
 
         if (container.innerHTML === "") {
-            container.innerHTML = "<div style='text-align:center; padding:20px;'>Nema direktnih polazaka ni presedanja.</div>";
+            container.innerHTML = "<div style='text-align:center; padding:20px; opacity:0.5;'>Nema pronađenih ruta.</div>";
         }
     }
 
@@ -346,7 +330,7 @@
                 </div>
             </div>
             <div class="itinerary">
-                <div style="padding:10px; color:var(--accent-yellow); font-size:0.8rem; text-align:center;">Sačekajte ${calcWait(arrM, depM)} min u stanici ${mid}</div>
+                <div style="padding:10px; color:var(--accent-yellow); font-size:0.8rem; text-align:center;">Presedanje: ${calcWait(arrM, depM)} min</div>
                 <div class="itin-step"><span>${start}</span><span>${dep1}</span></div>
                 <div class="itin-step"><span>${mid} (Dolazak)</span><span>${arrM}</span></div>
                 <div class="itin-step"><span>${mid} (Odlazak)</span><span>${depM}</span></div>
@@ -366,6 +350,11 @@
         const doo = document.getElementById('do-picker');
         const temp = od.value; od.value = doo.value; doo.value = temp;
         checkPlan();
+    }
+
+    function copyUrl() {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link kopiran!");
     }
 </script>
 </body>
