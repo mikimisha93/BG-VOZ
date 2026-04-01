@@ -110,7 +110,17 @@ option { background:#111827; color:white; }
 .pids-time { font-weight: 700; color: var(--yellow); text-align: right; }
 
 /* ── PLANNER ── */
-.planner-body { width:100%; padding:0 20px; display:flex; flex-direction:column; gap:12px; flex:1; min-height:0; overflow:hidden; }
+/* ── PLANNER ── */
+.planner-body { 
+    width:100%; 
+    padding:0 20px; 
+    display:flex; 
+    flex-direction:column; 
+    gap:12px; 
+    flex:1; 
+    min-height:0; /* Allows children to scroll */
+    overflow:hidden; 
+}
 .line-selector { display:flex; gap:10px; margin-bottom: 5px; }
 .line-btn { flex:1; padding:14px; border-radius:14px; border:2px solid transparent; background: var(--glass); color:white; font-family:var(--sans); font-size:0.85rem; font-weight:700; cursor:pointer; text-align:center; display:flex; align-items:center; justify-content:center; gap:8px; transition:0.2s; }
 .line-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
@@ -121,16 +131,23 @@ option { background:#111827; color:white; }
 .inputs-stack { display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .swap-btn { width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: var(--glass); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; color: white; }
 
-.results-scroll { flex:1; overflow-y:auto; padding:10px 0; display:flex; flex-direction:column; gap:10px; }
-.result-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; transition: 0.3s; cursor: pointer; }
+.results-scroll { 
+    flex:1; 
+    overflow-y:auto; 
+    padding:10px 0 100px; /* Extra bottom padding so nav doesn't cover last result */
+    display:flex; 
+    flex-direction:column; 
+    gap:10px; 
+}
+.result-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; transition: 0.3s; cursor: pointer; flex-shrink: 0; }
 .result-card.past { opacity: 0.5; }
 .card-top { display: grid; grid-template-columns: 70px 1fr 70px; align-items: center; padding: 18px 16px; }
 .card-id { font-family: var(--mono); font-size: 0.7rem; color: var(--dim); }
 .card-dest { font-weight: 700; font-size: 1.1rem; text-align: center; color: white; }
 .card-dep { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; color: var(--yellow); text-align: right; }
 
-.itinerary { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(0,0,0,0.2); }
-.result-card.expanded .itinerary { max-height: 1000px; border-top: 1px solid var(--glass-border); }
+.itinerary { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(0,0,0,0.2); }
+.result-card.expanded .itinerary { max-height: 1500px; border-top: 1px solid var(--glass-border); }
 .itin-inner { padding: 20px; position: relative; margin-left: 10px; }
 .itin-inner::before { content: ''; position: absolute; left: 25px; top: 25px; bottom: 25px; width: 2px; background: rgba(255,255,255,0.1); }
 .itin-stop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; position: relative; }
@@ -336,7 +353,6 @@ function renderPlanResults() {
         if (t.line !== lineKey) return false;
         const s1 = t.stops.findIndex(s => norm(s.station) === from);
         const s2 = t.stops.findIndex(s => norm(s.station) === to);
-        // Train must visit both stations AND From must be before To
         return s1 !== -1 && s2 !== -1 && s1 < s2;
     }).sort((a,b) => {
         const t1 = a.stops.find(s => norm(s.station) === from).departure;
@@ -369,7 +385,7 @@ function renderPlanResults() {
                     ${tripStops.map((s, i) => {
                         let dot = 'dot-future';
                         if (s.departure < now) dot = 'dot-past';
-                        else if (i === 0 || tripStops[i-1].departure < now) dot = 'dot-current';
+                        else if (i === 0 || (tripStops[i-1] && tripStops[i-1].departure < now)) dot = 'dot-current';
                         return `<div class="itin-stop">
                             <div class="stop-dot ${dot}"></div>
                             <span class="stop-name">${norm(s.station)}</span>
@@ -378,10 +394,20 @@ function renderPlanResults() {
                     }).join('')}
                 </div>
             </div>`;
+
         card.onclick = () => {
-            const exp = card.classList.contains('expanded');
+            const alreadyExpanded = card.classList.contains('expanded');
+            
+            // Close all other cards
             document.querySelectorAll('.result-card').forEach(c => c.classList.remove('expanded'));
-            if(!exp) card.classList.add('expanded');
+            
+            if(!alreadyExpanded) {
+                card.classList.add('expanded');
+                // Auto-scroll to show the expanded content after animation starts
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
         };
         container.appendChild(card);
     });
