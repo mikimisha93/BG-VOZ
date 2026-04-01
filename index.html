@@ -372,9 +372,11 @@ option { background:#111827; color:white; }
             <option value="" disabled selected>Изаберите станицу...</option>
         </select>
         <div class="pids-board" id="pids-board" style="display:none">
-            <div class="pids-head">
-                <span>Воз</span><span>Смер</span><span>Полазак</span>
-            </div>
+            <div class="pids-head" id="pids-head">
+    <span>Воз</span>
+    <span style="text-align: center;">Смер</span>
+    <span style="text-align: right;">Полазак</span>
+</div>
             <div class="pids-rows" id="pids-rows"></div>
         </div>
     </div>
@@ -626,83 +628,83 @@ function onPickersChange() {
     }
 }
 
-function renderPlanResults() {
+unction renderPlanResults() {
     const from = document.getElementById('plan-from').value;
     const to = document.getElementById('plan-to').value;
     const lineKey = selectedLine === 1 ? 'BG:voz 1' : 'BG:voz 2';
     const now = nowHHMM();
     const container = document.getElementById('plan-results');
+    
+    // Clear the "skeleton" lines
     container.innerHTML = '';
 
-    // 1. Filter ALL trains for the day that hit both stations in the right order
-    const all = ALL_TRAINS.filter(t => {
-        const fs = findStop(t, from);
-        const ts = findStop(t, to);
-        return t.line === lineKey && fs && ts && t.stops.indexOf(fs) < t.stops.indexOf(ts);
+    if (!from || !to) return;
+
+    // 1. Filter: Find trains on this line where 'from' appears before 'to'
+    const results = ALL_TRAINS.filter(t => {
+        if (t.line !== lineKey) return false;
+        const s1 = t.stops.findIndex(s => norm(s.station) === from);
+        const s2 = t.stops.findIndex(s => norm(s.station) === to);
+        return s1 !== -1 && s2 !== -1 && s1 < s2;
     }).sort((a, b) => {
-        // 2. Sort by departure time (00:00 to 23:59)
-        return findStop(a, from).departure.localeCompare(findStop(b, from).departure);
+        // 2. Sort by departure time from the 'from' station
+        const timeA = a.stops.find(s => norm(s.station) === from).departure;
+        const timeB = b.stops.find(s => norm(s.station) === from).departure;
+        return timeA.localeCompare(timeB);
     });
 
-    if (!all.length) {
-        container.innerHTML = '<div style="text-align:center; padding:20px; opacity:0.5">Нема полазака.</div>';
+    if (results.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5">Нема пронађених полазака за ову линију.</div>';
         return;
     }
 
-    all.forEach(t => {
-        const depStop = findStop(t, from);
-        const arrStop = findStop(t, to);
-        const isPast = depStop.departure < now; // Card is grey if it already left
-        
+    // 3. Generate HTML for each train
+    results.forEach(t => {
+        const depTime = t.stops.find(s => norm(s.station) === from).departure;
+        const arrTime = t.stops.find(s => norm(s.station) === to).departure;
+        const isPast = depTime < now;
+
         const card = document.createElement('div');
         card.className = `result-card ${isPast ? 'past' : ''}`;
         
-        // 3. Build the "Map Navigation" Itinerary
-        let itinHtml = '';
-        const relevantStops = t.stops.slice(t.stops.indexOf(depStop), t.stops.indexOf(arrStop) + 1);
-        
-        // Find current train position based on time
-        let currentIdx = -1;
-        relevantStops.forEach((s, idx) => {
-            if (s.departure <= now) currentIdx = idx;
-        });
+        // Build the itinerary (the navigation dots part)
+        const sIdx = t.stops.findIndex(s => norm(s.station) === from);
+        const eIdx = t.stops.findIndex(s => norm(s.station) === to);
+        const tripStops = t.stops.slice(sIdx, eIdx + 1);
 
-        relevantStops.forEach((s, idx) => {
+        let itinHtml = tripStops.map((s, idx) => {
             let dotClass = 'dot-future';
-            if (idx < currentIdx) {
-                dotClass = 'dot-past'; // Red (passed)
-            } else if (idx === currentIdx) {
-                // If reached destination, it's red. If still moving, it's green pulsating.
-                dotClass = (idx === relevantStops.length - 1) ? 'dot-past' : 'dot-current';
+            if (s.departure < now) dotClass = 'dot-past';
+            if (s.departure >= now && (idx === 0 || tripStops[idx-1].departure < now)) {
+                 // First stop that hasn't happened yet gets the green pulse
+                 dotClass = 'dot-current';
             }
 
-            itinHtml += `
+            return `
                 <div class="itin-stop">
                     <div class="stop-dot ${dotClass}"></div>
                     <span class="stop-name">${norm(s.station)}</span>
                     <span class="stop-time">${s.departure}</span>
                 </div>
             `;
-        });
+        }).join('');
 
-        // 4. Card Header: ID | DIRECTION (Bold) | TIME
         card.innerHTML = `
             <div class="card-top">
                 <div class="card-id">${t.train_id}</div>
                 <div class="card-dest">${norm(t.direction)}</div>
-                <div class="card-dep">${depStop.departure}</div>
+                <div class="card-dep">${depTime}</div>
             </div>
             <div class="itinerary">
                 <div class="itin-inner">${itinHtml}</div>
             </div>
         `;
 
-        // 5. Expand logic: Only one card open at a time
-        card.addEventListener('click', () => {
-            const isExp = card.classList.contains('expanded');
+        card.onclick = () => {
+            const wasExpanded = card.classList.contains('expanded');
             document.querySelectorAll('.result-card').forEach(c => c.classList.remove('expanded'));
-            if (!isExp) card.classList.add('expanded');
-        });
+            if (!wasExpanded) card.classList.add('expanded');
+        };
 
         container.appendChild(card);
     });
