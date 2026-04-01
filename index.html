@@ -276,6 +276,7 @@ init();
     return (h2*60+m2)-(h1*60+m1);
 }
         function renderResults(showPast) {
+    alert(allTrains.length + " trains loaded");
     const container = document.getElementById('plan-results');
     const from = document.getElementById('od-picker').value;
     const to   = document.getElementById('do-picker').value;
