@@ -128,13 +128,9 @@
     <div id="monitor-page" class="page glass">
         <div class="monitor-title-spacer"><h2>Станични монитор</h2></div>
         <div style="width: 100%; padding: 0 25px; margin-bottom: 25px;">
-            <select id="station-picker" class="styled-select" onchange="generatePIDS(this.value)">
-                <option value="" disabled selected>Изаберите станицу...</option>
-                <option value="vukov">Вуков Споменик</option>
-                <option value="prokop">Прокоп</option>
-                <option value="nbg">Нови Београд</option>
-                <option value="zemun">Земун</option>
-            </select>
+           <select id="station-picker" class="styled-select" onchange="generatePIDS(this.value)">
+    <option value="" disabled selected>Изаберите станицу...</option>
+</select>
         </div>
         <div id="pids-container" class="pids-display" style="display: none; margin: 0 15px;">
             <div class="pids-header"><span>Voz</span><span>Smer</span><span>Vreme</span></div>
@@ -146,8 +142,8 @@
         <div class="monitor-title-spacer"><h2>Планирај путовање</h2></div>
         <div class="plan-input-container">
             <div class="picker-stack">
-                <select id="od-picker" class="styled-select" onchange="checkPlan()"><option value="" disabled selected>Од:</option><option>Земун</option><option>НБГ</option><option>Прокоп</option><option>Вуков Споменик</option></select>
-                <select id="do-picker" class="styled-select" onchange="checkPlan()"><option value="" disabled selected>До:</option><option>Земун</option><option>НБГ</option><option>Прокоп</option><option>Вуков Споменик</option></select>
+               <select id="od-picker" class="styled-select" onchange="checkPlan()"><option value="" disabled selected>Од:</option></select>
+<select id="do-picker" class="styled-select" onchange="checkPlan()"><option value="" disabled selected>До:</option></select>
             </div>
             <div class="switch-btn" onclick="swapPlan()">⇄</div>
         </div>
@@ -193,9 +189,6 @@ function populatePickers() {
         [...allSet].sort().forEach(s => el.add(new Option(s, s)));
     });
 }
-
-init();
-
         function openMonitor() { 
             closeAll(); 
             document.getElementById('monitor-page').classList.add('active-up'); 
@@ -276,7 +269,6 @@ init();
     return (h2*60+m2)-(h1*60+m1);
 }
         function renderResults(showPast) {
-    alert(allTrains.length + " trains loaded");
     const container = document.getElementById('plan-results');
     const from = document.getElementById('od-picker').value;
     const to   = document.getElementById('do-picker').value;
@@ -436,6 +428,8 @@ init();
 }
 
         function copyUrl() { navigator.clipboard.writeText(window.location.href); alert("Линк је копиран!"); }
+
+        init();
     </script>
 </body>
 </html>
