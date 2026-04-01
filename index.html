@@ -31,16 +31,28 @@ body {
     position: relative;
 }
 
-body::before {
+body::before, body::after {
     content: '';
-    position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 0;
-    background: 
-        radial-gradient(circle at 30% 30%, rgba(192,57,43,0.4) 0%, transparent 40%),
-        radial-gradient(circle at 70% 70%, rgba(26,111,196,0.4) 0%, transparent 40%);
-    background-color: var(--bg);
-    filter: blur(60px);
+    position: fixed; 
+    top: -50%; 
+    left: -50%; 
+    width: 200%; 
+    height: 200%; 
+    z-index: 0;
+    filter: blur(80px);
     pointer-events: none;
-    animation: meshMove 25s ease-in-out infinite alternate;
+}
+
+/* THE RED LAVA */
+body::before {
+    background: radial-gradient(circle at center, rgba(192, 57, 43, 0.6) 0%, transparent 50%);
+    animation: lavaRed 25s ease-in-out infinite alternate;
+}
+
+/* THE BLUE LAVA */
+body::after {
+    background: radial-gradient(circle at center, rgba(26, 111, 196, 0.6) 0%, transparent 50%);
+    animation: lavaBlue 30s ease-in-out infinite alternate-reverse;
 }
 
 /* ── PAGES ── */
@@ -64,19 +76,39 @@ body::before {
 
 /* ── LANDING ── */
 .landing-inner {
-    display: flex; flex-direction: column; align-items: center; justify-content: center; 
-    gap: 2vh; height: 100%; width: 100%; padding: 0 28px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: flex-start; 
+    height: 100%; 
+    width: 100%; 
+    padding: 8vh 28px 20px; /* Moves the logo slightly down from the very top */
 }
-.brand { text-align:center; margin-bottom: 10px; }
-.brand-icon svg { width:52px; height:52px; }
+
+.brand { 
+    text-align: center; 
+    margin-bottom: 2vh; 
+}
+
+.brand-icon svg { width: 52px; height: 52px; }
+
 .brand-name {
-    font-family: var(--mono); font-size: 2.4rem; font-weight:700; letter-spacing: 0.12em;
+    font-family: var(--mono); font-size: 2.4rem; font-weight: 700; letter-spacing: 0.12em;
     background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.5));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.brand-sub { font-size:0.7rem; opacity:0.4; letter-spacing:0.2em; text-transform:uppercase; }
 
-.landing-actions { width:100%; display:flex; flex-direction:column; gap:12px; }
+.brand-sub { font-size: 0.7rem; opacity: 0.4; letter-spacing: 0.2em; text-transform: uppercase; }
+
+.landing-actions { 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    margin-top: auto;    /* Pushes actions to the middle */
+    margin-bottom: auto; /* Pushes actions away from the QR code */
+}
+
 .action-btn {
     width: 100%; padding: 18px 24px; border-radius: 18px;
     background: var(--glass); border: 1px solid var(--glass-border);
@@ -84,10 +116,17 @@ body::before {
     font-size: 0.9rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
     cursor: pointer; display: flex; align-items: center; gap: 16px; transition: 0.2s;
 }
+
 .action-icon { width: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .action-icon svg { width: 24px; height: 24px; fill: white; opacity: 0.9; }
 
-.landing-qr { margin-top: 10px; display: flex; flex-direction: column; align-items: center; animation: fadeIn 1.2s ease-out forwards; }
+.landing-qr { 
+    margin-bottom: 20px; /* Keeps it just above the navigation bar */
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    animation: fadeIn 1.2s ease-out forwards; 
+}
 .qr-wrap { background: white; padding: 6px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
 .qr-wrap img { width: 90px; height: 90px; display: block; border-radius: 4px; }
 
@@ -100,10 +139,32 @@ body::before {
 option { background:#111827; color:white; }
 
 /* ── MONITOR ── */
-.monitor-body { width:100%; padding:0 20px; display:flex; flex-direction:column; gap:16px; flex:1; min-height:0; }
-.pids-board { background:#000; border:2px solid #222; border-radius:12px; overflow:hidden; flex:1; min-height:0; display:flex; flex-direction:column; }
+.monitor-body { 
+    width:100%; 
+    padding:0 20px; 
+    display:flex; 
+    flex-direction:column; 
+    gap:16px; 
+    /* Remove flex:1 so it doesn't force children to stretch */
+    height: auto;
+    overflow-y: auto;
+}
+.pids-board { 
+    background:#000; 
+    border:2px solid #222; 
+    border-radius:12px; 
+    overflow:hidden; 
+    /* Remove flex:1 and min-height */
+    display:flex; 
+    flex-direction:column; 
+    width: 100%;
+    margin-bottom: 100px; /* Space for the nav bar */
+}
 .pids-head { display:grid; grid-template-columns:80px 1fr 72px; padding:10px 16px; background:#111; border-bottom:1px solid #222; font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.35); }
-.pids-rows { overflow-y:auto; flex:1; }
+.pids-rows { 
+    /* Remove flex:1 so it shrinks to content size */
+    overflow-y: visible; 
+}
 .pids-row { display:grid; grid-template-columns:80px 1fr 72px; padding:14px 16px; border-bottom:1px solid #111; font-family:var(--mono); align-items:center; }
 .pids-id { font-size: 0.7rem; color: var(--dim); }
 .pids-dir { font-weight: 700; color: white; text-align: center; }
@@ -158,14 +219,65 @@ option { background:#111827; color:white; }
 .dot-current { background: var(--green); box-shadow: 0 0 10px var(--green); animation: pulse 1.5s infinite; }
 
 /* ── NAV BAR ── */
-.nav-bar { position:fixed; bottom:28px; left:50%; transform:translateX(-50%); width:calc(100% - 48px); max-width:320px; height:66px; background:rgba(10,12,20,0.85); backdrop-filter:blur(30px); border:1px solid var(--glass-border); border-radius:33px; display:flex; justify-content:space-around; align-items:center; z-index:9999; }
+.nav-bar { 
+    position: fixed; 
+    bottom: 28px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: calc(100% - 48px); 
+    max-width: 320px; 
+    height: 66px; 
+    /* CHANGED: Used your glass variable and slightly more blur */
+    background: var(--glass); 
+    backdrop-filter: blur(40px); 
+    -webkit-backdrop-filter: blur(40px); /* For iOS support */
+    border: 1px solid var(--glass-border); 
+    border-radius: 33px; 
+    display: flex; 
+    justify-content: space-around; 
+    align-items: center; 
+    z-index: 9999; 
+}
 .nav-btn { width:54px; height:54px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:50%; }
-.nav-btn svg { width:24px; height:24px; fill:rgba(255,255,255,0.35); }
+.nav-btn svg { width:24px; height:24px; fill:rgba(255,255,255,0.5); }
 .nav-btn.active svg { fill:white; filter:drop-shadow(0 0 6px rgba(255,255,255,0.5)); }
 
-@keyframes meshMove { 0% { transform: translate(0,0); } 100% { transform: translate(5%, 5%); } }
+@keyframes lavaRed { 
+    0% { transform: translate(-10%, -10%) scale(1); } 
+    50% { transform: translate(15%, 10%) scale(1.2); }
+    100% { transform: translate(-5%, 20%) scale(1); } 
+}
+
+@keyframes lavaBlue { 
+    0% { transform: translate(10%, 10%) scale(1.2); } 
+    50% { transform: translate(-15%, -10%) scale(1); }
+    100% { transform: translate(5%, -20%) scale(1.1); } 
+}
 @keyframes pulse { 0% { transform: scale(0.9); opacity: 1; } 70% { transform: scale(1.2); opacity: 0.5; } 100% { transform: scale(0.9); opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* ── PIDS TICKER ── */
+.pids-ticker {
+    background: #111;
+    border-top: 1px solid #222;
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker-text {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: #ff3333; /* Station Red */
+    font-weight: 700;
+    padding-left: 100%;
+    animation: marquee 35s linear infinite;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
 </style>
 </head>
 <body>
@@ -217,6 +329,12 @@ option { background:#111827; color:white; }
                 <span style="text-align:right">Полазак</span>
             </div>
             <div class="pids-rows" id="pids-rows"></div>
+            
+            <div class="pids-ticker">
+                <div class="ticker-text">
+                    :БГ:ВОЗ: &nbsp; :ВАЖНО: &nbsp; :ПРИКАЗАНА ВРЕМЕНА СЕ НЕ АЖУРИРАЈУ: &nbsp; :ПРИКАЗАНИ СУ ПЛАНИРАНИ ПОЛАЗЦИ: &nbsp; :ТЕЛЕФОН ЗА ДЕТАЉНИЈЕ ИНФОРМАЦИЈЕ: &nbsp; :011 360 28 99: &nbsp; :БГ:ВОЗ:
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -272,7 +390,45 @@ function showPage(name) {
     document.getElementById(map[name]).classList.add('active');
 }
 
-function goHome() { showPage('landing'); }
+function goHome() {
+    // 1. Reset Monitor Page
+    const monSelect = document.getElementById('mon-station');
+    if (monSelect) monSelect.selectedIndex = 0; // Back to placeholder
+    
+    const pidsBoard = document.getElementById('pids-board');
+    if (pidsBoard) pidsBoard.style.display = 'none'; // Hide the board
+    
+    const pidsRows = document.getElementById('pids-rows');
+    if (pidsRows) pidsRows.innerHTML = ''; // Clear train rows
+
+    // 2. Reset Planner Page
+    selectedLine = 0;
+    
+    // Reset BG:1 and BG:2 buttons to default look
+    const btnL1 = document.getElementById('btn-l1');
+    const btnL2 = document.getElementById('btn-l2');
+    if (btnL1) btnL1.className = 'line-btn';
+    if (btnL2) btnL2.className = 'line-btn';
+
+    // Clear and disable the station pickers
+    const planFrom = document.getElementById('plan-from');
+    const planTo = document.getElementById('plan-to');
+    if (planFrom) {
+        planFrom.innerHTML = '<option value="" disabled selected>Полазиште</option>';
+        planFrom.disabled = true;
+    }
+    if (planTo) {
+        planTo.innerHTML = '<option value="" disabled selected>Одредиште</option>';
+        planTo.disabled = true;
+    }
+
+    // Clear search result cards
+    const planResults = document.getElementById('plan-results');
+    if (planResults) planResults.innerHTML = '';
+
+    // 3. Navigate to Landing
+    showPage('landing');
+}
 function goMonitor() { showPage('monitor'); }
 function goPlanner() { showPage('planner'); }
 
