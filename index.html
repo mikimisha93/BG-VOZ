@@ -224,7 +224,7 @@ option { background:#111827; color:white; }
 
 <nav class="nav-bar">
     <div class="nav-btn active" id="nav-home" onclick="goHome()"><svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
-    <div class="nav-btn" id="nav-mon" onclick="goMonitor()"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg></div>
+    <div class="nav-btn" id="nav-mon" onclick="goMonitor()"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg></div>
     <div class="nav-btn" id="nav-plan" onclick="goPlanner()"><svg viewBox="0 0 24 24"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg></div>
 </nav>
 
@@ -295,14 +295,18 @@ function selectLine(n) {
     document.getElementById('btn-l2').className = 'line-btn' + (n===2 ? ' active-l2' : '');
 
     const lineKey = n === 1 ? 'BG:voz 1' : 'BG:voz 2';
-    const stSet = new Set();
-    ALL_TRAINS.filter(t => t.line === lineKey).forEach(t => t.stops.forEach(s => stSet.add(norm(s.station))));
-    const sorted = [...stSet].sort();
     
+    // FIND RELEVANT STATIONS IN GEOGRAPHICAL ORDER
+    // We look at the longest route for this line to get the correct station sequence
+    let longestRoute = [];
+    ALL_TRAINS.filter(t => t.line === lineKey).forEach(t => {
+        if (t.stops.length > longestRoute.length) longestRoute = t.stops.map(s => norm(s.station));
+    });
+
     ['plan-from','plan-to'].forEach(id => {
         const el = document.getElementById(id);
         el.innerHTML = '<option value="" disabled selected>' + (id==='plan-from'?'Полазиште':'Одредиште') + '</option>';
-        sorted.forEach(s => el.add(new Option(s, s)));
+        longestRoute.forEach(s => el.add(new Option(s, s)));
         el.disabled = false;
     });
 }
@@ -332,12 +336,18 @@ function renderPlanResults() {
         if (t.line !== lineKey) return false;
         const s1 = t.stops.findIndex(s => norm(s.station) === from);
         const s2 = t.stops.findIndex(s => norm(s.station) === to);
+        // Train must visit both stations AND From must be before To
         return s1 !== -1 && s2 !== -1 && s1 < s2;
     }).sort((a,b) => {
         const t1 = a.stops.find(s => norm(s.station) === from).departure;
         const t2 = b.stops.find(s => norm(s.station) === from).departure;
         return t1.localeCompare(t2);
     });
+
+    if (results.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5">Нема возова на овој релацији.</div>';
+        return;
+    }
 
     results.forEach(t => {
         const depTime = t.stops.find(s => norm(s.station) === from).departure;
