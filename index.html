@@ -293,12 +293,21 @@ body::after {
 
 
 /* ── SHARED PAGE CHROME ── */
+.page-header { 
+    width: 100%; 
+    padding: 6vh 24px 10px; /* Smanjen donji padding da ne gura selektore nadole */
+    flex-shrink: 0; 
+}
 
-.page-header { width:100%; padding: 6vh 24px 0; flex-shrink:0; }
-
-.page-title { font-size:1.1rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; opacity:0.9; margin-bottom:20px; text-align:center; }
-
-
+.page-title { 
+    font-size: 1.1rem; 
+    font-weight: 700; 
+    letter-spacing: 0.08em; 
+    text-transform: uppercase; 
+    opacity: 0.9; 
+    margin-bottom: 10px; /* Smanjen margin sa 20px na 10px */
+    text-align: center; 
+}
 
 /* ── GLASS SELECT ── */
 
@@ -377,23 +386,12 @@ option { background:#111827; color:white; }
 /* ── COMPACT PLANNER ── */
 
 .planner-body { 
-
-    width:100%; 
-
-    padding: 12px 16px;
-
-    display:flex; 
-
-    flex-direction:column; 
-
-    gap:8px; /* Reduced gap */
-
-    flex:1; 
-
-    min-height:0;
-
-    overflow:hidden; 
-
+    width: 100%; 
+    padding: 0 20px; /* Identično kao .monitor-body */
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; /* Isti razmak kao na Monitoru */
+    flex: 1; 
 }
 
 .line-selector { 
@@ -449,17 +447,10 @@ option { background:#111827; color:white; }
 
 
 .planner-selection-group { 
-
     display: flex; 
-
-    align-items: center; 
-
-    gap: 8px; 
-
+    align-items: center; /* Centriranje po horizontali */
+    gap: 12px; 
     width: 100%; 
-
-    margin-bottom: 4px; 
-
 }
 
 .inputs-stack { 
@@ -475,25 +466,17 @@ option { background:#111827; color:white; }
 }
 
 .swap-btn { 
-
-    width: 40px; 
-
-    height: 80px; /* Tall button to match the height of two stacked selects */
-
-    border-radius: 12px; 
-
+    width: 46px; 
+    height: 46px; /* Neka bude kvadratno */
+    border-radius: 14px; 
     background: var(--glass); 
-
     border: 1px solid var(--glass-border); 
-
     display: flex; 
-
     align-items: center; 
-
     justify-content: center; 
-
     cursor: pointer; 
-
+    font-size: 1.2rem;
+    flex-shrink: 0;
 }
 
 
@@ -793,41 +776,24 @@ option { background:#111827; color:white; }
 
 
 <div id="page-planner" class="page">
-
-    <div class="page-header"><div class="page-title">Планирај Путовање</div></div>
-
-    <div class="planner-body">
-
-        <div class="line-selector">
-
-            <div class="line-btn" id="btn-l1" onclick="selectLine(1)"><div class="line-dot" style="background:var(--l1)"></div>БГ:1</div>
-
-            <div class="line-btn" id="btn-l2" onclick="selectLine(2)"><div class="line-dot" style="background:var(--l2)"></div>БГ:2</div>
-
-        </div>
-
-        
-
-        <div class="planner-selection-group">
-
-            <div class="inputs-stack">
-
-                <select id="plan-from" class="g-select" onchange="onPickersChange()" disabled><option value="" disabled selected>полазак</option></select>
-
-                <select id="plan-to" class="g-select" onchange="onPickersChange()" disabled><option value="" disabled selected>долазак</option></select>
-
-            </div>
-
-            <div class="swap-btn" onclick="swapStations()">⇵</div>
-
-        </div>
-
-        
-
-        <div id="plan-results" class="results-scroll"></div>
-
+    <div class="page-header">
+        <div class="page-title">Планирај Путовање</div>
     </div>
-
+    <div class="planner-body">
+        <div class="planner-selection-group">
+            <div class="inputs-stack">
+                <select id="plan-from" class="g-select" onchange="onPickersChange()">
+                    <option value="" disabled selected>полазак</option>
+                </select>
+                <div style="height: 8px;"></div> <select id="plan-to" class="g-select" onchange="onPickersChange()">
+                    <option value="" disabled selected>долазак</option>
+                </select>
+            </div>
+            <div class="swap-btn" onclick="swapStations()">⇵</div>
+        </div>
+        
+        <div id="plan-results" class="results-scroll"></div>
+    </div>
 </div>
 
 
@@ -853,17 +819,15 @@ let selectedLine = 0;
 
 
 async function loadData() {
-
     try {
-
         const res = await fetch('trains.json');
-
         ALL_TRAINS = await res.json();
-
         buildMonitorPicker();
-
+        
+        // Add this line so the planner fills up immediately!
+        buildPlannerPickers(); 
+        
     } catch(e) { console.error("Error loading trains.json", e); }
-
 }
 
 
@@ -899,81 +863,30 @@ function showPage(name) {
 
 
 function goHome() {
-
     // 1. Reset Monitor Page
-
     const monSelect = document.getElementById('mon-station');
-
-    if (monSelect) monSelect.selectedIndex = 0; // Back to placeholder
-
+    if (monSelect) monSelect.selectedIndex = 0; 
     
-
     const pidsBoard = document.getElementById('pids-board');
-
-    if (pidsBoard) pidsBoard.style.display = 'none'; // Hide the board
-
+    if (pidsBoard) pidsBoard.style.display = 'none'; 
     
-
     const pidsRows = document.getElementById('pids-rows');
-
-    if (pidsRows) pidsRows.innerHTML = ''; // Clear train rows
-
-
+    if (pidsRows) pidsRows.innerHTML = ''; 
 
     // 2. Reset Planner Page
-
-    selectedLine = 0;
-
-    
-
-    // Reset BG:1 and BG:2 buttons to default look
-
-    const btnL1 = document.getElementById('btn-l1');
-
-    const btnL2 = document.getElementById('btn-l2');
-
-    if (btnL1) btnL1.className = 'line-btn';
-
-    if (btnL2) btnL2.className = 'line-btn';
-
-
-
-    // Clear and disable the station pickers
-
+    // We only reset the "selection" to the placeholder, NOT the options list
     const planFrom = document.getElementById('plan-from');
-
     const planTo = document.getElementById('plan-to');
-
-    if (planFrom) {
-
-        planFrom.innerHTML = '<option value="" disabled selected>полазак</option>';
-
-        planFrom.disabled = true;
-
-    }
-
-    if (planTo) {
-
-        planTo.innerHTML = '<option value="" disabled selected>долазак</option>';
-
-        planTo.disabled = true;
-
-    }
-
-
+    
+    if (planFrom) planFrom.selectedIndex = 0;
+    if (planTo) planTo.selectedIndex = 0;
 
     // Clear search result cards
-
     const planResults = document.getElementById('plan-results');
-
     if (planResults) planResults.innerHTML = '';
 
-
-
     // 3. Navigate to Landing
-
     showPage('landing');
-
 }
 
 function goMonitor() { showPage('monitor'); }
@@ -1042,47 +955,7 @@ function renderPIDS() {
 
 
 
-function selectLine(n) {
 
-    selectedLine = n;
-
-    document.getElementById('btn-l1').className = 'line-btn' + (n===1 ? ' active-l1' : '');
-
-    document.getElementById('btn-l2').className = 'line-btn' + (n===2 ? ' active-l2' : '');
-
-
-
-    const lineKey = n === 1 ? 'BG:voz 1' : 'BG:voz 2';
-
-    
-
-    // FIND RELEVANT STATIONS IN GEOGRAPHICAL ORDER
-
-    // We look at the longest route for this line to get the correct station sequence
-
-    let longestRoute = [];
-
-    ALL_TRAINS.filter(t => t.line === lineKey).forEach(t => {
-
-        if (t.stops.length > longestRoute.length) longestRoute = t.stops.map(s => norm(s.station));
-
-    });
-
-
-
-    ['plan-from','plan-to'].forEach(id => {
-
-        const el = document.getElementById(id);
-
-        el.innerHTML = '<option value="" disabled selected>' + (id==='plan-from'?'полазак':'долазак') + '</option>';
-
-        longestRoute.forEach(s => el.add(new Option(s, s)));
-
-        el.disabled = false;
-
-    });
-
-}
 
 
 
@@ -1113,39 +986,21 @@ function onPickersChange() {
 
 
 function renderPlanResults() {
-
     const from = document.getElementById('plan-from').value;
-
     const to = document.getElementById('plan-to').value;
-
-    const lineKey = selectedLine === 1 ? 'BG:voz 1' : 'BG:voz 2';
-
     const now = nowHHMM();
-
     const container = document.getElementById('plan-results');
-
     container.innerHTML = '';
 
-
-
+    // This now searches EVERY train for a match, including Altina on BG:1
     const results = ALL_TRAINS.filter(t => {
-
-        if (t.line !== lineKey) return false;
-
         const s1 = t.stops.findIndex(s => norm(s.station) === from);
-
         const s2 = t.stops.findIndex(s => norm(s.station) === to);
-
         return s1 !== -1 && s2 !== -1 && s1 < s2;
-
     }).sort((a,b) => {
-
         const t1 = a.stops.find(s => norm(s.station) === from).departure;
-
         const t2 = b.stops.find(s => norm(s.station) === from).departure;
-
         return t1.localeCompare(t2);
-
     });
 
 
@@ -1252,6 +1107,31 @@ function renderPlanResults() {
 
     });
 
+}
+function buildPlannerPickers() {
+    const allStations = new Set();
+    
+    // 1. Get every unique station name from your JSON
+    ALL_TRAINS.forEach(t => {
+        t.stops.forEach(s => allStations.add(norm(s.station)));
+    });
+    
+    const sortedStations = [...allStations].sort();
+    const fromEl = document.getElementById('plan-from');
+    const toEl = document.getElementById('plan-to');
+    
+    // 2. Fill the "From" and "To" dropdowns
+    fromEl.innerHTML = '<option value="" disabled selected>полазак</option>';
+    toEl.innerHTML = '<option value="" disabled selected>долазак</option>';
+    
+    sortedStations.forEach(s => {
+        fromEl.add(new Option(s, s));
+        toEl.add(new Option(s, s));
+    });
+
+    // 3. CRITICAL: Remove the 'disabled' state so user can click them immediately
+    fromEl.disabled = false;
+    toEl.disabled = false;
 }
 
 loadData();
