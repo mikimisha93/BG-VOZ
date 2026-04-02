@@ -596,7 +596,7 @@ function buildPlannerSelects() {
     });
 
     // Sort each group alphabetically
-    const sort = arr => arr.sort((a, b) => a.name.localeCompare(b, 'sr'));
+    const sort = arr => arr.sort((a, b) => a.name.localeCompare(b.name, 'sr'));
     sort(l1Only); sort(l2Only); sort(both);
 
     ['plan-from', 'plan-to'].forEach((elId, idx) => {
