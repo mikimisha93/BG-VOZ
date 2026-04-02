@@ -21,6 +21,7 @@
     --green: #3ddc84;
     --mono: 'JetBrains Mono', monospace;
     --sans: 'Space Grotesk', sans-serif;
+    --text: #f0f0f0; 
 }
 
 * { 
@@ -31,31 +32,41 @@
 }
 
 body {
+    margin: 0;
+    padding: 0;
     font-family: var(--sans);
+    /* Change this to match your theme-color meta tag */
     background-color: var(--bg); 
-    color: var(--text);
+    color: var(--text) !important;
     height: 100dvh; 
     width: 100vw;
     overflow: hidden;
     position: relative;
+    /* This handles the notch area */
     padding-top: env(safe-area-inset-top, 0px);
 }
 
 body::before, body::after {
     content: '';
     position: fixed; 
-    top: -50%; left: -50%; 
-    width: 200%; height: 200%; 
-    z-index: -1;
+    top: -50%; 
+    left: -50%; 
+    width: 200%; 
+    height: 200%; 
+    z-index: -1; /* Move it BEHIND everything including the status bar area */
     filter: blur(80px);
     pointer-events: none;
 }
+
+/* THE RED LAVA */
 body::before {
-    background: radial-gradient(circle at center, rgba(192,57,43,0.6) 0%, transparent 50%);
+    background: radial-gradient(circle at center, rgba(192, 57, 43, 0.6) 0%, transparent 50%);
     animation: lavaRed 25s ease-in-out infinite alternate;
 }
+
+/* THE BLUE LAVA */
 body::after {
-    background: radial-gradient(circle at center, rgba(26,111,196,0.6) 0%, transparent 50%);
+    background: radial-gradient(circle at center, rgba(26, 111, 196, 0.6) 0%, transparent 50%);
     animation: lavaBlue 30s ease-in-out infinite alternate-reverse;
 }
 
@@ -70,6 +81,7 @@ body::after {
     pointer-events: none; 
     opacity: 0;
 }
+
 .page.visible { 
     opacity: 1 !important; 
     transform: translateY(0) !important; 
@@ -79,19 +91,39 @@ body::after {
 
 /* ── LANDING ── */
 .landing-inner {
-    display: flex; flex-direction: column; align-items: center; 
-    justify-content: flex-start; height: 100%; width: 100%; 
-    padding: 8vh 28px 20px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: flex-start; 
+    height: 100%; 
+    width: 100%; 
+    padding: 8vh 28px 20px; /* Moves the logo slightly down from the very top */
 }
-.brand { text-align: center; margin-bottom: 2vh; }
+
+.brand { 
+    text-align: center; 
+    margin-bottom: 2vh; 
+}
+
 .brand-icon svg { width: 52px; height: 52px; }
+
 .brand-name {
     font-family: var(--mono); font-size: 2.4rem; font-weight: 700; letter-spacing: 0.12em;
     background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.5));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
+
 .brand-sub { font-size: 0.7rem; opacity: 0.4; letter-spacing: 0.2em; text-transform: uppercase; }
-.landing-actions { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: auto; margin-bottom: auto; }
+
+.landing-actions { 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    margin-top: auto;    /* Pushes actions to the middle */
+    margin-bottom: auto; /* Pushes actions away from the QR code */
+}
+
 .action-btn {
     width: 100%; padding: 18px 24px; border-radius: 18px;
     background: var(--glass); border: 1px solid var(--glass-border);
@@ -99,9 +131,17 @@ body::after {
     font-size: 0.9rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
     cursor: pointer; display: flex; align-items: center; gap: 16px; transition: 0.2s;
 }
+
 .action-icon { width: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .action-icon svg { width: 24px; height: 24px; fill: white; opacity: 0.9; }
-.landing-qr { margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; animation: fadeIn 1.2s ease-out forwards; }
+
+.landing-qr { 
+    margin-bottom: 20px; /* Keeps it just above the navigation bar */
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    animation: fadeIn 1.2s ease-out forwards; 
+}
 .qr-wrap { background: white; padding: 6px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
 .qr-wrap img { width: 90px; height: 90px; display: block; border-radius: 4px; }
 
@@ -112,131 +152,192 @@ body::after {
 /* ── GLASS SELECT ── */
 .g-select { width:100%; padding: 12px 16px; border-radius:14px; background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: blur(20px); color: white; font-family:var(--sans); font-size: 0.9rem; outline:none; appearance:none; cursor:pointer; }
 option { background:#111827; color:white; }
-optgroup { background:#0d1117; color:rgba(255,255,255,0.35); font-size:0.72rem; font-style:normal; letter-spacing:0.08em; }
 
 /* ── MONITOR ── */
-.monitor-body { width:100%; padding:0 20px; display:flex; flex-direction:column; gap:16px; height:auto; overflow-y:auto; }
-.pids-board { background:#000; border:2px solid #222; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; width:100%; margin-bottom:100px; }
+.monitor-body { 
+    width:100%; 
+    padding:0 20px; 
+    display:flex; 
+    flex-direction:column; 
+    gap:16px; 
+    /* Remove flex:1 so it doesn't force children to stretch */
+    height: auto;
+    overflow-y: auto;
+}
+.pids-board { 
+    background:#000; 
+    border:2px solid #222; 
+    border-radius:12px; 
+    overflow:hidden; 
+    /* Remove flex:1 and min-height */
+    display:flex; 
+    flex-direction:column; 
+    width: 100%;
+    margin-bottom: 100px; /* Space for the nav bar */
+}
 .pids-head { display:grid; grid-template-columns:80px 1fr 72px; padding:10px 16px; background:#111; border-bottom:1px solid #222; font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.35); }
-.pids-rows { overflow-y:visible; }
+.pids-rows { 
+    /* Remove flex:1 so it shrinks to content size */
+    overflow-y: visible; 
+}
 .pids-row { display:grid; grid-template-columns:80px 1fr 72px; padding:14px 16px; border-bottom:1px solid #111; font-family:var(--mono); align-items:center; }
-.pids-id { font-size:0.7rem; color:var(--dim); }
-.pids-dir { font-weight:700; color:white; text-align:center; }
-.pids-time { font-weight:700; color:var(--yellow); text-align:right; }
-
-/* ── PIDS TICKER ── */
-.pids-ticker { background:#111; border-top:1px solid #222; padding:10px 0; overflow:hidden; white-space:nowrap; }
-.ticker-text { display:inline-block; font-family:var(--mono); font-size:0.75rem; color:#ff3333; font-weight:700; padding-left:100%; animation:marquee 35s linear infinite; }
+.pids-id { font-size: 0.7rem; color: var(--dim); }
+.pids-dir { font-weight: 700; color: white; text-align: center; }
+.pids-time { font-weight: 700; color: var(--yellow); text-align: right; }
 
 /* ── PLANNER ── */
-.planner-body { width:100%; padding:12px 16px; display:flex; flex-direction:column; gap:8px; flex:1; min-height:0; overflow:hidden; }
-.planner-selection-group { display:flex; align-items:center; gap:8px; width:100%; margin-bottom:4px; }
-.inputs-stack { display:flex; flex-direction:column; gap:6px; flex:1; }
-.swap-btn { width:40px; height:80px; border-radius:12px; background:var(--glass); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.1rem; color:white; transition:0.15s; }
-.swap-btn:active { background:rgba(255,255,255,0.2); }
-
-.results-scroll { flex:1; overflow-y:auto; padding:10px 0 100px; display:flex; flex-direction:column; gap:10px; }
-
-/* ── JOURNEY CARDS (new design) ── */
-.journey-card {
-    background: var(--glass); border: 1px solid var(--glass-border);
-    border-radius: 16px; overflow: hidden; flex-shrink: 0;
-    transition: 0.2s; cursor: pointer;
+/* ── COMPACT PLANNER ── */
+.planner-body { 
+    width:100%; 
+    padding: 12px 16px;
+    display:flex; 
+    flex-direction:column; 
+    gap:8px; /* Reduced gap */
+    flex:1; 
+    min-height:0;
+    overflow:hidden; 
 }
-.journey-card.past { opacity: 0.45; }
-
-/* Card header row */
-.jc-top {
-    display: grid;
-    grid-template-columns: 56px 1fr auto;
-    align-items: center;
-    padding: 14px 16px 10px;
-    gap: 8px;
+.line-selector { 
+    display:flex; 
+    gap:8px; 
+    margin-bottom: 2px; 
 }
-.jc-train-id { font-family:var(--mono); font-size:0.68rem; color:var(--dim); }
-.jc-dest { font-weight:700; font-size:1rem; }
-.jc-dep { font-family:var(--mono); font-size:1.1rem; font-weight:700; color:var(--yellow); }
-
-/* Transfer badge row */
-.jc-badges { display:flex; align-items:center; gap:6px; padding:0 16px 12px; flex-wrap:wrap; }
-.jc-line-pill {
-    display: inline-flex; align-items:center; gap:5px;
-    padding: 3px 9px; border-radius: 20px;
-    font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: white;
+.line-btn { 
+    flex:1; 
+    padding:10px; /* Reduced from 14px */
+    border-radius:12px; 
+    border:1px solid var(--glass-border); 
+    background: var(--glass); 
+    color:white; 
+    font-family:var(--sans); 
+    font-size:0.8rem; /* Slightly smaller text */
+    font-weight:700; 
+    cursor:pointer; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    gap:6px; 
+    transition:0.2s; 
 }
-.jc-line-dot { width:7px; height:7px; border-radius:50%; }
-.jc-transfer-arrow { font-size:0.75rem; opacity:0.4; }
-.jc-duration { font-family:var(--mono); font-size:0.68rem; color:var(--dim); margin-left:auto; }
+.line-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.line-btn.active-l1 { border-color:var(--l1); background:rgba(192,57,43,0.2); }
+.line-btn.active-l2 { border-color:var(--l2); background:rgba(26,111,196,0.2); }
 
-/* Expanded itinerary */
-.itinerary { max-height:0; overflow:hidden; transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1); background:rgba(0,0,0,0.2); }
-.journey-card.expanded .itinerary { max-height:2000px; border-top:1px solid var(--glass-border); }
-
-/* Segment within itinerary */
-.seg-header {
-    display: flex; align-items: center; gap: 8px;
-    padding: 12px 16px 6px;
+.planner-selection-group { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    width: 100%; 
+    margin-bottom: 4px; 
 }
-.seg-line-badge {
-    font-family:var(--mono); font-size:0.7rem; font-weight:700;
-    padding:2px 8px; border-radius:20px; color:white; flex-shrink:0;
+.inputs-stack { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; 
+    flex: 1; 
 }
-.seg-train-info { font-family:var(--mono); font-size:0.7rem; color:var(--dim); }
-
-/* Transfer divider */
-.transfer-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 16px;
-    background: rgba(240,192,64,0.08);
-    border-top: 1px solid rgba(240,192,64,0.15);
-    border-bottom: 1px solid rgba(240,192,64,0.15);
+.swap-btn { 
+    width: 40px; 
+    height: 80px; /* Tall button to match the height of two stacked selects */
+    border-radius: 12px; 
+    background: var(--glass); 
+    border: 1px solid var(--glass-border); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer; 
 }
-.transfer-icon { font-size:0.9rem; }
-.transfer-label { font-family:var(--mono); font-size:0.72rem; color:var(--yellow); }
-.transfer-wait { font-family:var(--mono); font-size:0.68rem; color:var(--dim); margin-left:auto; }
 
-/* Stop timeline */
-.itin-inner { padding:10px 16px 16px; position:relative; margin-left:8px; }
-.itin-inner::before { content:''; position:absolute; left:23px; top:18px; bottom:8px; width:2px; background:rgba(255,255,255,0.08); }
-.itin-stop { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; position:relative; }
-.stop-name { margin-left:32px; font-size:0.88rem; flex:1; }
-.stop-name.bold { font-weight:700; }
-.stop-time { font-family:var(--mono); font-size:0.82rem; color:var(--dim); }
-.stop-dot { position:absolute; left:0px; width:10px; height:10px; border-radius:50%; background:#333; border:2px solid #555; z-index:2; }
-.dot-past { background:var(--l1); border-color:var(--l1); }
-.dot-current { background:var(--green); border-color:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 1.5s infinite; }
-.dot-l1 { background:var(--l1); border-color:var(--l1); }
-.dot-l2 { background:var(--l2); border-color:var(--l2); }
-.dot-terminus { background:white; border-color:white; width:12px; height:12px; left:-1px; }
+.results-scroll { 
+    flex:1; 
+    overflow-y:auto; 
+    padding:10px 0 100px; /* Extra bottom padding so nav doesn't cover last result */
+    display:flex; 
+    flex-direction:column; 
+    gap:10px; 
+}
+.result-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; transition: 0.3s; cursor: pointer; flex-shrink: 0; }
+.result-card.past { opacity: 0.5; }
+.card-top { display: grid; grid-template-columns: 70px 1fr 70px; align-items: center; padding: 18px 16px; }
+.card-id { font-family: var(--mono); font-size: 0.7rem; color: var(--dim); }
+.card-dest { font-weight: 700; font-size: 1.1rem; text-align: center; color: white; }
+.card-dep { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; color: var(--yellow); text-align: right; }
 
-/* No results */
-.no-results { text-align:center; padding:40px 20px; opacity:0.45; font-family:var(--mono); font-size:0.85rem; line-height:1.9; }
-
-/* ── OLD result-card kept for monitor ── */
-.result-card { background:var(--glass); border:1px solid var(--glass-border); border-radius:16px; overflow:hidden; transition:0.3s; cursor:pointer; flex-shrink:0; }
+.itinerary { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(0,0,0,0.2); }
+.result-card.expanded .itinerary { max-height: 1500px; border-top: 1px solid var(--glass-border); }
+.itin-inner { padding: 20px; position: relative; margin-left: 10px; }
+.itin-inner::before { content: ''; position: absolute; left: 25px; top: 25px; bottom: 25px; width: 2px; background: rgba(255,255,255,0.1); }
+.itin-stop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; position: relative; }
+.stop-name { margin-left: 40px; font-size: 0.9rem; flex: 1; }
+.stop-time { font-family: var(--mono); font-size: 0.85rem; color: var(--dim); }
+.stop-dot { position: absolute; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: #444; z-index: 2; }
+.dot-past { background: var(--l1); }
+.dot-current { background: var(--green); box-shadow: 0 0 10px var(--green); animation: pulse 1.5s infinite; }
 
 /* ── NAV BAR ── */
 .nav-bar { 
-    position:fixed; bottom:28px; left:50%; transform:translateX(-50%); 
-    width:calc(100% - 48px); max-width:320px; height:66px; 
-    background:var(--glass); backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px);
-    border:1px solid var(--glass-border); border-radius:33px; 
-    display:flex; justify-content:space-around; align-items:center; z-index:9999; 
+    position: fixed; 
+    bottom: 28px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: calc(100% - 48px); 
+    max-width: 320px; 
+    height: 66px; 
+    /* CHANGED: Used your glass variable and slightly more blur */
+    background: var(--glass); 
+    backdrop-filter: blur(40px); 
+    -webkit-backdrop-filter: blur(40px); /* For iOS support */
+    border: 1px solid var(--glass-border); 
+    border-radius: 33px; 
+    display: flex; 
+    justify-content: space-around; 
+    align-items: center; 
+    z-index: 9999; 
 }
 .nav-btn { width:54px; height:54px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:50%; }
 .nav-btn svg { width:24px; height:24px; fill:rgba(255,255,255,0.5); }
 .nav-btn.active svg { fill:white; filter:drop-shadow(0 0 6px rgba(255,255,255,0.5)); }
 
-@keyframes lavaRed { 0%{transform:translate(-10%,-10%) scale(1)} 50%{transform:translate(15%,10%) scale(1.2)} 100%{transform:translate(-5%,20%) scale(1)} }
-@keyframes lavaBlue { 0%{transform:translate(10%,10%) scale(1.2)} 50%{transform:translate(-15%,-10%) scale(1)} 100%{transform:translate(5%,-20%) scale(1.1)} }
-@keyframes pulse { 0%{transform:scale(0.9);opacity:1} 70%{transform:scale(1.2);opacity:0.5} 100%{transform:scale(0.9);opacity:1} }
-@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
+@keyframes lavaRed { 
+    0% { transform: translate(-10%, -10%) scale(1); } 
+    50% { transform: translate(15%, 10%) scale(1.2); }
+    100% { transform: translate(-5%, 20%) scale(1); } 
+}
+
+@keyframes lavaBlue { 
+    0% { transform: translate(10%, 10%) scale(1.2); } 
+    50% { transform: translate(-15%, -10%) scale(1); }
+    100% { transform: translate(5%, -20%) scale(1.1); } 
+}
+@keyframes pulse { 0% { transform: scale(0.9); opacity: 1; } 70% { transform: scale(1.2); opacity: 0.5; } 100% { transform: scale(0.9); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* ── PIDS TICKER ── */
+.pids-ticker {
+    background: #111;
+    border-top: 1px solid #222;
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker-text {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: #ff3333; /* Station Red */
+    font-weight: 700;
+    padding-left: 100%;
+    animation: marquee 35s linear infinite;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
 </style>
 </head>
 <body>
 
-<!-- ══ LANDING ══ -->
 <div id="page-landing" class="page visible">
     <div class="landing-inner">
         <div class="brand">
@@ -271,7 +372,6 @@ optgroup { background:#0d1117; color:rgba(255,255,255,0.35); font-size:0.72rem; 
     </div>
 </div>
 
-<!-- ══ MONITOR ══ -->
 <div id="page-monitor" class="page">
     <div class="page-header"><div class="page-title">Станични Монитор</div></div>
     <div class="monitor-body">
@@ -285,6 +385,7 @@ optgroup { background:#0d1117; color:rgba(255,255,255,0.35); font-size:0.72rem; 
                 <span style="text-align:right">Полазак</span>
             </div>
             <div class="pids-rows" id="pids-rows"></div>
+            
             <div class="pids-ticker">
                 <div class="ticker-text">
                     :БГ:ВОЗ: &nbsp; :ВАЖНО: &nbsp; :ПРИКАЗАНА ВРЕМЕНА СЕ НЕ АЖУРИРАЈУ: &nbsp; :ПРИКАЗАНИ СУ ПЛАНИРАНИ ПОЛАЗЦИ: &nbsp; :ТЕЛЕФОН ЗА ДЕТАЉНИЈЕ ИНФОРМАЦИЈЕ: &nbsp; :011 360 28 99: &nbsp; :БГ:ВОЗ:
@@ -294,21 +395,22 @@ optgroup { background:#0d1117; color:rgba(255,255,255,0.35); font-size:0.72rem; 
     </div>
 </div>
 
-<!-- ══ PLANNER ══ -->
 <div id="page-planner" class="page">
     <div class="page-header"><div class="page-title">Планирај Путовање</div></div>
     <div class="planner-body">
+        <div class="line-selector">
+            <div class="line-btn" id="btn-l1" onclick="selectLine(1)"><div class="line-dot" style="background:var(--l1)"></div>БГ:1</div>
+            <div class="line-btn" id="btn-l2" onclick="selectLine(2)"><div class="line-dot" style="background:var(--l2)"></div>БГ:2</div>
+        </div>
+        
         <div class="planner-selection-group">
             <div class="inputs-stack">
-                <select id="plan-from" class="g-select" onchange="onPickersChange()" disabled>
-                    <option value="" disabled selected>Полазиште</option>
-                </select>
-                <select id="plan-to" class="g-select" onchange="onPickersChange()" disabled>
-                    <option value="" disabled selected>Одредиште</option>
-                </select>
+                <select id="plan-from" class="g-select" onchange="onPickersChange()" disabled><option value="" disabled selected>Полазиште</option></select>
+                <select id="plan-to" class="g-select" onchange="onPickersChange()" disabled><option value="" disabled selected>Одредиште</option></select>
             </div>
             <div class="swap-btn" onclick="swapStations()">⇄</div>
         </div>
+        
         <div id="plan-results" class="results-scroll"></div>
     </div>
 </div>
@@ -320,508 +422,77 @@ optgroup { background:#0d1117; color:rgba(255,255,255,0.35); font-size:0.72rem; 
 </nav>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════
-// UTILITIES
-// ═══════════════════════════════════════════════════════════════════
 let ALL_TRAINS = [];
+let selectedLine = 0;
 
-// Strip "(Arr)" / "(Dep)" suffix and lowercase for comparison
-function norm(s) { return s ? s.replace(/\s*\((Arr|Dep)\)\s*$/i, '').trim() : ''; }
-function normLow(s) { return norm(s).toLowerCase(); }
+async function loadData() {
+    try {
+        const res = await fetch('trains.json');
+        ALL_TRAINS = await res.json();
+        buildMonitorPicker();
+    } catch(e) { console.error("Error loading trains.json", e); }
+}
+
+function norm(s) { return s.replace(/\s*\((Arr|Dep)\)\s*$/i, '').trim(); }
 function nowHHMM() { return new Date().toTimeString().slice(0, 5); }
 
-function toMins(hhmm) {
-    if (!hhmm) return 0;
-    const [h, m] = hhmm.split(':').map(Number);
-    return h * 60 + m;
-}
-function fromMins(m) {
-    return `${String(Math.floor(m / 60) % 24).padStart(2,'0')}:${String(m % 60).padStart(2,'0')}`;
-}
-function diffMins(a, b) { return toMins(b) - toMins(a); }
-
-// ═══════════════════════════════════════════════════════════════════
-// GRAPH — built dynamically from trains.json
-// We build a graph where nodes = normalised station names,
-// edges = connections that exist on at least one real train.
-// Weight = actual travel time in minutes between stops.
-// This way we never need to hardcode topology — it's inferred
-// directly from the timetable data.
-// ═══════════════════════════════════════════════════════════════════
-
-let GRAPH = {};       // { stationName: [ { to, weight, lines[] } ] }
-let STATION_LINES = {}; // { stationName: Set<'BG:voz 1'|'BG:voz 2'> }
-
-function buildGraph() {
-    GRAPH = {};
-    STATION_LINES = {};
-
-    ALL_TRAINS.forEach(train => {
-        const stops = train.stops;
-        for (let i = 0; i < stops.length; i++) {
-            const sName = normLow(stops[i].station);
-
-            // Register station
-            if (!GRAPH[sName]) GRAPH[sName] = [];
-            if (!STATION_LINES[sName]) STATION_LINES[sName] = new Set();
-            STATION_LINES[sName].add(train.line);
-
-            // Add edge to next stop
-            if (i < stops.length - 1) {
-                const tName = normLow(stops[i + 1].station);
-                const w = Math.max(1, diffMins(stops[i].departure, stops[i + 1].departure));
-
-                // Check if this edge already exists for this line
-                const existing = GRAPH[sName].find(e => e.to === tName && e.lines.includes(train.line));
-                if (!existing) {
-                    // Check if edge exists for another line — add line to it
-                    const shared = GRAPH[sName].find(e => e.to === tName);
-                    if (shared) {
-                        if (!shared.lines.includes(train.line)) shared.lines.push(train.line);
-                    } else {
-                        GRAPH[sName].push({ to: tName, weight: w, lines: [train.line] });
-                    }
-                }
-
-                // Register reverse node too
-                if (!GRAPH[tName]) GRAPH[tName] = [];
-                if (!STATION_LINES[tName]) STATION_LINES[tName] = new Set();
-                STATION_LINES[tName].add(train.line);
-            }
-        }
+function showPage(name) {
+    const pages = ['landing', 'monitor', 'planner'];
+    pages.forEach(p => {
+        const el = document.getElementById('page-' + p);
+        if (p === name) el.classList.add('visible');
+        else el.classList.remove('visible');
     });
-
-    // Add reverse edges (undirected graph)
-    const allNodes = Object.keys(GRAPH);
-    allNodes.forEach(from => {
-        GRAPH[from].forEach(edge => {
-            const reverseExists = GRAPH[edge.to]?.find(e => e.to === from);
-            if (!reverseExists) {
-                if (!GRAPH[edge.to]) GRAPH[edge.to] = [];
-                GRAPH[edge.to].push({ to: from, weight: edge.weight, lines: [...edge.lines] });
-            }
-        });
-    });
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const map = { landing:'nav-home', monitor:'nav-mon', planner:'nav-plan' };
+    document.getElementById(map[name]).classList.add('active');
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// DIJKSTRA — time-weighted shortest path
-// Returns { dist, prev, prevLine } maps
-// ═══════════════════════════════════════════════════════════════════
-function dijkstra(source) {
-    const dist = {}, prev = {}, prevLine = {};
-    const visited = new Set();
+function goHome() {
+    // 1. Reset Monitor Page
+    const monSelect = document.getElementById('mon-station');
+    if (monSelect) monSelect.selectedIndex = 0; // Back to placeholder
+    
+    const pidsBoard = document.getElementById('pids-board');
+    if (pidsBoard) pidsBoard.style.display = 'none'; // Hide the board
+    
+    const pidsRows = document.getElementById('pids-rows');
+    if (pidsRows) pidsRows.innerHTML = ''; // Clear train rows
 
-    Object.keys(GRAPH).forEach(id => { dist[id] = Infinity; prev[id] = null; prevLine[id] = null; });
-    dist[source] = 0;
+    // 2. Reset Planner Page
+    selectedLine = 0;
+    
+    // Reset BG:1 and BG:2 buttons to default look
+    const btnL1 = document.getElementById('btn-l1');
+    const btnL2 = document.getElementById('btn-l2');
+    if (btnL1) btnL1.className = 'line-btn';
+    if (btnL2) btnL2.className = 'line-btn';
 
-    // Simple min-heap via sorted array (graph is small)
-    const queue = [{ id: source, d: 0, line: null }];
-
-    while (queue.length) {
-        queue.sort((a, b) => a.d - b.d);
-        const { id: u, line: currentLine } = queue.shift();
-        if (visited.has(u)) continue;
-        visited.add(u);
-
-        for (const edge of (GRAPH[u] || [])) {
-            // Prefer to stay on same line (no transfer penalty needed —
-            // actual wait time is handled in timetable lookup)
-            const stayOnLine = currentLine && edge.lines.includes(currentLine);
-            const useLine = stayOnLine ? currentLine : edge.lines[0];
-            const alt = dist[u] + edge.weight;
-
-            if (alt < dist[edge.to]) {
-                dist[edge.to] = alt;
-                prev[edge.to] = u;
-                prevLine[edge.to] = useLine;
-                queue.push({ id: edge.to, d: alt, line: useLine });
-            }
-        }
+    // Clear and disable the station pickers
+    const planFrom = document.getElementById('plan-from');
+    const planTo = document.getElementById('plan-to');
+    if (planFrom) {
+        planFrom.innerHTML = '<option value="" disabled selected>Полазиште</option>';
+        planFrom.disabled = true;
     }
-    return { dist, prev, prevLine };
-}
-
-function buildPath(prev, target) {
-    const path = []; let cur = target;
-    while (cur) { path.unshift(cur); cur = prev[cur]; }
-    return path;
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// SEGMENT INFERENCE
-// Walk the path and group consecutive stops into segments per line.
-// A segment break = a line transfer.
-// ═══════════════════════════════════════════════════════════════════
-function inferSegments(path) {
-    if (path.length < 2) return [];
-    const segments = [];
-    let curLine = null;
-    let curSeg = [path[0]];
-
-    for (let i = 1; i < path.length; i++) {
-        const from = path[i - 1], to = path[i];
-        const edge = GRAPH[from]?.find(e => e.to === to);
-        const edgeLines = edge ? edge.lines : [];
-
-        if (!curLine) {
-            curLine = edgeLines[0] || null;
-        }
-
-        if (edgeLines.includes(curLine)) {
-            curSeg.push(to);
-        } else {
-            // Transfer — close current segment
-            segments.push({ line: curLine, stations: [...curSeg] });
-            curLine = edgeLines[0] || null;
-            curSeg = [from, to];
-        }
-    }
-    segments.push({ line: curLine, stations: [...curSeg] });
-
-    // Merge adjacent segments on same line
-    return segments.reduce((acc, seg) => {
-        if (acc.length && acc[acc.length - 1].line === seg.line) {
-            const last = acc[acc.length - 1];
-            seg.stations.forEach((st, i) => {
-                if (i === 0 && last.stations[last.stations.length - 1] === st) return;
-                last.stations.push(st);
-            });
-        } else {
-            acc.push({ line: seg.line, stations: [...seg.stations] });
-        }
-        return acc;
-    }, []);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// TIMETABLE LOOKUP
-// For a segment (line + from + to), find all real trains after a
-// given time. Uses actual trains.json data.
-// ═══════════════════════════════════════════════════════════════════
-function findTrains(line, fromName, toName, afterTime) {
-    const results = [];
-
-    ALL_TRAINS.filter(t => t.line === line).forEach(t => {
-        const fi = t.stops.findIndex(s => normLow(s.station) === fromName);
-        const ti = t.stops.findIndex(s => normLow(s.station) === toName);
-        if (fi === -1 || ti === -1 || fi >= ti) return;
-
-        const depStop = t.stops[fi];
-        const arrStop = t.stops[ti];
-        if (depStop.departure <= afterTime) return;
-
-        results.push({
-            train_id: t.train_id,
-            line: t.line,
-            direction: norm(t.direction),
-            dep: depStop.departure,
-            arr: arrStop.departure,
-            dur: diffMins(depStop.departure, arrStop.departure),
-            stops: t.stops.slice(fi, ti + 1).map(s => ({
-                name: norm(s.station),
-                time: s.departure,
-            })),
-        });
-    });
-
-    return results.sort((a, b) => a.dep.localeCompare(b.dep));
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// MAIN PLANNER
-// Plans a journey from fromName (display) to toName (display),
-// returns array of journey options (direct + with transfer).
-// ═══════════════════════════════════════════════════════════════════
-function planJourney(fromDisplay, toDisplay, afterTime) {
-    const fromKey = fromDisplay.toLowerCase();
-    const toKey   = toDisplay.toLowerCase();
-
-    if (!GRAPH[fromKey] || !GRAPH[toKey] || fromKey === toKey) return [];
-
-    const { dist, prev } = dijkstra(fromKey);
-    if (dist[toKey] === Infinity) return [];
-
-    const path = buildPath(prev, toKey);
-    const segments = inferSegments(path);
-
-    // Enrich each segment with real train data
-    let minDep = afterTime;
-    const enriched = [];
-
-    for (let si = 0; si < segments.length; si++) {
-        const seg = segments[si];
-        const segFrom = seg.stations[0];
-        const segTo   = seg.stations[seg.stations.length - 1];
-        const trains  = findTrains(seg.line, segFrom, segTo, minDep);
-
-        // Advance minDep for next segment: use arr of first available train + 2min margin
-        if (trains.length > 0 && si < segments.length - 1) {
-            minDep = fromMins(toMins(trains[0].arr) + 2);
-        }
-
-        enriched.push({ ...seg, segFrom, segTo, trains });
+    if (planTo) {
+        planTo.innerHTML = '<option value="" disabled selected>Одредиште</option>';
+        planTo.disabled = true;
     }
 
-    return [{
-        segments: enriched,
-        totalMins: dist[toKey],
-        hasTransfer: segments.length > 1,
-    }];
+    // Clear search result cards
+    const planResults = document.getElementById('plan-results');
+    if (planResults) planResults.innerHTML = '';
+
+    // 3. Navigate to Landing
+    showPage('landing');
 }
+function goMonitor() { showPage('monitor'); }
+function goPlanner() { showPage('planner'); }
 
-// ═══════════════════════════════════════════════════════════════════
-// BUILD PLANNER SELECTS
-// Populates from/to dropdowns with all stations grouped by line
-// ═══════════════════════════════════════════════════════════════════
-function buildPlannerSelects() {
-    // Canonical display name: get original casing from trains.json
-    const displayName = {}; // lowercased key → display name
-    ALL_TRAINS.forEach(t => {
-        t.stops.forEach(s => {
-            const key = normLow(s.station);
-            if (!displayName[key]) displayName[key] = norm(s.station);
-        });
-    });
-
-    // Group by line membership
-    const l1Only = [], l2Only = [], both = [];
-    Object.keys(STATION_LINES).forEach(key => {
-        const lines = STATION_LINES[key];
-        const name = displayName[key] || key;
-        if (lines.has('BG:voz 1') && lines.has('BG:voz 2')) both.push({ key, name });
-        else if (lines.has('BG:voz 1')) l1Only.push({ key, name });
-        else l2Only.push({ key, name });
-    });
-
-    // Sort each group alphabetically
-    const sort = arr => arr.sort((a, b) => a.name.localeCompare(b.name, 'sr'));
-    sort(l1Only); sort(l2Only); sort(both);
-
-    ['plan-from', 'plan-to'].forEach((elId, idx) => {
-        const el = document.getElementById(elId);
-        const placeholder = idx === 0 ? 'Полазиште' : 'Одредиште';
-        el.innerHTML = `<option value="" disabled selected>${placeholder}</option>`;
-
-        const addGroup = (label, stations) => {
-            if (!stations.length) return;
-            const og = document.createElement('optgroup');
-            og.label = label;
-            stations.forEach(({ key, name }) => {
-                const o = new Option(name, name);
-                og.appendChild(o);
-            });
-            el.appendChild(og);
-        };
-
-        addGroup('БГ:1 + БГ:2', both);
-        addGroup('БГ:1', l1Only);
-        addGroup('БГ:2', l2Only);
-
-        el.disabled = false;
-    });
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// RENDER RESULTS
-// ═══════════════════════════════════════════════════════════════════
-function renderPlanResults() {
-    const from = document.getElementById('plan-from').value;
-    const to   = document.getElementById('plan-to').value;
-    const now  = nowHHMM();
-    const container = document.getElementById('plan-results');
-    container.innerHTML = '';
-
-    if (!from || !to) return;
-    if (from === to) {
-        container.innerHTML = '<div class="no-results">Полазиште и одредиште су иста станица.</div>';
-        return;
-    }
-
-    const journeys = planJourney(from, to, now);
-
-    if (!journeys.length) {
-        container.innerHTML = `<div class="no-results">Нема доступних возова.<br>Покушајте касније или проверите вебсајт ЈП Железнице Србије.</div>`;
-        return;
-    }
-
-    journeys.forEach(journey => {
-        const firstSeg = journey.segments[0];
-        const lastSeg  = journey.segments[journey.segments.length - 1];
-        const firstTrain = firstSeg.trains[0];
-        const lastTrain  = lastSeg.trains[0];
-
-        // If no trains found at all
-        if (!firstTrain) {
-            container.innerHTML = `<div class="no-results">Нема возова за данас.<br>Сви возови на овој релацији су прошли.</div>`;
-            return;
-        }
-
-        const depTime = firstTrain.dep;
-        const arrTime = lastTrain ? lastTrain.arr : '—';
-        const totalDur = (lastTrain && depTime !== '—') ? diffMins(depTime, arrTime) : null;
-        const isPast = depTime < now;
-
-        const card = document.createElement('div');
-        card.className = `journey-card${isPast ? ' past' : ''}`;
-
-        // ── Line pills for header ──
-        const linePills = journey.segments.map((seg, si) => {
-            const isL1 = seg.line === 'BG:voz 1';
-            const color = isL1 ? 'var(--l1)' : 'var(--l2)';
-            const label = isL1 ? 'БГ:1' : 'БГ:2';
-            const arrow = si < journey.segments.length - 1 ? `<span class="jc-transfer-arrow">→</span>` : '';
-            return `<span class="jc-line-pill" style="background:${color}">
-                        <span class="jc-line-dot" style="background:rgba(255,255,255,0.7)"></span>${label}
-                    </span>${arrow}`;
-        }).join('');
-
-        card.innerHTML = `
-            <div class="jc-top">
-                <div class="jc-train-id">${firstTrain.train_id}</div>
-                <div class="jc-dest">${firstTrain.direction}</div>
-                <div class="jc-dep">${depTime}</div>
-            </div>
-            <div class="jc-badges">
-                ${linePills}
-                ${totalDur !== null ? `<span class="jc-duration">${totalDur} мин</span>` : ''}
-            </div>
-            <div class="itinerary">
-                ${buildItineraryHTML(journey, now)}
-            </div>`;
-
-        card.onclick = () => {
-            const alreadyExpanded = card.classList.contains('expanded');
-            document.querySelectorAll('.journey-card').forEach(c => c.classList.remove('expanded'));
-            if (!alreadyExpanded) {
-                card.classList.add('expanded');
-                setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
-            }
-        };
-
-        container.appendChild(card);
-    });
-
-    // Show next 2 upcoming departures below the main card
-    renderUpcomingDepartures(from, to, now, container);
-}
-
-function buildItineraryHTML(journey, now) {
-    let html = '';
-
-    journey.segments.forEach((seg, si) => {
-        const isL1 = seg.line === 'BG:voz 1';
-        const color = isL1 ? 'var(--l1)' : 'var(--l2)';
-        const label = isL1 ? 'БГ:1' : 'БГ:2';
-        const train = seg.trains[0];
-
-        // Transfer divider (between segments)
-        if (si > 0) {
-            const prevSeg = journey.segments[si - 1];
-            const prevTrain = prevSeg.trains[0];
-            const waitMins = (prevTrain && train)
-                ? diffMins(prevTrain.arr, train.dep)
-                : null;
-            html += `
-            <div class="transfer-row">
-                <span class="transfer-icon">⇄</span>
-                <span class="transfer-label">Пресед на ${seg.stations[0]}</span>
-                ${waitMins !== null ? `<span class="transfer-wait">чекање ${waitMins} мин</span>` : ''}
-            </div>`;
-        }
-
-        // Segment header
-        html += `
-        <div class="seg-header">
-            <span class="seg-line-badge" style="background:${color}">${label}</span>
-            ${train ? `<span class="seg-train-info">${train.train_id} · пр. ${train.direction}</span>` : ''}
-        </div>`;
-
-        if (!train) {
-            html += `<div class="itin-inner"><div style="font-family:var(--mono);font-size:0.78rem;opacity:0.4">Нема доступних возова за ову деоницу.</div></div>`;
-            return;
-        }
-
-        // Stop timeline
-        html += `<div class="itin-inner">`;
-        train.stops.forEach((stop, i) => {
-            const isFirst = i === 0;
-            const isLast  = i === train.stops.length - 1;
-            let dotClass = isL1 ? 'dot-l1' : 'dot-l2';
-            if (isFirst || isLast) dotClass = 'dot-terminus';
-            else if (stop.time < now) dotClass = 'dot-past';
-            else if (train.stops[i-1] && train.stops[i-1].time < now) dotClass = 'dot-current';
-
-            html += `
-            <div class="itin-stop">
-                <div class="stop-dot ${dotClass}"></div>
-                <span class="stop-name${(isFirst||isLast)?' bold':''}">${stop.name}</span>
-                <span class="stop-time">${stop.time}</span>
-            </div>`;
-        });
-        html += `</div>`;
-    });
-
-    return html;
-}
-
-// Show next few departures as compact chips below the main card
-function renderUpcomingDepartures(from, to, afterNow, container) {
-    const fromKey = from.toLowerCase();
-    const toKey   = to.toLowerCase();
-
-    // Collect all direct trains (both lines)
-    const upcoming = [];
-    ALL_TRAINS.forEach(t => {
-        const fi = t.stops.findIndex(s => normLow(s.station) === fromKey);
-        const ti = t.stops.findIndex(s => normLow(s.station) === toKey);
-        if (fi === -1 || ti === -1 || fi >= ti) return;
-        const dep = t.stops[fi].departure;
-        const arr = t.stops[ti].departure;
-        if (dep <= afterNow) return;
-        upcoming.push({ train_id: t.train_id, line: t.line, dep, arr, dur: diffMins(dep, arr) });
-    });
-
-    upcoming.sort((a, b) => a.dep.localeCompare(b.dep));
-
-    // Skip the very first one (already shown in main card) and show next 3
-    const next = upcoming.slice(1, 4);
-    if (!next.length) return;
-
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-top:2px;';
-
-    const label = document.createElement('div');
-    label.style.cssText = 'font-family:var(--mono);font-size:0.65rem;opacity:0.3;letter-spacing:0.12em;padding:2px 0;';
-    label.textContent = 'СЛЕДЕЋИ ПОЛАЗИ';
-    wrap.appendChild(label);
-
-    next.forEach(t => {
-        const isL1 = t.line === 'BG:voz 1';
-        const color = isL1 ? 'var(--l1)' : 'var(--l2)';
-        const row = document.createElement('div');
-        row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;';
-        row.innerHTML = `
-            <div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></div>
-            <span style="font-family:var(--mono);font-size:0.68rem;opacity:0.5;">${t.train_id}</span>
-            <span style="font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--yellow)">${t.dep}</span>
-            <span style="opacity:0.25;font-size:0.8rem">→</span>
-            <span style="font-family:var(--mono);font-size:0.95rem;opacity:0.65">${t.arr}</span>
-            <span style="font-family:var(--mono);font-size:0.68rem;opacity:0.3;margin-left:auto">${t.dur} мин</span>`;
-        wrap.appendChild(row);
-    });
-
-    container.appendChild(wrap);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// MONITOR (unchanged from original)
-// ═══════════════════════════════════════════════════════════════════
 function buildMonitorPicker() {
     const monSet = new Set();
-    ALL_TRAINS.forEach(t => t.stops.forEach((s, i) => {
-        if (i < t.stops.length - 1) monSet.add(norm(s.station));
-    }));
+    ALL_TRAINS.forEach(t => t.stops.forEach((s, i) => { if(i < t.stops.length-1) monSet.add(norm(s.station)); }));
     const el = document.getElementById('mon-station');
     [...monSet].sort().forEach(s => el.add(new Option(s, s)));
 }
@@ -839,7 +510,7 @@ function renderPIDS() {
             }
         }
     });
-    const rows = Object.values(byDir).sort((a, b) => a.dep.localeCompare(b.dep));
+    const rows = Object.values(byDir).sort((a,b) => a.dep.localeCompare(b.dep));
     document.getElementById('pids-board').style.display = 'flex';
     document.getElementById('pids-rows').innerHTML = rows.map(r => `
         <div class="pids-row">
@@ -849,45 +520,32 @@ function renderPIDS() {
         </div>`).join('');
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// PAGE NAV
-// ═══════════════════════════════════════════════════════════════════
-function showPage(name) {
-    ['landing', 'monitor', 'planner'].forEach(p => {
-        document.getElementById('page-' + p).classList.toggle('visible', p === name);
+function selectLine(n) {
+    selectedLine = n;
+    document.getElementById('btn-l1').className = 'line-btn' + (n===1 ? ' active-l1' : '');
+    document.getElementById('btn-l2').className = 'line-btn' + (n===2 ? ' active-l2' : '');
+
+    const lineKey = n === 1 ? 'BG:voz 1' : 'BG:voz 2';
+    
+    // FIND RELEVANT STATIONS IN GEOGRAPHICAL ORDER
+    // We look at the longest route for this line to get the correct station sequence
+    let longestRoute = [];
+    ALL_TRAINS.filter(t => t.line === lineKey).forEach(t => {
+        if (t.stops.length > longestRoute.length) longestRoute = t.stops.map(s => norm(s.station));
     });
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    const map = { landing:'nav-home', monitor:'nav-mon', planner:'nav-plan' };
-    document.getElementById(map[name]).classList.add('active');
+
+    ['plan-from','plan-to'].forEach(id => {
+        const el = document.getElementById(id);
+        el.innerHTML = '<option value="" disabled selected>' + (id==='plan-from'?'Полазиште':'Одредиште') + '</option>';
+        longestRoute.forEach(s => el.add(new Option(s, s)));
+        el.disabled = false;
+    });
 }
-
-function goHome() {
-    // Reset monitor
-    const monSelect = document.getElementById('mon-station');
-    if (monSelect) monSelect.selectedIndex = 0;
-    const pidsBoard = document.getElementById('pids-board');
-    if (pidsBoard) pidsBoard.style.display = 'none';
-    const pidsRows = document.getElementById('pids-rows');
-    if (pidsRows) pidsRows.innerHTML = '';
-
-    // Reset planner
-    const planFrom = document.getElementById('plan-from');
-    const planTo   = document.getElementById('plan-to');
-    if (planFrom) planFrom.value = '';
-    if (planTo)   planTo.value   = '';
-    const planResults = document.getElementById('plan-results');
-    if (planResults) planResults.innerHTML = '';
-
-    showPage('landing');
-}
-
-function goMonitor() { showPage('monitor'); }
-function goPlanner()  { showPage('planner'); }
 
 function swapStations() {
     const f = document.getElementById('plan-from');
     const t = document.getElementById('plan-to');
-    [f.value, t.value] = [t.value, f.value];
+    const tmp = f.value; f.value = t.value; t.value = tmp;
     onPickersChange();
 }
 
@@ -897,21 +555,77 @@ function onPickersChange() {
     if (f && t) renderPlanResults();
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════════════
-async function loadData() {
-    try {
-        const res = await fetch('trains.json');
-        ALL_TRAINS = await res.json();
-        buildGraph();
-        buildMonitorPicker();
-        buildPlannerSelects();
-    } catch(e) {
-        console.error('Error loading trains.json', e);
-    }
-}
+function renderPlanResults() {
+    const from = document.getElementById('plan-from').value;
+    const to = document.getElementById('plan-to').value;
+    const lineKey = selectedLine === 1 ? 'BG:voz 1' : 'BG:voz 2';
+    const now = nowHHMM();
+    const container = document.getElementById('plan-results');
+    container.innerHTML = '';
 
+    const results = ALL_TRAINS.filter(t => {
+        if (t.line !== lineKey) return false;
+        const s1 = t.stops.findIndex(s => norm(s.station) === from);
+        const s2 = t.stops.findIndex(s => norm(s.station) === to);
+        return s1 !== -1 && s2 !== -1 && s1 < s2;
+    }).sort((a,b) => {
+        const t1 = a.stops.find(s => norm(s.station) === from).departure;
+        const t2 = b.stops.find(s => norm(s.station) === from).departure;
+        return t1.localeCompare(t2);
+    });
+
+    if (results.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5">Нема возова на овој релацији.</div>';
+        return;
+    }
+
+    results.forEach(t => {
+        const depTime = t.stops.find(s => norm(s.station) === from).departure;
+        const isPast = depTime < now;
+        const sIdx = t.stops.findIndex(s => norm(s.station) === from);
+        const eIdx = t.stops.findIndex(s => norm(s.station) === to);
+        const tripStops = t.stops.slice(sIdx, eIdx + 1);
+
+        const card = document.createElement('div');
+        card.className = `result-card ${isPast ? 'past' : ''}`;
+        card.innerHTML = `
+            <div class="card-top">
+                <div class="card-id">${t.train_id}</div>
+                <div class="card-dest">${norm(t.direction)}</div>
+                <div class="card-dep">${depTime}</div>
+            </div>
+            <div class="itinerary">
+                <div class="itin-inner">
+                    ${tripStops.map((s, i) => {
+                        let dot = 'dot-future';
+                        if (s.departure < now) dot = 'dot-past';
+                        else if (i === 0 || (tripStops[i-1] && tripStops[i-1].departure < now)) dot = 'dot-current';
+                        return `<div class="itin-stop">
+                            <div class="stop-dot ${dot}"></div>
+                            <span class="stop-name">${norm(s.station)}</span>
+                            <span class="stop-time">${s.departure}</span>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+
+        card.onclick = () => {
+            const alreadyExpanded = card.classList.contains('expanded');
+            
+            // Close all other cards
+            document.querySelectorAll('.result-card').forEach(c => c.classList.remove('expanded'));
+            
+            if(!alreadyExpanded) {
+                card.classList.add('expanded');
+                // Auto-scroll to show the expanded content after animation starts
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        };
+        container.appendChild(card);
+    });
+}
 loadData();
 </script>
 </body>
