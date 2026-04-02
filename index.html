@@ -357,7 +357,7 @@ option { background:#111827; color:white; }
         <div class="landing-actions">
             <div class="action-btn" onclick="goMonitor()">
                 <div class="action-icon"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg></div>
-                Станични Монитор
+                Станични  ред вожње
             </div>
             <div class="action-btn" onclick="goPlanner()">
                 <div class="action-icon"><svg viewBox="0 0 24 24"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg></div>
@@ -373,7 +373,7 @@ option { background:#111827; color:white; }
 </div>
 
 <div id="page-monitor" class="page">
-    <div class="page-header"><div class="page-title">Станични Монитор</div></div>
+    <div class="page-header"><div class="page-title">Станични  ред вожње</div></div>
     <div class="monitor-body">
         <select id="mon-station" class="g-select" onchange="renderPIDS()">
             <option value="" disabled selected>Изаберите станицу...</option>
@@ -388,7 +388,7 @@ option { background:#111827; color:white; }
             
             <div class="pids-ticker">
                 <div class="ticker-text">
-                    :БГ:ВОЗ: &nbsp; :ВАЖНО: &nbsp; :ПРИКАЗАНА ВРЕМЕНА СЕ НЕ АЖУРИРАЈУ: &nbsp; :ПРИКАЗАНИ СУ ПЛАНИРАНИ ПОЛАЗЦИ: &nbsp; :ТЕЛЕФОН ЗА ДЕТАЉНИЈЕ ИНФОРМАЦИЈЕ: &nbsp; :011 360 28 99: &nbsp; :БГ:ВОЗ:
+                    :БГ:ВОЗ: &nbsp; :ВАЖНО:: &nbsp; :ПРИКАЗАНИ СУ ПЛАНИРАНИ ПОЛАСЦИ: &nbsp; :ИНФОРМАЦИЈЕ О КАШЊЕЊУ: &nbsp; :ТЕЛ 011 360 28 99: &nbsp; :БГ:ВОЗ:
                 </div>
             </div>
         </div>
@@ -405,8 +405,8 @@ option { background:#111827; color:white; }
         
         <div class="planner-selection-group">
             <div class="inputs-stack">
-                <select id="plan-from" class="g-select" onchange="onPickersChange()" disabled><option value="" disabled selected>Полазиште</option></select>
-                <select id="plan-to" class="g-select" onchange="onPickersChange()" disabled><option value="" disabled selected>Одредиште</option></select>
+                <select id="plan-from" class="g-select" onchange="onPickersChange()" disabled><option value="" disabled selected>полазак</option></select>
+                <select id="plan-to" class="g-select" onchange="onPickersChange()" disabled><option value="" disabled selected>долазак</option></select>
             </div>
             <div class="swap-btn" onclick="swapStations()">⇄</div>
         </div>
@@ -472,11 +472,11 @@ function goHome() {
     const planFrom = document.getElementById('plan-from');
     const planTo = document.getElementById('plan-to');
     if (planFrom) {
-        planFrom.innerHTML = '<option value="" disabled selected>Полазиште</option>';
+        planFrom.innerHTML = '<option value="" disabled selected>полазак</option>';
         planFrom.disabled = true;
     }
     if (planTo) {
-        planTo.innerHTML = '<option value="" disabled selected>Одредиште</option>';
+        planTo.innerHTML = '<option value="" disabled selected>долазак</option>';
         planTo.disabled = true;
     }
 
@@ -536,7 +536,7 @@ function selectLine(n) {
 
     ['plan-from','plan-to'].forEach(id => {
         const el = document.getElementById(id);
-        el.innerHTML = '<option value="" disabled selected>' + (id==='plan-from'?'Полазиште':'Одредиште') + '</option>';
+        el.innerHTML = '<option value="" disabled selected>' + (id==='plan-from'?'полазак':'долазак') + '</option>';
         longestRoute.forEach(s => el.add(new Option(s, s)));
         el.disabled = false;
     });
