@@ -1,2532 +1,919 @@
-[
-{
-  "line": "BG:voz 1",
-  "train_id": "8001",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "06:00" },
-    { "station": "Камендин", "departure": "06:04" },
-    { "station": "Земунско поље", "departure": "06:06" },
-    { "station": "Алтина", "departure": "06:08" },
-    { "station": "Земун", "departure": "06:12" },
-    { "station": "Тошин бунар", "departure": "06:16" },
-    { "station": "Нови Београд", "departure": "06:19" },
-    { "station": "Београд Центар (Arr)", "departure": "06:22" },
-    { "station": "Београд Центар (Dep)", "departure": "06:23" },
-    { "station": "Карађорђев парк", "departure": "06:27" },
-    { "station": "Вуков споменик", "departure": "06:31" },
-    { "station": "Панчевачки мост", "departure": "06:35" },
-    { "station": "Крњача мост", "departure": "06:39" },
-    { "station": "Крњача", "departure": "06:42" },
-    { "station": "Себеш", "departure": "06:45" },
-    { "station": "Овча", "departure": "06:48" }
-  ]
-},
-{
-  "line": "BG:voz 1",
-  "train_id": "8003",
-  "direction": "Овча",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Батајница", "departure": "06:30" },
-    { "station": "Камендин", "departure": "06:34" },
-    { "station": "Земунско поље", "departure": "06:36" },
-    { "station": "Алтина", "departure": "06:38" },
-    { "station": "Земун", "departure": "06:42" },
-    { "station": "Тошин бунар", "departure": "06:46" },
-    { "station": "Нови Београд", "departure": "06:49" },
-    { "station": "Београд Центар (Arr)", "departure": "06:52" },
-    { "station": "Београд Центар (Dep)", "departure": "06:53" },
-    { "station": "Карађорђев парк", "departure": "06:57" },
-    { "station": "Вуков споменик", "departure": "07:01" },
-    { "station": "Панчевачки мост", "departure": "07:05" },
-    { "station": "Крњача мост", "departure": "07:09" },
-    { "station": "Крњача", "departure": "07:12" },
-    { "station": "Себеш", "departure": "07:15" },
-    { "station": "Овча", "departure": "07:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8005",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "07:10" },
-    { "station": "Камендин", "departure": "07:14" },
-    { "station": "Земунско поље", "departure": "07:16" },
-    { "station": "Алтина", "departure": "07:18" },
-    { "station": "Земун", "departure": "07:22" },
-    { "station": "Тошин бунар", "departure": "07:26" },
-    { "station": "Нови Београд", "departure": "07:29" },
-    { "station": "Београд Центар (Arr)", "departure": "07:32" },
-    { "station": "Београд Центар (Dep)", "departure": "07:33" },
-    { "station": "Карађорђев парк", "departure": "07:37" },
-    { "station": "Вуков споменик", "departure": "07:41" },
-    { "station": "Панчевачки мост", "departure": "07:45" },
-    { "station": "Крњача мост", "departure": "07:49" },
-    { "station": "Крњача", "departure": "07:52" },
-    { "station": "Себеш", "departure": "07:55" },
-    { "station": "Овча", "departure": "07:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8007",
-  "direction": "Овча",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Батајница", "departure": "07:30" },
-    { "station": "Камендин", "departure": "07:34" },
-    { "station": "Земунско поље", "departure": "07:36" },
-    { "station": "Алтина", "departure": "07:38" },
-    { "station": "Земун", "departure": "07:42" },
-    { "station": "Тошин бунар", "departure": "07:46" },
-    { "station": "Нови Београд", "departure": "07:49" },
-    { "station": "Београд Центар (Arr)", "departure": "07:52" },
-    { "station": "Београд Центар (Dep)", "departure": "07:53" },
-    { "station": "Карађорђев парк", "departure": "07:57" },
-    { "station": "Вуков споменик", "departure": "08:01" },
-    { "station": "Панчевачки мост", "departure": "08:05" },
-    { "station": "Крњача мост", "departure": "08:09" },
-    { "station": "Крњача", "departure": "08:12" },
-    { "station": "Себеш", "departure": "08:15" },
-    { "station": "Овча", "departure": "08:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8009",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "08:00" },
-    { "station": "Камендин", "departure": "08:04" },
-    { "station": "Земунско поље", "departure": "08:06" },
-    { "station": "Алтина", "departure": "08:08" },
-    { "station": "Земун", "departure": "08:12" },
-    { "station": "Тошин бунар", "departure": "08:16" },
-    { "station": "Нови Београд", "departure": "08:19" },
-    { "station": "Београд Центар (Arr)", "departure": "08:22" },
-    { "station": "Београд Центар (Dep)", "departure": "08:23" },
-    { "station": "Карађорђев парк", "departure": "08:27" },
-    { "station": "Вуков споменик", "departure": "08:31" },
-    { "station": "Панчевачки мост", "departure": "08:35" },
-    { "station": "Крњача мост", "departure": "08:39" },
-    { "station": "Крњача", "departure": "08:42" },
-    { "station": "Себеш", "departure": "08:45" },
-    { "station": "Овча", "departure": "08:48" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8011",
-  "direction": "Овча",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Батајница", "departure": "08:30" },
-    { "station": "Камендин", "departure": "08:34" },
-    { "station": "Земунско поље", "departure": "08:36" },
-    { "station": "Алтина", "departure": "08:38" },
-    { "station": "Земун", "departure": "08:42" },
-    { "station": "Тошин бунар", "departure": "08:46" },
-    { "station": "Нови Београд", "departure": "08:49" },
-    { "station": "Београд Центар (Arr)", "departure": "08:52" },
-    { "station": "Београд Центар (Dep)", "departure": "08:53" },
-    { "station": "Карађорђев парк", "departure": "08:57" },
-    { "station": "Вуков споменик", "departure": "09:01" },
-    { "station": "Панчевачки мост", "departure": "09:05" },
-    { "station": "Крњача мост", "departure": "09:09" },
-    { "station": "Крњача", "departure": "09:12" },
-    { "station": "Себеш", "departure": "09:15" },
-    { "station": "Овча", "departure": "09:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8013",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "08:57" },
-    { "station": "Камендин", "departure": "09:01" },
-    { "station": "Земунско поље", "departure": "09:03" },
-    { "station": "Алтина", "departure": "09:05" },
-    { "station": "Земун", "departure": "09:18" },
-    { "station": "Тошин бунар", "departure": "09:22" },
-    { "station": "Нови Београд", "departure": "09:25" },
-    { "station": "Београд Центар (Arr)", "departure": "09:28" },
-    { "station": "Београд Центар (Dep)", "departure": "09:29" },
-    { "station": "Карађорђев парк", "departure": "09:33" },
-    { "station": "Вуков споменик", "departure": "09:37" },
-    { "station": "Панчевачки мост", "departure": "09:41" },
-    { "station": "Крњача мост", "departure": "09:45" },
-    { "station": "Крњача", "departure": "09:48" },
-    { "station": "Себеш", "departure": "09:51" },
-    { "station": "Овча", "departure": "09:54" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8015",
-  "direction": "Овча",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Батајница", "departure": "09:30" },
-    { "station": "Камендин", "departure": "09:34" },
-    { "station": "Земунско поље", "departure": "09:36" },
-    { "station": "Алтина", "departure": "09:38" },
-    { "station": "Земун", "departure": "09:42" },
-    { "station": "Тошин бунар", "departure": "09:46" },
-    { "station": "Нови Београд", "departure": "09:49" },
-    { "station": "Београд Центар (Arr)", "departure": "09:52" },
-    { "station": "Београд Центар (Dep)", "departure": "09:53" },
-    { "station": "Карађорђев парк", "departure": "09:57" },
-    { "station": "Вуков споменик", "departure": "10:01" },
-    { "station": "Панчевачки мост", "departure": "10:05" },
-    { "station": "Крњача мост", "departure": "10:09" },
-    { "station": "Крњача", "departure": "10:12" },
-    { "station": "Себеш", "departure": "10:15" },
-    { "station": "Овча", "departure": "10:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8017",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "10:10" },
-    { "station": "Камендин", "departure": "10:14" },
-    { "station": "Земунско поље", "departure": "10:16" },
-    { "station": "Алтина", "departure": "10:18" },
-    { "station": "Земун", "departure": "10:22" },
-    { "station": "Тошин бунар", "departure": "10:26" },
-    { "station": "Нови Београд", "departure": "10:29" },
-    { "station": "Београд Центар (Arr)", "departure": "10:32" },
-    { "station": "Београд Центар (Dep)", "departure": "10:33" },
-    { "station": "Карађорђев парк", "departure": "10:37" },
-    { "station": "Вуков споменик", "departure": "10:41" },
-    { "station": "Панчевачки мост", "departure": "10:45" },
-    { "station": "Крњача мост", "departure": "10:49" },
-    { "station": "Крњача", "departure": "10:52" },
-    { "station": "Себеш", "departure": "10:55" },
-    { "station": "Овча", "departure": "10:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8019",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "11:20" },
-    { "station": "Камендин", "departure": "11:24" },
-    { "station": "Земунско поље", "departure": "11:26" },
-    { "station": "Алтина", "departure": "11:28" },
-    { "station": "Земун", "departure": "11:32" },
-    { "station": "Тошин бунар", "departure": "11:36" },
-    { "station": "Нови Београд", "departure": "11:39" },
-    { "station": "Београд Центар (Arr)", "departure": "11:42" },
-    { "station": "Београд Центар (Dep)", "departure": "11:43" },
-    { "station": "Карађорђев парк", "departure": "11:47" },
-    { "station": "Вуков споменик", "departure": "11:51" },
-    { "station": "Панчевачки мост", "departure": "11:55" },
-    { "station": "Крњача мост", "departure": "11:59" },
-    { "station": "Крњача", "departure": "12:02" },
-    { "station": "Себеш", "departure": "12:05" },
-    { "station": "Овча", "departure": "12:08" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8021",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "12:00" },
-    { "station": "Камендин", "departure": "12:04" },
-    { "station": "Земунско поље", "departure": "12:06" },
-    { "station": "Алтина", "departure": "12:08" },
-    { "station": "Земун", "departure": "12:12" },
-    { "station": "Тошин бунар", "departure": "12:16" },
-    { "station": "Нови Београд", "departure": "12:19" },
-    { "station": "Београд Центар (Arr)", "departure": "12:22" },
-    { "station": "Београд Центар (Dep)", "departure": "12:23" },
-    { "station": "Карађорђев парк", "departure": "12:27" },
-    { "station": "Вуков споменик", "departure": "12:31" },
-    { "station": "Панчевачки мост", "departure": "12:35" },
-    { "station": "Крњача мост", "departure": "12:39" },
-    { "station": "Крњача", "departure": "12:42" },
-    { "station": "Себеш", "departure": "12:45" },
-    { "station": "Овча", "departure": "12:48" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8023",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "13:20" },
-    { "station": "Камендин", "departure": "13:24" },
-    { "station": "Земунско поље", "departure": "13:26" },
-    { "station": "Алтина", "departure": "13:28" },
-    { "station": "Земун", "departure": "13:32" },
-    { "station": "Тошин бунар", "departure": "13:36" },
-    { "station": "Нови Београд", "departure": "13:39" },
-    { "station": "Београд Центар (Arr)", "departure": "13:42" },
-    { "station": "Београд Центар (Dep)", "departure": "13:43" },
-    { "station": "Карађорђев парк", "departure": "13:47" },
-    { "station": "Вуков споменик", "departure": "13:51" },
-    { "station": "Панчевачки мост", "departure": "13:55" },
-    { "station": "Крњача мост", "departure": "13:59" },
-    { "station": "Крњача", "departure": "14:02" },
-    { "station": "Себеш", "departure": "14:05" },
-    { "station": "Овча", "departure": "14:08" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8025",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "14:00" },
-    { "station": "Камендин", "departure": "14:04" },
-    { "station": "Земунско поље", "departure": "14:06" },
-    { "station": "Алтина", "departure": "14:08" },
-    { "station": "Земун", "departure": "14:12" },
-    { "station": "Тошин бунар", "departure": "14:16" },
-    { "station": "Нови Београд", "departure": "14:19" },
-    { "station": "Београд Центар (Arr)", "departure": "14:22" },
-    { "station": "Београд Центар (Dep)", "departure": "14:23" },
-    { "station": "Карађорђев парк", "departure": "14:27" },
-    { "station": "Вуков споменик", "departure": "14:31" },
-    { "station": "Панчевачки мост", "departure": "14:35" },
-    { "station": "Крњача мост", "departure": "14:39" },
-    { "station": "Крњача", "departure": "14:42" },
-    { "station": "Себеш", "departure": "14:45" },
-    { "station": "Овча", "departure": "14:48" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8027",
-  "direction": "Овча",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Батајница", "departure": "14:30" },
-    { "station": "Камендин", "departure": "14:34" },
-    { "station": "Земунско поље", "departure": "14:36" },
-    { "station": "Алтина", "departure": "14:38" },
-    { "station": "Земун", "departure": "14:42" },
-    { "station": "Тошин бунар", "departure": "14:46" },
-    { "station": "Нови Београд", "departure": "14:49" },
-    { "station": "Београд Центар (Arr)", "departure": "14:52" },
-    { "station": "Београд Центар (Dep)", "departure": "14:53" },
-    { "station": "Карађорђев парк", "departure": "14:57" },
-    { "station": "Вуков споменик", "departure": "15:01" },
-    { "station": "Панчевачки мост", "departure": "15:05" },
-    { "station": "Крњача мост", "departure": "15:09" },
-    { "station": "Крњача", "departure": "15:12" },
-    { "station": "Себеш", "departure": "15:15" },
-    { "station": "Овча", "departure": "15:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8029",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "15:10" },
-    { "station": "Камендин", "departure": "15:14" },
-    { "station": "Земунско поље", "departure": "15:16" },
-    { "station": "Алтина", "departure": "15:18" },
-    { "station": "Земун", "departure": "15:22" },
-    { "station": "Тошин бунар", "departure": "15:26" },
-    { "station": "Нови Београд", "departure": "15:29" },
-    { "station": "Београд Центар (Arr)", "departure": "15:32" },
-    { "station": "Београд Центар (Dep)", "departure": "15:33" },
-    { "station": "Карађорђев парк", "departure": "15:37" },
-    { "station": "Вуков споменик", "departure": "15:41" },
-    { "station": "Панчевачки мост", "departure": "15:45" },
-    { "station": "Крњача мост", "departure": "15:49" },
-    { "station": "Крњача", "departure": "15:52" },
-    { "station": "Себеш", "departure": "15:55" },
-    { "station": "Овча", "departure": "15:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8031",
-  "direction": "Овча",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Батајница", "departure": "15:30" },
-    { "station": "Камендин", "departure": "15:34" },
-    { "station": "Земунско поље", "departure": "15:36" },
-    { "station": "Алтина", "departure": "15:38" },
-    { "station": "Земун", "departure": "15:42" },
-    { "station": "Тошин бунар", "departure": "15:46" },
-    { "station": "Нови Београд", "departure": "15:49" },
-    { "station": "Београд Центар (Arr)", "departure": "15:52" },
-    { "station": "Београд Центар (Dep)", "departure": "15:53" },
-    { "station": "Карађорђев парк", "departure": "15:57" },
-    { "station": "Вуков споменик", "departure": "16:01" },
-    { "station": "Панчевачки мост", "departure": "16:05" },
-    { "station": "Крњача мост", "departure": "16:09" },
-    { "station": "Крњача", "departure": "16:12" },
-    { "station": "Себеш", "departure": "16:15" },
-    { "station": "Овча", "departure": "16:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8033",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "16:00" },
-    { "station": "Камендин", "departure": "16:04" },
-    { "station": "Земунско поље", "departure": "16:06" },
-    { "station": "Алтина", "departure": "16:08" },
-    { "station": "Земун", "departure": "16:12" },
-    { "station": "Тошин бунар", "departure": "16:16" },
-    { "station": "Нови Београд", "departure": "16:19" },
-    { "station": "Београд Центар (Arr)", "departure": "16:22" },
-    { "station": "Београд Центар (Dep)", "departure": "16:23" },
-    { "station": "Карађорђев парк", "departure": "16:27" },
-    { "station": "Вуков споменик", "departure": "16:31" },
-    { "station": "Панчевачки мост", "departure": "16:35" },
-    { "station": "Крњача мост", "departure": "16:39" },
-    { "station": "Крњача", "departure": "16:42" },
-    { "station": "Себеш", "departure": "16:45" },
-    { "station": "Овча", "departure": "16:48" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8035",
-  "direction": "Овча",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Батајница", "departure": "16:30" },
-    { "station": "Камендин", "departure": "16:34" },
-    { "station": "Земунско поље", "departure": "16:36" },
-    { "station": "Алтина", "departure": "16:38" },
-    { "station": "Земун", "departure": "16:42" },
-    { "station": "Тошин бунар", "departure": "16:46" },
-    { "station": "Нови Београд", "departure": "16:49" },
-    { "station": "Београд Центар (Arr)", "departure": "16:52" },
-    { "station": "Београд Центар (Dep)", "departure": "16:53" },
-    { "station": "Карађорђев парк", "departure": "16:57" },
-    { "station": "Вуков споменик", "departure": "17:01" },
-    { "station": "Панчевачки мост", "departure": "17:05" },
-    { "station": "Крњача мост", "departure": "17:09" },
-    { "station": "Крњача", "departure": "17:12" },
-    { "station": "Себеш", "departure": "17:15" },
-    { "station": "Овча", "departure": "17:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8037",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "17:10" },
-    { "station": "Камендин", "departure": "17:14" },
-    { "station": "Земунско поље", "departure": "17:16" },
-    { "station": "Алтина", "departure": "17:18" },
-    { "station": "Земун", "departure": "17:22" },
-    { "station": "Тошин бунар", "departure": "17:26" },
-    { "station": "Нови Београд", "departure": "17:29" },
-    { "station": "Београд Центар (Arr)", "departure": "17:32" },
-    { "station": "Београд Центар (Dep)", "departure": "17:33" },
-    { "station": "Карађорђев парк", "departure": "17:37" },
-    { "station": "Вуков споменик", "departure": "17:41" },
-    { "station": "Панчевачки мост", "departure": "17:45" },
-    { "station": "Крњача мост", "departure": "17:49" },
-    { "station": "Крњача", "departure": "17:52" },
-    { "station": "Себеш", "departure": "17:55" },
-    { "station": "Овча", "departure": "17:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8039",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "17:30" },
-    { "station": "Камендин", "departure": "17:34" },
-    { "station": "Земунско поље", "departure": "17:36" },
-    { "station": "Алтина", "departure": "17:38" },
-    { "station": "Земун", "departure": "17:42" },
-    { "station": "Тошин бунар", "departure": "17:46" },
-    { "station": "Нови Београд", "departure": "17:49" },
-    { "station": "Београд Центар (Arr)", "departure": "17:52" },
-    { "station": "Београд Центар (Dep)", "departure": "17:53" },
-    { "station": "Карађорђев парк", "departure": "17:57" },
-    { "station": "Вуков споменик", "departure": "18:01" },
-    { "station": "Панчевачки мост", "departure": "18:05" },
-    { "station": "Крњача мост", "departure": "18:09" },
-    { "station": "Крњача", "departure": "18:12" },
-    { "station": "Себеш", "departure": "18:15" },
-    { "station": "Овча", "departure": "18:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8041",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "18:30" },
-    { "station": "Камендин", "departure": "18:34" },
-    { "station": "Земунско поље", "departure": "18:36" },
-    { "station": "Алтина", "departure": "18:38" },
-    { "station": "Земун", "departure": "18:42" },
-    { "station": "Тошин бунар", "departure": "18:46" },
-    { "station": "Нови Београд", "departure": "18:49" },
-    { "station": "Београд Центар (Arr)", "departure": "18:52" },
-    { "station": "Београд Центар (Dep)", "departure": "18:53" },
-    { "station": "Карађорђев парк", "departure": "18:57" },
-    { "station": "Вуков споменик", "departure": "19:01" },
-    { "station": "Панчевачки мост", "departure": "19:05" },
-    { "station": "Крњача мост", "departure": "19:09" },
-    { "station": "Крњача", "departure": "19:12" },
-    { "station": "Себеш", "departure": "19:15" },
-    { "station": "Овча", "departure": "19:18" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8043",
-  "direction": "Овча",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Батајница", "departure": "19:10" },
-    { "station": "Камендин", "departure": "19:14" },
-    { "station": "Земунско поље", "departure": "19:16" },
-    { "station": "Алтина", "departure": "19:18" },
-    { "station": "Земун", "departure": "19:22" },
-    { "station": "Тошин бунар", "departure": "19:26" },
-    { "station": "Нови Београд", "departure": "19:29" },
-    { "station": "Београд Центар (Arr)", "departure": "19:32" },
-    { "station": "Београд Центар (Dep)", "departure": "19:33" },
-    { "station": "Карађорђев парк", "departure": "19:37" },
-    { "station": "Вуков споменик", "departure": "19:41" },
-    { "station": "Панчевачки мост", "departure": "19:45" },
-    { "station": "Крњача мост", "departure": "19:49" },
-    { "station": "Крњача", "departure": "19:52" },
-    { "station": "Себеш", "departure": "19:55" },
-    { "station": "Овча", "departure": "19:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8045",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Батајница", "departure": "20:00" },
-    { "station": "Камендин", "departure": "20:04" },
-    { "station": "Земунско поље", "departure": "20:06" },
-    { "station": "Алтина", "departure": "20:08" },
-    { "station": "Земун", "departure": "20:12" },
-    { "station": "Тошин бунар", "departure": "20:16" },
-    { "station": "Нови Београд", "departure": "20:19" },
-    { "station": "Београд Центар (Arr)", "departure": "20:22" },
-    { "station": "Београд Центар (Dep)", "departure": "20:23" },
-    { "station": "Карађорђев парк", "departure": "20:27" },
-    { "station": "Вуков споменик", "departure": "20:31" },
-    { "station": "Панчевачки мост", "departure": "20:35" },
-    { "station": "Крњача мост", "departure": "20:39" },
-    { "station": "Крњача", "departure": "20:42" },
-    { "station": "Себеш", "departure": "20:45" },
-    { "station": "Овча", "departure": "20:48" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8000",
-  "direction": "Батајница",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "05:40" },
-    { "station": "Себеш", "departure": "05:44" },
-    { "station": "Крњача", "departure": "05:48" },
-    { "station": "Крњача мост", "departure": "05:50" },
-    { "station": "Панчевачки мост", "departure": "05:56" },
-    { "station": "Вуков споменик", "departure": "05:59" },
-    { "station": "Карађорђев парк", "departure": "06:03" },
-    { "station": "Београд Центар (Arr)", "departure": "06:05" },
-    { "station": "Београд Центар (Dep)", "departure": "06:06" },
-    { "station": "Нови Београд", "departure": "06:10" },
-    { "station": "Тошин бунар", "departure": "06:13" },
-    { "station": "Земун", "departure": "06:17" },
-    { "station": "Алтина", "departure": "06:20" },
-    { "station": "Земунско поље", "departure": "06:22" },
-    { "station": "Камендин", "departure": "06:24" },
-    { "station": "Батајница", "departure": "06:28" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8002",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "06:10" },
-    { "station": "Себеш", "departure": "06:14" },
-    { "station": "Крњача", "departure": "06:18" },
-    { "station": "Крњача мост", "departure": "06:20" },
-    { "station": "Панчевачки мост", "departure": "06:26" },
-    { "station": "Вуков споменик", "departure": "06:29" },
-    { "station": "Карађорђев парк", "departure": "06:33" },
-    { "station": "Београд Центар (Arr)", "departure": "06:35" },
-    { "station": "Београд Центар (Dep)", "departure": "06:36" },
-    { "station": "Нови Београд", "departure": "06:40" },
-    { "station": "Тошин бунар", "departure": "06:43" },
-    { "station": "Земун", "departure": "06:47" },
-    { "station": "Алтина", "departure": "06:50" },
-    { "station": "Земунско поље", "departure": "06:52" },
-    { "station": "Камендин", "departure": "06:54" },
-    { "station": "Батајница", "departure": "06:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8004",
-  "direction": "Батајница",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "06:40" },
-    { "station": "Себеш", "departure": "06:44" },
-    { "station": "Крњача", "departure": "06:48" },
-    { "station": "Крњача мост", "departure": "06:50" },
-    { "station": "Панчевачки мост", "departure": "06:56" },
-    { "station": "Вуков споменик", "departure": "06:59" },
-    { "station": "Карађорђев парк", "departure": "07:03" },
-    { "station": "Београд Центар (Arr)", "departure": "07:05" },
-    { "station": "Београд Центар (Dep)", "departure": "07:06" },
-    { "station": "Нови Београд", "departure": "07:10" },
-    { "station": "Тошин бунар", "departure": "07:13" },
-    { "station": "Земун", "departure": "07:17" },
-    { "station": "Алтина", "departure": "07:20" },
-    { "station": "Земунско поље", "departure": "07:22" },
-    { "station": "Камендин", "departure": "07:24" },
-    { "station": "Батајница", "departure": "07:28" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8006",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "07:10" },
-    { "station": "Себеш", "departure": "07:14" },
-    { "station": "Крњача", "departure": "07:18" },
-    { "station": "Крњача мост", "departure": "07:20" },
-    { "station": "Панчевачки мост", "departure": "07:26" },
-    { "station": "Вуков споменик", "departure": "07:29" },
-    { "station": "Карађорђев парк", "departure": "07:33" },
-    { "station": "Београд Центар (Arr)", "departure": "07:35" },
-    { "station": "Београд Центар (Dep)", "departure": "07:36" },
-    { "station": "Нови Београд", "departure": "07:40" },
-    { "station": "Тошин бунар", "departure": "07:43" },
-    { "station": "Земун", "departure": "07:47" },
-    { "station": "Алтина", "departure": "07:50" },
-    { "station": "Земунско поље", "departure": "07:52" },
-    { "station": "Камендин", "departure": "07:54" },
-    { "station": "Батајница", "departure": "07:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8008",
-  "direction": "Батајница",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "07:40" },
-    { "station": "Себеш", "departure": "07:44" },
-    { "station": "Крњача", "departure": "07:48" },
-    { "station": "Крњача мост", "departure": "07:50" },
-    { "station": "Панчевачки мост", "departure": "07:56" },
-    { "station": "Вуков споменик", "departure": "07:59" },
-    { "station": "Карађорђев парк", "departure": "08:03" },
-    { "station": "Београд Центар (Arr)", "departure": "08:05" },
-    { "station": "Београд Центар (Dep)", "departure": "08:06" },
-    { "station": "Нови Београд", "departure": "08:10" },
-    { "station": "Тошин бунар", "departure": "08:13" },
-    { "station": "Земун", "departure": "08:17" },
-    { "station": "Алтина", "departure": "08:20" },
-    { "station": "Земунско поље", "departure": "08:22" },
-    { "station": "Камендин", "departure": "08:24" },
-    { "station": "Батајница", "departure": "08:28" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8010",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "08:10" },
-    { "station": "Себеш", "departure": "08:14" },
-    { "station": "Крњача", "departure": "08:18" },
-    { "station": "Крњача мост", "departure": "08:20" },
-    { "station": "Панчевачки мост", "departure": "08:26" },
-    { "station": "Вуков споменик", "departure": "08:29" },
-    { "station": "Карађорђев парк", "departure": "08:33" },
-    { "station": "Београд Центар (Arr)", "departure": "08:35" },
-    { "station": "Београд Центар (Dep)", "departure": "08:36" },
-    { "station": "Нови Београд", "departure": "08:40" },
-    { "station": "Тошин бунар", "departure": "08:43" },
-    { "station": "Земун", "departure": "08:47" },
-    { "station": "Алтина", "departure": "08:50" },
-    { "station": "Земунско поље", "departure": "08:52" },
-    { "station": "Камендин", "departure": "08:54" },
-    { "station": "Батајница", "departure": "08:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8012",
-  "direction": "Батајница",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "08:40" },
-    { "station": "Себеш", "departure": "08:44" },
-    { "station": "Крњача", "departure": "08:48" },
-    { "station": "Крњача мост", "departure": "08:50" },
-    { "station": "Панчевачки мост", "departure": "08:56" },
-    { "station": "Вуков споменик", "departure": "08:59" },
-    { "station": "Карађорђев парк", "departure": "09:03" },
-    { "station": "Београд Центар (Arr)", "departure": "09:05" },
-    { "station": "Београд Центар (Dep)", "departure": "09:06" },
-    { "station": "Нови Београд", "departure": "09:10" },
-    { "station": "Тошин бунар", "departure": "09:13" },
-    { "station": "Земун", "departure": "09:17" },
-    { "station": "Алтина", "departure": "09:20" },
-    { "station": "Земунско поље", "departure": "09:22" },
-    { "station": "Камендин", "departure": "09:24" },
-    { "station": "Батајница", "departure": "09:28" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8014",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "09:10" },
-    { "station": "Себеш", "departure": "09:14" },
-    { "station": "Крњача", "departure": "09:18" },
-    { "station": "Крњача мост", "departure": "09:20" },
-    { "station": "Панчевачки мост", "departure": "09:26" },
-    { "station": "Вуков споменик", "departure": "09:29" },
-    { "station": "Карађорђев парк", "departure": "09:33" },
-    { "station": "Београд Центар (Arr)", "departure": "09:35" },
-    { "station": "Београд Центар (Dep)", "departure": "09:36" },
-    { "station": "Нови Београд", "departure": "09:40" },
-    { "station": "Тошин бунар", "departure": "09:43" },
-    { "station": "Земун", "departure": "09:47" },
-    { "station": "Алтина", "departure": "09:50" },
-    { "station": "Земунско поље", "departure": "09:52" },
-    { "station": "Камендин", "departure": "09:54" },
-    { "station": "Батајница", "departure": "09:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8016",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "09:50" },
-    { "station": "Себеш", "departure": "09:54" },
-    { "station": "Крњача", "departure": "09:58" },
-    { "station": "Крњача мост", "departure": "10:00" },
-    { "station": "Панчевачки мост", "departure": "10:06" },
-    { "station": "Вуков споменик", "departure": "10:09" },
-    { "station": "Карађорђев парк", "departure": "10:13" },
-    { "station": "Београд Центар (Arr)", "departure": "10:15" },
-    { "station": "Београд Центар (Dep)", "departure": "10:16" },
-    { "station": "Нови Београд", "departure": "10:20" },
-    { "station": "Тошин бунар", "departure": "10:23" },
-    { "station": "Земун", "departure": "10:27" },
-    { "station": "Алтина", "departure": "10:30" },
-    { "station": "Земунско поље", "departure": "10:32" },
-    { "station": "Камендин", "departure": "10:34" },
-    { "station": "Батајница", "departure": "10:38" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8018",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "10:50" },
-    { "station": "Себеш", "departure": "10:54" },
-    { "station": "Крњача", "departure": "10:58" },
-    { "station": "Крњача мост", "departure": "11:00" },
-    { "station": "Панчевачки мост", "departure": "11:06" },
-    { "station": "Вуков споменик", "departure": "11:09" },
-    { "station": "Карађорђев парк", "departure": "11:13" },
-    { "station": "Београд Центар (Arr)", "departure": "11:15" },
-    { "station": "Београд Центар (Dep)", "departure": "11:16" },
-    { "station": "Нови Београд", "departure": "11:20" },
-    { "station": "Тошин бунар", "departure": "11:23" },
-    { "station": "Земун", "departure": "11:27" },
-    { "station": "Алтина", "departure": "11:30" },
-    { "station": "Земунско поље", "departure": "11:32" },
-    { "station": "Камендин", "departure": "11:34" },
-    { "station": "Батајница", "departure": "11:38" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8020",
-  "direction": "Земун",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "11:20" },
-    { "station": "Себеш", "departure": "11:24" },
-    { "station": "Крњача", "departure": "11:28" },
-    { "station": "Крњача мост", "departure": "11:30" },
-    { "station": "Панчевачки мост", "departure": "11:36" },
-    { "station": "Вуков споменик", "departure": "11:39" },
-    { "station": "Карађорђев парк", "departure": "11:43" },
-    { "station": "Београд Центар (Arr)", "departure": "11:45" },
-    { "station": "Београд Центар (Dep)", "departure": "11:46" },
-    { "station": "Нови Београд", "departure": "11:50" },
-    { "station": "Тошин бунар", "departure": "11:53" },
-    { "station": "Земун", "departure": "11:56" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8022",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "12:10" },
-    { "station": "Себеш", "departure": "12:14" },
-    { "station": "Крњача", "departure": "12:18" },
-    { "station": "Крњача мост", "departure": "12:20" },
-    { "station": "Панчевачки мост", "departure": "12:26" },
-    { "station": "Вуков споменик", "departure": "12:29" },
-    { "station": "Карађорђев парк", "departure": "12:33" },
-    { "station": "Београд Центар (Arr)", "departure": "12:35" },
-    { "station": "Београд Центар (Dep)", "departure": "12:36" },
-    { "station": "Нови Београд", "departure": "12:40" },
-    { "station": "Тошин бунар", "departure": "12:43" },
-    { "station": "Земун", "departure": "12:47" },
-    { "station": "Алтина", "departure": "12:50" },
-    { "station": "Земунско поље", "departure": "12:52" },
-    { "station": "Камендин", "departure": "12:54" },
-    { "station": "Батајница", "departure": "12:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8024",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "13:10" },
-    { "station": "Себеш", "departure": "13:14" },
-    { "station": "Крњача", "departure": "13:18" },
-    { "station": "Крњача мост", "departure": "13:20" },
-    { "station": "Панчевачки мост", "departure": "13:26" },
-    { "station": "Вуков споменик", "departure": "13:29" },
-    { "station": "Карађорђев парк", "departure": "13:33" },
-    { "station": "Београд Центар (Arr)", "departure": "13:35" },
-    { "station": "Београд Центар (Dep)", "departure": "13:36" },
-    { "station": "Нови Београд", "departure": "13:40" },
-    { "station": "Тошин бунар", "departure": "13:43" },
-    { "station": "Земун", "departure": "13:47" },
-    { "station": "Алтина", "departure": "13:50" },
-    { "station": "Земунско поље", "departure": "13:52" },
-    { "station": "Камендин", "departure": "13:54" },
-    { "station": "Батајница", "departure": "13:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8026",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "13:50" },
-    { "station": "Себеш", "departure": "13:54" },
-    { "station": "Крњача", "departure": "13:58" },
-    { "station": "Крњача мост", "departure": "14:00" },
-    { "station": "Панчевачки мост", "departure": "14:06" },
-    { "station": "Вуков споменик", "departure": "14:09" },
-    { "station": "Карађорђев парк", "departure": "14:13" },
-    { "station": "Београд Центар (Arr)", "departure": "14:15" },
-    { "station": "Београд Центар (Dep)", "departure": "14:16" },
-    { "station": "Нови Београд", "departure": "14:20" },
-    { "station": "Тошин бунар", "departure": "14:23" },
-    { "station": "Земун", "departure": "14:27" },
-    { "station": "Алтина", "departure": "14:30" },
-    { "station": "Земунско поље", "departure": "14:32" },
-    { "station": "Камендин", "departure": "14:34" },
-    { "station": "Батајница", "departure": "14:38" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8028",
-  "direction": "Батајница",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "14:40" },
-    { "station": "Себеш", "departure": "14:44" },
-    { "station": "Крњача", "departure": "14:48" },
-    { "station": "Крњача мост", "departure": "14:50" },
-    { "station": "Панчевачки мост", "departure": "14:56" },
-    { "station": "Вуков споменик", "departure": "14:59" },
-    { "station": "Карађорђев парк", "departure": "15:03" },
-    { "station": "Београд Центар (Arr)", "departure": "15:05" },
-    { "station": "Београд Центар (Dep)", "departure": "15:06" },
-    { "station": "Нови Београд", "departure": "15:10" },
-    { "station": "Тошин бунар", "departure": "15:13" },
-    { "station": "Земун", "departure": "15:17" },
-    { "station": "Алтина", "departure": "15:20" },
-    { "station": "Земунско поље", "departure": "15:22" },
-    { "station": "Камендин", "departure": "15:24" },
-    { "station": "Батајница", "departure": "15:28" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8030",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "15:10" },
-    { "station": "Себеш", "departure": "15:14" },
-    { "station": "Крњача", "departure": "15:18" },
-    { "station": "Крњача мост", "departure": "15:20" },
-    { "station": "Панчевачки мост", "departure": "15:26" },
-    { "station": "Вуков споменик", "departure": "15:29" },
-    { "station": "Карађорђев парк", "departure": "15:33" },
-    { "station": "Београд Центар (Arr)", "departure": "15:35" },
-    { "station": "Београд Центар (Dep)", "departure": "15:36" },
-    { "station": "Нови Београд", "departure": "15:40" },
-    { "station": "Тошин бунар", "departure": "15:43" },
-    { "station": "Земун", "departure": "15:47" },
-    { "station": "Алтина", "departure": "15:50" },
-    { "station": "Земунско поље", "departure": "15:52" },
-    { "station": "Камендин", "departure": "15:54" },
-    { "station": "Батајница", "departure": "15:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8032",
-  "direction": "Батајница",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "15:40" },
-    { "station": "Себеш", "departure": "15:44" },
-    { "station": "Крњача", "departure": "15:48" },
-    { "station": "Крњача мост", "departure": "15:50" },
-    { "station": "Панчевачки мост", "departure": "15:56" },
-    { "station": "Вуков споменик", "departure": "15:59" },
-    { "station": "Карађорђев парк", "departure": "16:03" },
-    { "station": "Београд Центар (Arr)", "departure": "16:05" },
-    { "station": "Београд Центар (Dep)", "departure": "16:06" },
-    { "station": "Нови Београд", "departure": "16:10" },
-    { "station": "Тошин бунар", "departure": "16:13" },
-    { "station": "Земун", "departure": "16:17" },
-    { "station": "Алтина", "departure": "16:20" },
-    { "station": "Земунско поље", "departure": "16:22" },
-    { "station": "Камендин", "departure": "16:24" },
-    { "station": "Батајница", "departure": "16:28" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8034",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "16:20" },
-    { "station": "Себеш", "departure": "16:24" },
-    { "station": "Крњача", "departure": "16:28" },
-    { "station": "Крњача мост", "departure": "16:30" },
-    { "station": "Панчевачки мост", "departure": "16:36" },
-    { "station": "Вуков споменик", "departure": "16:39" },
-    { "station": "Карађорђев парк", "departure": "16:43" },
-    { "station": "Београд Центар (Arr)", "departure": "16:45" },
-    { "station": "Београд Центар (Dep)", "departure": "16:46" },
-    { "station": "Нови Београд", "departure": "16:50" },
-    { "station": "Тошин бунар", "departure": "16:53" },
-    { "station": "Земун", "departure": "16:57" },
-    { "station": "Алтина", "departure": "17:00" },
-    { "station": "Земунско поље", "departure": "17:02" },
-    { "station": "Камендин", "departure": "17:04" },
-    { "station": "Батајница", "departure": "17:08" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8036",
-  "direction": "Батајница",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "16:40" },
-    { "station": "Себеш", "departure": "16:44" },
-    { "station": "Крњача", "departure": "16:48" },
-    { "station": "Крњача мост", "departure": "16:50" },
-    { "station": "Панчевачки мост", "departure": "16:56" },
-    { "station": "Вуков споменик", "departure": "16:59" },
-    { "station": "Карађорђев парк", "departure": "17:03" },
-    { "station": "Београд Центар (Arr)", "departure": "17:05" },
-    { "station": "Београд Центар (Dep)", "departure": "17:06" },
-    { "station": "Нови Београд", "departure": "17:10" },
-    { "station": "Тошин бунар", "departure": "17:13" },
-    { "station": "Земун", "departure": "17:17" },
-    { "station": "Алтина", "departure": "17:20" },
-    { "station": "Земунско поље", "departure": "17:22" },
-    { "station": "Камендин", "departure": "17:24" },
-    { "station": "Батајница", "departure": "17:28" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8038",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "17:10" },
-    { "station": "Себеш", "departure": "17:14" },
-    { "station": "Крњача", "departure": "17:18" },
-    { "station": "Крњача мост", "departure": "17:20" },
-    { "station": "Панчевачки мост", "departure": "17:26" },
-    { "station": "Вуков споменик", "departure": "17:29" },
-    { "station": "Карађорђев парк", "departure": "17:33" },
-    { "station": "Београд Центар (Arr)", "departure": "17:35" },
-    { "station": "Београд Центар (Dep)", "departure": "17:36" },
-    { "station": "Нови Београд", "departure": "17:40" },
-    { "station": "Тошин бунар", "departure": "17:43" },
-    { "station": "Земун", "departure": "17:47" },
-    { "station": "Алтина", "departure": "17:50" },
-    { "station": "Земунско поље", "departure": "17:52" },
-    { "station": "Камендин", "departure": "17:54" },
-    { "station": "Батајница", "departure": "17:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8040",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "17:50" },
-    { "station": "Себеш", "departure": "17:54" },
-    { "station": "Крњача", "departure": "17:58" },
-    { "station": "Крњача мост", "departure": "18:00" },
-    { "station": "Панчевачки мост", "departure": "18:06" },
-    { "station": "Вуков споменик", "departure": "18:09" },
-    { "station": "Карађорђев парк", "departure": "18:13" },
-    { "station": "Београд Центар (Arr)", "departure": "18:15" },
-    { "station": "Београд Центар (Dep)", "departure": "18:16" },
-    { "station": "Нови Београд", "departure": "18:20" },
-    { "station": "Тошин бунар", "departure": "18:23" },
-    { "station": "Земун", "departure": "18:27" },
-    { "station": "Алтина", "departure": "18:30" },
-    { "station": "Земунско поље", "departure": "18:32" },
-    { "station": "Камендин", "departure": "18:34" },
-    { "station": "Батајница", "departure": "18:38" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8042",
-  "direction": "Земун",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "18:40" },
-    { "station": "Себеш", "departure": "18:44" },
-    { "station": "Крњача", "departure": "18:48" },
-    { "station": "Крњача мост", "departure": "18:50" },
-    { "station": "Панчевачки мост", "departure": "18:56" },
-    { "station": "Вуков споменик", "departure": "18:59" },
-    { "station": "Карађорђев парк", "departure": "19:03" },
-    { "station": "Београд Центар (Arr)", "departure": "19:05" },
-    { "station": "Београд Центар (Dep)", "departure": "19:06" },
-    { "station": "Нови Београд", "departure": "19:10" },
-    { "station": "Тошин бунар", "departure": "19:13" },
-    { "station": "Земун", "departure": "19:16" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8044",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "19:10" },
-    { "station": "Себеш", "departure": "19:14" },
-    { "station": "Крњача", "departure": "19:18" },
-    { "station": "Крњача мост", "departure": "19:20" },
-    { "station": "Панчевачки мост", "departure": "19:26" },
-    { "station": "Вуков споменик", "departure": "19:29" },
-    { "station": "Карађорђев парк", "departure": "19:33" },
-    { "station": "Београд Центар (Arr)", "departure": "19:35" },
-    { "station": "Београд Центар (Dep)", "departure": "19:36" },
-    { "station": "Нови Београд", "departure": "19:40" },
-    { "station": "Тошин бунар", "departure": "19:43" },
-    { "station": "Земун", "departure": "19:47" },
-    { "station": "Алтина", "departure": "19:50" },
-    { "station": "Земунско поље", "departure": "19:52" },
-    { "station": "Камендин", "departure": "19:54" },
-    { "station": "Батајница", "departure": "19:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8046",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "19:40" },
-    { "station": "Себеш", "departure": "19:44" },
-    { "station": "Крњача", "departure": "19:48" },
-    { "station": "Крњача мост", "departure": "19:50" },
-    { "station": "Панчевачки мост", "departure": "19:56" },
-    { "station": "Вуков споменик", "departure": "19:59" },
-    { "station": "Карађорђев парк", "departure": "20:03" },
-    { "station": "Београд Центар (Arr)", "departure": "20:05" },
-    { "station": "Београд Центар (Dep)", "departure": "20:06" },
-    { "station": "Нови Београд", "departure": "20:10" },
-    { "station": "Тошин бунар", "departure": "20:13" },
-    { "station": "Земун", "departure": "20:17" },
-    { "station": "Алтина", "departure": "20:20" },
-    { "station": "Земунско поље", "departure": "20:22" },
-    { "station": "Камендин", "departure": "20:24" },
-    { "station": "Батајница", "departure": "20:28" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8048",
-  "direction": "Батајница",
-  "runs_on_weekends": false,
-  "holiday_exceptions": [
-    "2026-01-01", "2026-01-02", "2026-01-07",
-    "2026-02-15", "2026-02-16", "2026-02-17",
-    "2026-04-10", "2026-04-12", "2026-04-13",
-    "2026-05-01", "2026-05-02",
-    "2026-11-11"
-  ],
-  "stops": [
-    { "station": "Овча", "departure": "20:20" },
-    { "station": "Себеш", "departure": "20:24" },
-    { "station": "Крњача", "departure": "20:28" },
-    { "station": "Крњача мост", "departure": "20:30" },
-    { "station": "Панчевачки мост", "departure": "20:36" },
-    { "station": "Вуков споменик", "departure": "20:39" },
-    { "station": "Карађорђев парк", "departure": "20:43" },
-    { "station": "Београд Центар (Arr)", "departure": "20:45" },
-    { "station": "Београд Центар (Dep)", "departure": "20:46" },
-    { "station": "Нови Београд", "departure": "20:50" },
-    { "station": "Тошин бунар", "departure": "20:53" },
-    { "station": "Земун", "departure": "20:57" },
-    { "station": "Алтина", "departure": "21:00" },
-    { "station": "Земунско поље", "departure": "21:02" },
-    { "station": "Камендин", "departure": "21:04" },
-    { "station": "Батајница", "departure": "21:08" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8050",
-  "direction": "Батајница",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "21:10" },
-    { "station": "Себеш", "departure": "21:14" },
-    { "station": "Крњача", "departure": "21:18" },
-    { "station": "Крњача мост", "departure": "21:20" },
-    { "station": "Панчевачки мост", "departure": "21:26" },
-    { "station": "Вуков споменик", "departure": "21:29" },
-    { "station": "Карађорђев парк", "departure": "21:33" },
-    { "station": "Београд Центар (Arr)", "departure": "21:35" },
-    { "station": "Београд Центар (Dep)", "departure": "21:36" },
-    { "station": "Нови Београд", "departure": "21:40" },
-    { "station": "Тошин бунар", "departure": "21:43" },
-    { "station": "Земун", "departure": "21:47" },
-    { "station": "Алтина", "departure": "21:50" },
-    { "station": "Земунско поље", "departure": "21:52" },
-    { "station": "Камендин", "departure": "21:54" },
-    { "station": "Батајница", "departure": "21:58" }
-  ]
-},
-  {
-  "line": "BG:voz 1",
-  "train_id": "8340",
-  "direction": "Земун",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "22:35" },
-    { "station": "Себеш", "departure": "22:39" },
-    { "station": "Крњача", "departure": "22:43" },
-    { "station": "Крњача мост", "departure": "22:45" },
-    { "station": "Панчевачки мост", "departure": "22:51" },
-    { "station": "Вуков споменик", "departure": "22:54" },
-    { "station": "Карађорђев парк", "departure": "22:58" },
-    { "station": "Београд Центар (Arr)", "departure": "23:00" },
-    { "station": "Београд Центар (Dep)", "departure": "23:01" },
-    { "station": "Нови Београд", "departure": "23:05" },
-    { "station": "Тошин бунар", "departure": "23:08" },
-    { "station": "Земун", "departure": "23:11" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8301",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "05:40" },
-    { "station": "Кијево", "departure": "05:43" },
-    { "station": "Кнежевац", "departure": "05:45" },
-    { "station": "Раковица", "departure": "05:49" },
-    { "station": "Карађорђев парк", "departure": "05:57" },
-    { "station": "Вуков споменик", "departure": "06:01" },
-    { "station": "Панчевачки мост", "departure": "06:04" },
-    { "station": "Крњача мост", "departure": "06:08" },
-    { "station": "Крњача", "departure": "06:11" },
-    { "station": "Себеш", "departure": "06:14" },
-    { "station": "Овча", "departure": "06:17" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7100",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Лазаревац", "departure": "05:40" },
-    { "station": "Вреоци", "departure": "05:47" },
-    { "station": "Степојевац", "departure": "05:54" },
-    { "station": "Лесковац Колубарски", "departure": "05:57" },
-    { "station": "Велики Борак", "departure": "06:01" },
-    { "station": "Барајево Центар", "departure": "06:06" },
-    { "station": "Барајево", "departure": "06:09" },
-    { "station": "Бела река", "departure": "06:17" },
-    { "station": "Ресник (Arr)", "departure": "06:25" },
-    { "station": "Ресник (Dep)", "departure": "06:30" },
-    { "station": "Кијево", "departure": "06:33" },
-    { "station": "Кнежевац", "departure": "06:35" },
-    { "station": "Раковица", "departure": "06:39" },
-    { "station": "Карађорђев парк", "departure": "06:47" },
-    { "station": "Вуков споменик", "departure": "06:51" },
-    { "station": "Панчевачки мост", "departure": "06:54" },
-    { "station": "Крњача мост", "departure": "06:58" },
-    { "station": "Крњача", "departure": "07:01" },
-    { "station": "Себеш", "departure": "07:04" },
-    { "station": "Овча", "departure": "07:07" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7102",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Лазаревац", "departure": "05:55" },
-    { "station": "Вреоци", "departure": "06:02" },
-    { "station": "Степојевац", "departure": "06:09" },
-    { "station": "Лесковац Колубарски", "departure": "06:12" },
-    { "station": "Велики Борак", "departure": "06:16" },
-    { "station": "Барајево Центар", "departure": "06:21" },
-    { "station": "Бела река", "departure": "06:31" },
-    { "station": "Ресник (Arr)", "departure": "06:46" },
-    { "station": "Ресник (Dep)", "departure": "06:59" },
-    { "station": "Кијево", "departure": "07:02" },
-    { "station": "Кнежевац", "departure": "07:04" },
-    { "station": "Раковица", "departure": "07:07" },
-    { "station": "Карађорђев парк", "departure": "07:15" },
-    { "station": "Вуков споменик", "departure": "07:18" },
-    { "station": "Панчевачки мост", "departure": "07:21" },
-    { "station": "Крњача мост", "departure": "07:25" },
-    { "station": "Крњача", "departure": "07:27" },
-    { "station": "Себеш", "departure": "07:30" },
-    { "station": "Овча", "departure": "07:33" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8303",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "08:00" },
-    { "station": "Кијево", "departure": "08:03" },
-    { "station": "Кнежевац", "departure": "08:05" },
-    { "station": "Раковица", "departure": "08:09" },
-    { "station": "Карађорђев парк", "departure": "08:17" },
-    { "station": "Вуков споменик", "departure": "08:21" },
-    { "station": "Панчевачки мост", "departure": "08:24" },
-    { "station": "Крњача мост", "departure": "08:28" },
-    { "station": "Крњача", "departure": "08:31" },
-    { "station": "Себеш", "departure": "08:34" },
-    { "station": "Овча", "departure": "08:37" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7104",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Лазаревац", "departure": "07:52" },
-    { "station": "Вреоци", "departure": "07:58" },
-    { "station": "Степојевац", "departure": "08:09" },
-    { "station": "Лесковац Колубарски", "departure": "08:11" },
-    { "station": "Велики Борак", "departure": "08:15" },
-    { "station": "Барајево Центар", "departure": "08:20" },
-    { "station": "Бела река", "departure": "08:29" },
-    { "station": "Ресник (Arr)", "departure": "08:42" },
-    { "station": "Ресник (Dep)", "departure": "08:43" },
-    { "station": "Кијево", "departure": "08:47" },
-    { "station": "Кнежевац", "departure": "08:50" },
-    { "station": "Раковица", "departure": "08:54" },
-    { "station": "Карађорђев парк", "departure": "09:02" },
-    { "station": "Вуков споменик", "departure": "09:06" },
-    { "station": "Панчевачки мост", "departure": "09:10" },
-    { "station": "Крњача мост", "departure": "09:14" },
-    { "station": "Крњача", "departure": "09:17" },
-    { "station": "Себеш", "departure": "09:20" },
-    { "station": "Овча", "departure": "09:23" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8305",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "09:30" },
-    { "station": "Кијево", "departure": "09:33" },
-    { "station": "Кнежевац", "departure": "09:35" },
-    { "station": "Раковица", "departure": "09:39" },
-    { "station": "Карађорђев парк", "departure": "09:47" },
-    { "station": "Вуков споменик", "departure": "09:51" },
-    { "station": "Панчевачки мост", "departure": "09:54" },
-    { "station": "Крњача мост", "departure": "09:58" },
-    { "station": "Крњача", "departure": "10:01" },
-    { "station": "Себеш", "departure": "10:04" },
-    { "station": "Овча", "departure": "10:07" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8307",
-  "direction": "Београд Центар",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "10:00" },
-    { "station": "Кијево", "departure": "10:03" },
-    { "station": "Кнежевац", "departure": "10:05" },
-    { "station": "Раковица", "departure": "10:09" },
-    { "station": "Београд Центар", "departure": "10:17" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8311",
-  "direction": "Београд Центар",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "11:00" },
-    { "station": "Кијево", "departure": "11:03" },
-    { "station": "Кнежевац", "departure": "11:05" },
-    { "station": "Раковица", "departure": "11:09" },
-    { "station": "Београд Центар", "departure": "11:17" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8313",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "11:40" },
-    { "station": "Кијево", "departure": "11:43" },
-    { "station": "Кнежевац", "departure": "11:45" },
-    { "station": "Раковица", "departure": "11:49" },
-    { "station": "Карађорђев парк", "departure": "11:57" },
-    { "station": "Вуков споменик", "departure": "12:01" },
-    { "station": "Панчевачки мост", "departure": "12:04" },
-    { "station": "Крњача мост", "departure": "12:08" },
-    { "station": "Крњача", "departure": "12:11" },
-    { "station": "Себеш", "departure": "12:14" },
-    { "station": "Овча", "departure": "12:17" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7106",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Лазаревац", "departure": "11:40" },
-    { "station": "Вреоци", "departure": "11:47" },
-    { "station": "Степојевац", "departure": "11:54" },
-    { "station": "Лесковац Колубарски", "departure": "11:57" },
-    { "station": "Велики Борак", "departure": "12:01" },
-    { "station": "Барајево Центар", "departure": "12:06" },
-    { "station": "Барајево", "departure": "12:08" },
-    { "station": "Бела река", "departure": "12:16" },
-    { "station": "Ресник (Arr)", "departure": "12:24" },
-    { "station": "Ресник (Dep)", "departure": "12:25" },
-    { "station": "Кијево", "departure": "12:28" },
-    { "station": "Кнежевац", "departure": "12:30" },
-    { "station": "Раковица", "departure": "12:34" },
-    { "station": "Београд Центар", "departure": "12:42" },
-    { "station": "Карађорђев парк", "departure": "12:46" },
-    { "station": "Вуков споменик", "departure": "12:49" },
-    { "station": "Панчевачки мост", "departure": "12:53" },
-    { "station": "Крњача мост", "departure": "12:56" },
-    { "station": "Крњача", "departure": "12:59" },
-    { "station": "Себеш", "departure": "13:02" },
-    { "station": "Овча", "departure": "13:05" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8317",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "12:50" },
-    { "station": "Кијево", "departure": "12:53" },
-    { "station": "Кнежевац", "departure": "12:55" },
-    { "station": "Раковица", "departure": "12:59" },
-    { "station": "Карађорђев парк", "departure": "13:07" },
-    { "station": "Вуков споменик", "departure": "13:11" },
-    { "station": "Панчевачки мост", "departure": "13:14" },
-    { "station": "Крњача мост", "departure": "13:18" },
-    { "station": "Крњача", "departure": "13:21" },
-    { "station": "Себеш", "departure": "13:24" },
-    { "station": "Овча", "departure": "13:27" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8319",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "13:20" },
-    { "station": "Кијево", "departure": "13:23" },
-    { "station": "Кнежевац", "departure": "13:25" },
-    { "station": "Раковица", "departure": "13:29" },
-    { "station": "Карађорђев парк", "departure": "13:37" },
-    { "station": "Вуков споменик", "departure": "13:41" },
-    { "station": "Панчевачки мост", "departure": "13:44" },
-    { "station": "Крњача мост", "departure": "13:48" },
-    { "station": "Крњача", "departure": "13:51" },
-    { "station": "Себеш", "departure": "13:54" },
-    { "station": "Овча", "departure": "13:57" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8321",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "14:00" },
-    { "station": "Кијево", "departure": "14:03" },
-    { "station": "Кнежевац", "departure": "14:05" },
-    { "station": "Раковица", "departure": "14:09" },
-    { "station": "Карађорђев парк", "departure": "14:17" },
-    { "station": "Вуков споменик", "departure": "14:21" },
-    { "station": "Панчевачки мост", "departure": "14:24" },
-    { "station": "Крњача мост", "departure": "14:28" },
-    { "station": "Крњача", "departure": "14:31" },
-    { "station": "Себеш", "departure": "14:34" },
-    { "station": "Овча", "departure": "14:37" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8323",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "14:20" },
-    { "station": "Кијево", "departure": "14:23" },
-    { "station": "Кнежевац", "departure": "14:25" },
-    { "station": "Раковица", "departure": "14:29" },
-    { "station": "Карађорђев парк", "departure": "14:37" },
-    { "station": "Вуков споменик", "departure": "14:41" },
-    { "station": "Панчевачки мост", "departure": "14:44" },
-    { "station": "Крњача мост", "departure": "14:48" },
-    { "station": "Крњача", "departure": "14:51" },
-    { "station": "Себеш", "departure": "14:54" },
-    { "station": "Овча", "departure": "14:57" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7108",
-  "direction": "Земун",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Лазаревац", "departure": "13:58" },
-    { "station": "Вреоци", "departure": "14:09" },
-    { "station": "Степојевац", "departure": "14:16" },
-    { "station": "Лесковац Колубарски", "departure": "14:19" },
-    { "station": "Велики Борак", "departure": "14:23" },
-    { "station": "Барајево Центар", "departure": "14:28" },
-    { "station": "Бела река", "departure": "14:38" },
-    { "station": "Ресник (Arr)", "departure": "14:46" },
-    { "station": "Ресник (Dep)", "departure": "14:48" },
-    { "station": "Кијево", "departure": "14:52" },
-    { "station": "Кнежевац", "departure": "14:55" },
-    { "station": "Раковица", "departure": "15:01" },
-    { "station": "Београд Центар", "departure": "15:10" },
-    { "station": "Нови Београд", "departure": "15:14" },
-    { "station": "Тошин бунар", "departure": "15:17" },
-    { "station": "Земун", "departure": "15:20" }
-  ]
-},
-  {
-    "line": "BG:voz 2",
-    "train_id": "8325",
-    "direction": "Овча",
-    "runs_on_weekends": true,
-    "holiday_exceptions": [],
-    "stops": [
-      { "station": "Ресник", "departure": "15:00" },
-      { "station": "Кијево", "departure": "15:03" },
-      { "station": "Кнежевац", "departure": "15:05" },
-      { "station": "Раковица", "departure": "15:09" },
-      { "station": "Карађорђев парк", "departure": "15:17" },
-      { "station": "Вуков споменик", "departure": "15:21" },
-      { "station": "Панчевачки мост", "departure": "15:24" },
-      { "station": "Крњача мост", "departure": "15:28" },
-      { "station": "Крњача", "departure": "15:31" },
-      { "station": "Себеш", "departure": "15:34" },
-      { "station": "Овча", "departure": "15:37" }
-    ]
-  },
-  {
-    "line": "BG:voz 2",
-    "train_id": "8327",
-    "direction": "Овча",
-    "runs_on_weekends": true,
-    "holiday_exceptions": [],
-    "stops": [
-      { "station": "Ресник", "departure": "15:30" },
-      { "station": "Кијево", "departure": "15:33" },
-      { "station": "Кнежевац", "departure": "15:35" },
-      { "station": "Раковица", "departure": "15:09" },
-      { "station": "Карађорђев парк", "departure": "15:47" },
-      { "station": "Вуков споменик", "departure": "15:51" },
-      { "station": "Панчевачки мост", "departure": "15:54" },
-      { "station": "Крњача мост", "departure": "15:58" },
-      { "station": "Крњача", "departure": "16:01" },
-      { "station": "Себеш", "departure": "16:04" },
-      { "station": "Овча", "departure": "16:07" }
-    ]
-  },
-  {
-    "line": "BG:voz 2",
-    "train_id": "8329",
-    "direction": "Овча",
-    "runs_on_weekends": true,
-    "holiday_exceptions": [],
-    "stops": [
-      { "station": "Ресник", "departure": "16:30" },
-      { "station": "Кијево", "departure": "16:33" },
-      { "station": "Кнежевац", "departure": "16:35" },
-      { "station": "Раковица", "departure": "16:39" },
-      { "station": "Карађорђев парк", "departure": "16:47" },
-      { "station": "Вуков споменик", "departure": "16:51" },
-      { "station": "Панчевачки мост", "departure": "16:54" },
-      { "station": "Крњача мост", "departure": "16:58" },
-      { "station": "Крњача", "departure": "17:01" },
-      { "station": "Себеш", "departure": "17:04" },
-      { "station": "Овча", "departure": "17:07" }
-    ]
-  },
-  {
-    "line": "BG:voz 2",
-    "train_id": "8331",
-    "direction": "Овча",
-    "runs_on_weekends": true,
-    "holiday_exceptions": [],
-    "stops": [
-      { "station": "Ресник", "departure": "17:00" },
-      { "station": "Кијево", "departure": "17:03" },
-      { "station": "Кнежевац", "departure": "17:05" },
-      { "station": "Раковица", "departure": "17:09" },
-      { "station": "Карађорђев парк", "departure": "17:17" },
-      { "station": "Вуков споменик", "departure": "17:21" },
-      { "station": "Панчевачки мост", "departure": "17:24" },
-      { "station": "Крњача мост", "departure": "17:28" },
-      { "station": "Крњача", "departure": "17:31" },
-      { "station": "Себеш", "departure": "17:34" },
-      { "station": "Овча", "departure": "17:37" }
-    ]
-  },
-  {
-    "line": "BG:voz 2",
-    "train_id": "8333",
-    "direction": "Овча",
-    "runs_on_weekends": true,
-    "holiday_exceptions": [],
-    "stops": [
-      { "station": "Ресник", "departure": "17:30" },
-      { "station": "Кијево", "departure": "17:33" },
-      { "station": "Кнежевац", "departure": "17:35" },
-      { "station": "Раковица", "departure": "17:39" },
-      { "station": "Карађорђев парк", "departure": "17:47" },
-      { "station": "Вуков споменик", "departure": "17:51" },
-      { "station": "Панчевачки мост", "departure": "17:54" },
-      { "station": "Крњача мост", "departure": "17:58" },
-      { "station": "Крњача", "departure": "18:01" },
-      { "station": "Себеш", "departure": "18:04" },
-      { "station": "Овча", "departure": "18:07" }
-    ]
-  },
-  {
-  "line": "BG:voz 2",
-  "train_id": "7112",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Лазаревац", "departure": "17:05" },
-    { "station": "Вреоци", "departure": "17:11" },
-    { "station": "Степојевац", "departure": "17:18" },
-    { "station": "Лесковац Колубарски", "departure": "17:21" },
-    { "station": "Велики Борак", "departure": "17:34" },
-    { "station": "Барајево Центар", "departure": "17:39" },
-    { "station": "Бела река", "departure": "17:48" },
-    { "station": "Ресник (Arr)", "departure": "17:54" },
-    { "station": "Ресник (Dep)", "departure": "17:55" },
-    { "station": "Кијево", "departure": "17:58" },
-    { "station": "Кнежевац", "departure": "18:00" },
-    { "station": "Раковица", "departure": "18:04" },
-    { "station": "Карађорђев парк", "departure": "18:12" },
-    { "station": "Вуков споменик", "departure": "18:16" },
-    { "station": "Панчевачки мост", "departure": "18:19" },
-    { "station": "Крњача мост", "departure": "18:23" },
-    { "station": "Крњача", "departure": "18:26" },
-    { "station": "Себеш", "departure": "18:29" },
-    { "station": "Овча", "departure": "18:32" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8335",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "18:30" },
-    { "station": "Кијево", "departure": "18:33" },
-    { "station": "Кнежевац", "departure": "18:35" },
-    { "station": "Раковица", "departure": "18:39" },
-    { "station": "Карађорђев парк", "departure": "18:47" },
-    { "station": "Вуков споменик", "departure": "18:51" },
-    { "station": "Панчевачки мост", "departure": "18:54" },
-    { "station": "Крњача мост", "departure": "18:58" },
-    { "station": "Крњача", "departure": "19:01" },
-    { "station": "Себеш", "departure": "19:04" },
-    { "station": "Овча", "departure": "19:07" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7904",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "19:25" },
-    { "station": "Кијево", "departure": "19:28" },
-    { "station": "Кнежевац", "departure": "19:30" },
-    { "station": "Раковица", "departure": "19:34" },
-    { "station": "Карађорђев парк", "departure": "19:42" },
-    { "station": "Вуков споменик", "departure": "19:46" },
-    { "station": "Панчевачки мост", "departure": "19:49" },
-    { "station": "Крњача мост", "departure": "19:53" },
-    { "station": "Крњача", "departure": "19:56" },
-    { "station": "Себеш", "departure": "19:59" },
-    { "station": "Овча", "departure": "20:02" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7114",
-  "direction": "Земун",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Лазаревац", "departure": "18:52" },
-    { "station": "Вреоци", "departure": "18:59" },
-    { "station": "Степојевац", "departure": "19:06" },
-    { "station": "Лесковац Колубарски", "departure": "19:09" },
-    { "station": "Велики Борак", "departure": "19:14" },
-    { "station": "Барајево Центар", "departure": "19:19" },
-    { "station": "Бела река", "departure": "19:33" },
-    { "station": "Ресник (Arr)", "departure": "19:51" },
-    { "station": "Ресник (Dep)", "departure": "19:52" },
-    { "station": "Кијево", "departure": "19:55" },
-    { "station": "Кнежевац", "departure": "19:57" },
-    { "station": "Раковица", "departure": "20:01" },
-    { "station": "Београд Центар", "departure": "20:10" },
-    { "station": "Нови Београд", "departure": "20:14" },
-    { "station": "Тошин бунар", "departure": "20:17" },
-    { "station": "Земун", "departure": "20:20" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8337",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "21:00" },
-    { "station": "Кијево", "departure": "21:03" },
-    { "station": "Кнежевац", "departure": "21:05" },
-    { "station": "Раковица", "departure": "21:09" },
-    { "station": "Карађорђев парк", "departure": "21:17" },
-    { "station": "Вуков споменик", "departure": "21:21" },
-    { "station": "Панчевачки мост", "departure": "21:24" },
-    { "station": "Крњача мост", "departure": "21:28" },
-    { "station": "Крњача", "departure": "21:31" },
-    { "station": "Себеш", "departure": "21:34" },
-    { "station": "Овча", "departure": "21:37" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7116",
-  "direction": "Земун",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Лазаревац", "departure": "20:29" },
-    { "station": "Вреоци", "departure": "20:35" },
-    { "station": "Степојевац", "departure": "20:46" },
-    { "station": "Лесковац Колубарски", "departure": "20:49" },
-    { "station": "Велики Борак", "departure": "20:53" },
-    { "station": "Барајево Центар", "departure": "20:58" },
-    { "station": "Бела река", "departure": "21:08" },
-    { "station": "Ресник (Arr)", "departure": "21:16" },
-    { "station": "Ресник (Dep)", "departure": "21:30" },
-    { "station": "Кијево", "departure": "21:33" },
-    { "station": "Кнежевац", "departure": "21:35" },
-    { "station": "Раковица", "departure": "21:39" },
-    { "station": "Београд Центар", "departure": "21:48" },
-    { "station": "Нови Београд", "departure": "21:52" },
-    { "station": "Тошин бунар", "departure": "21:55" },
-    { "station": "Земун", "departure": "21:58" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8339",
-  "direction": "Овча",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Ресник", "departure": "21:40" },
-    { "station": "Кијево", "departure": "21:43" },
-    { "station": "Кнежевац", "departure": "21:45" },
-    { "station": "Раковица", "departure": "21:49" },
-    { "station": "Карађорђев парк", "departure": "21:57" },
-    { "station": "Вуков споменик", "departure": "22:01" },
-    { "station": "Панчевачки мост", "departure": "22:04" },
-    { "station": "Крњача мост", "departure": "22:08" },
-    { "station": "Крњача", "departure": "22:11" },
-    { "station": "Себеш", "departure": "22:14" },
-    { "station": "Овча", "departure": "22:17" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7101",
-  "direction": "Лазаревац",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Земун", "departure": "04:10" },
-    { "station": "Тошин бунар", "departure": "04:13" },
-    { "station": "Нови Београд", "departure": "04:15" },
-    { "station": "Београд Центар", "departure": "04:20" },
-    { "station": "Раковица", "departure": "04:29" },
-    { "station": "Кнежевац", "departure": "04:32" },
-    { "station": "Кијево", "departure": "04:34" },
-    { "station": "Ресник (Arr)", "departure": "04:37" },
-    { "station": "Ресник (Dep)", "departure": "04:38" },
-    { "station": "Бела река", "departure": "04:47" },
-    { "station": "Барајево Центар", "departure": "04:55" },
-    { "station": "Велики Борак", "departure": "05:00" },
-    { "station": "Лесковац Колубарски", "departure": "05:03" },
-    { "station": "Степојевац", "departure": "05:07" },
-    { "station": "Вреоци", "departure": "05:14" },
-    { "station": "Лазаревац", "departure": "05:20" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7103",
-  "direction": "Лазаревац",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "05:50" },
-    { "station": "Себеш", "departure": "05:54" },
-    { "station": "Крњача", "departure": "05:58" },
-    { "station": "Крњача мост", "departure": "06:00" },
-    { "station": "Панчевачки мост", "departure": "06:06" },
-    { "station": "Вуков споменик", "departure": "06:09" },
-    { "station": "Карађорђев парк", "departure": "06:12" },
-    { "station": "Раковица", "departure": "06:21" },
-    { "station": "Кнежевац", "departure": "06:24" },
-    { "station": "Кијево", "departure": "06:26" },
-    { "station": "Ресник (Arr)", "departure": "06:29" },
-    { "station": "Ресник (Dep)", "departure": "06:29" },
-    { "station": "Бела река", "departure": "06:48" },
-    { "station": "Барајево", "departure": "06:59" },
-    { "station": "Барајево Центар", "departure": "07:02" },
-    { "station": "Велики Борак", "departure": "07:07" },
-    { "station": "Лесковац Колубарски", "departure": "07:10" },
-    { "station": "Степојевац", "departure": "07:13" },
-    { "station": "Вреоци", "departure": "07:27" },
-    { "station": "Лазаревац", "departure": "07:33" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8300",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "06:20" },
-    { "station": "Себеш", "departure": "06:24" },
-    { "station": "Крњача", "departure": "06:28" },
-    { "station": "Крњача мост", "departure": "06:30" },
-    { "station": "Панчевачки мост", "departure": "06:35" },
-    { "station": "Вуков споменик", "departure": "06:38" },
-    { "station": "Карађорђев парк", "departure": "06:41" },
-    { "station": "Раковица", "departure": "06:50" },
-    { "station": "Кнежевац", "departure": "06:53" },
-    { "station": "Кијево", "departure": "06:55" },
-    { "station": "Ресник", "departure": "06:58" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8302",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "07:35" },
-    { "station": "Себеш", "departure": "07:39" },
-    { "station": "Крњача", "departure": "07:43" },
-    { "station": "Крњача мост", "departure": "07:45" },
-    { "station": "Панчевачки мост", "departure": "07:50" },
-    { "station": "Вуков споменик", "departure": "07:53" },
-    { "station": "Карађорђев парк", "departure": "07:56" },
-    { "station": "Раковица", "departure": "08:05" },
-    { "station": "Кнежевац", "departure": "08:08" },
-    { "station": "Кијево", "departure": "08:10" },
-    { "station": "Ресник", "departure": "08:13" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7105",
-  "direction": "Лазаревац",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "07:48" },
-    { "station": "Себеш", "departure": "07:52" },
-    { "station": "Крњача", "departure": "07:55" },
-    { "station": "Крњача мост", "departure": "07:57" },
-    { "station": "Панчевачки мост", "departure": "08:02" },
-    { "station": "Вуков споменик", "departure": "08:05" },
-    { "station": "Карађорђев парк", "departure": "08:08" },
-    { "station": "Раковица", "departure": "08:16" },
-    { "station": "Кнежевац", "departure": "08:19" },
-    { "station": "Кијево", "departure": "08:21" },
-    { "station": "Ресник (Arr)", "departure": "08:24" },
-    { "station": "Ресник (Dep)", "departure": "08:24" },
-    { "station": "Бела река", "departure": "08:33" },
-    { "station": "Барајево Центар", "departure": "08:41" },
-    { "station": "Велики Борак", "departure": "08:46" },
-    { "station": "Лесковац Колубарски", "departure": "08:49" },
-    { "station": "Степојевац", "departure": "08:53" },
-    { "station": "Вреоци", "departure": "09:00" },
-    { "station": "Лазаревац", "departure": "09:06" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8304",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "08:20" },
-    { "station": "Себеш", "departure": "08:24" },
-    { "station": "Крњача", "departure": "08:28" },
-    { "station": "Крњача мост", "departure": "08:30" },
-    { "station": "Панчевачки мост", "departure": "08:35" },
-    { "station": "Вуков споменик", "departure": "08:38" },
-    { "station": "Карађорђев парк", "departure": "08:41" },
-    { "station": "Раковица", "departure": "08:50" },
-    { "station": "Кнежевац", "departure": "08:53" },
-    { "station": "Кијево", "departure": "08:55" },
-    { "station": "Ресник", "departure": "08:58" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8308",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "09:18" },
-    { "station": "Себеш", "departure": "09:22" },
-    { "station": "Крњача", "departure": "09:26" },
-    { "station": "Крњача мост", "departure": "09:28" },
-    { "station": "Панчевачки мост", "departure": "09:33" },
-    { "station": "Вуков споменик", "departure": "09:36" },
-    { "station": "Карађорђев парк", "departure": "09:39" },
-    { "station": "Раковица", "departure": "09:48" },
-    { "station": "Кнежевац", "departure": "09:51" },
-    { "station": "Кијево", "departure": "09:53" },
-    { "station": "Ресник", "departure": "09:56" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8205",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Београд Центар", "departure": "10:40" },
-    { "station": "Раковица", "departure": "10:49" },
-    { "station": "Кнежевац", "departure": "10:52" },
-    { "station": "Кијево", "departure": "10:54" },
-    { "station": "Ресник", "departure": "10:57" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8312",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "10:35" },
-    { "station": "Себеш", "departure": "10:39" },
-    { "station": "Крњача", "departure": "10:43" },
-    { "station": "Крњача мост", "departure": "10:45" },
-    { "station": "Панчевачки мост", "departure": "10:50" },
-    { "station": "Вуков споменик", "departure": "10:53" },
-    { "station": "Карађорђев парк", "departure": "10:56" },
-    { "station": "Раковица", "departure": "11:05" },
-    { "station": "Кнежевац", "departure": "11:08" },
-    { "station": "Кијево", "departure": "11:10" },
-    { "station": "Ресник", "departure": "11:13" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8207",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Београд Центар", "departure": "11:40" },
-    { "station": "Раковица", "departure": "11:49" },
-    { "station": "Кнежевац", "departure": "11:52" },
-    { "station": "Кијево", "departure": "11:54" },
-    { "station": "Ресник", "departure": "11:57" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7107",
-  "direction": "Лазаревац",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "11:50" },
-    { "station": "Себеш", "departure": "11:54" },
-    { "station": "Крњача", "departure": "11:58" },
-    { "station": "Крњача мост", "departure": "12:00" },
-    { "station": "Панчевачки мост", "departure": "12:05" },
-    { "station": "Вуков споменик", "departure": "12:08" },
-    { "station": "Карађорђев парк", "departure": "12:11" },
-    { "station": "Раковица", "departure": "12:20" },
-    { "station": "Кнежевац", "departure": "12:23" },
-    { "station": "Кијево", "departure": "12:25" },
-    { "station": "Ресник (Arr)", "departure": "12:28" },
-    { "station": "Ресник (Dep)", "departure": "12:31" },
-    { "station": "Бела река", "departure": "12:40" },
-    { "station": "Барајево Центар", "departure": "12:48" },
-    { "station": "Велики Борак", "departure": "12:53" },
-    { "station": "Лесковац Колубарски", "departure": "12:56" },
-    { "station": "Степојевац", "departure": "13:00" },
-    { "station": "Вреоци", "departure": "13:07" },
-    { "station": "Лазаревац", "departure": "13:13" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8314",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "12:40" },
-    { "station": "Себеш", "departure": "12:44" },
-    { "station": "Крњача", "departure": "12:48" },
-    { "station": "Крњача мост", "departure": "12:50" },
-    { "station": "Панчевачки мост", "departure": "12:55" },
-    { "station": "Вуков споменик", "departure": "12:58" },
-    { "station": "Карађорђев парк", "departure": "13:01" },
-    { "station": "Раковица", "departure": "13:10" },
-    { "station": "Кнежевац", "departure": "13:13" },
-    { "station": "Кијево", "departure": "13:15" },
-    { "station": "Ресник", "departure": "13:18" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8316",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "13:25" },
-    { "station": "Себеш", "departure": "13:29" },
-    { "station": "Крњача", "departure": "13:33" },
-    { "station": "Крњача мост", "departure": "13:35" },
-    { "station": "Панчевачки мост", "departure": "13:40" },
-    { "station": "Вуков споменик", "departure": "13:43" },
-    { "station": "Карађорђев парк", "departure": "13:46" },
-    { "station": "Раковица", "departure": "13:55" },
-    { "station": "Кнежевац", "departure": "13:58" },
-    { "station": "Кијево", "departure": "14:00" },
-    { "station": "Ресник", "departure": "14:03" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8318",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "13:55" },
-    { "station": "Себеш", "departure": "13:59" },
-    { "station": "Крњача", "departure": "14:03" },
-    { "station": "Крњача мост", "departure": "14:05" },
-    { "station": "Панчевачки мост", "departure": "14:10" },
-    { "station": "Вуков споменик", "departure": "14:13" },
-    { "station": "Карађорђев парк", "departure": "14:16" },
-    { "station": "Раковица", "departure": "14:25" },
-    { "station": "Кнежевац", "departure": "14:28" },
-    { "station": "Кијево", "departure": "14:30" },
-    { "station": "Ресник", "departure": "14:33" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8320",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "14:20" },
-    { "station": "Себеш", "departure": "14:24" },
-    { "station": "Крњача", "departure": "14:28" },
-    { "station": "Крњача мост", "departure": "14:30" },
-    { "station": "Панчевачки мост", "departure": "14:35" },
-    { "station": "Вуков споменик", "departure": "14:38" },
-    { "station": "Карађорђев парк", "departure": "14:41" },
-    { "station": "Раковица", "departure": "14:50" },
-    { "station": "Кнежевац", "departure": "14:53" },
-    { "station": "Кијево", "departure": "14:55" },
-    { "station": "Ресник", "departure": "14:58" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8322",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "15:00" },
-    { "station": "Себеш", "departure": "15:04" },
-    { "station": "Крњача", "departure": "15:08" },
-    { "station": "Крњача мост", "departure": "15:10" },
-    { "station": "Панчевачки мост", "departure": "15:15" },
-    { "station": "Вуков споменик", "departure": "15:18" },
-    { "station": "Карађорђев парк", "departure": "15:21" },
-    { "station": "Раковица", "departure": "15:30" },
-    { "station": "Кнежевац", "departure": "15:33" },
-    { "station": "Кијево", "departure": "15:35" },
-    { "station": "Ресник", "departure": "15:38" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7111",
-  "direction": "Лазаревац",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "15:22" },
-    { "station": "Себеш", "departure": "15:26" },
-    { "station": "Крњача", "departure": "15:30" },
-    { "station": "Крњача мост", "departure": "15:32" },
-    { "station": "Панчевачки мост", "departure": "15:37" },
-    { "station": "Вуков споменик", "departure": "15:40" },
-    { "station": "Карађорђев парк", "departure": "15:43" },
-    { "station": "Раковица", "departure": "15:52" },
-    { "station": "Кнежевац", "departure": "15:55" },
-    { "station": "Кијево", "departure": "15:57" },
-    { "station": "Ресник (Arr)", "departure": "16:00" },
-    { "station": "Ресник (Dep)", "departure": "16:03" },
-    { "station": "Бела река", "departure": "16:12" },
-    { "station": "Барајево", "departure": "16:18" },
-    { "station": "Барајево Центар", "departure": "16:20" },
-    { "station": "Велики Борак", "departure": "16:25" },
-    { "station": "Лесковац Колубарски", "departure": "16:28" },
-    { "station": "Степојевац", "departure": "16:31" },
-    { "station": "Вреоци", "departure": "16:37" },
-    { "station": "Лазаревац", "departure": "16:43" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7903",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "15:52" },
-    { "station": "Себеш", "departure": "15:56" },
-    { "station": "Крњача", "departure": "16:00" },
-    { "station": "Крњача мост", "departure": "16:02" },
-    { "station": "Панчевачки мост", "departure": "16:08" },
-    { "station": "Вуков споменик", "departure": "16:11" },
-    { "station": "Карађорђев парк", "departure": "16:13" },
-    { "station": "Раковица", "departure": "16:22" },
-    { "station": "Кнежевац", "departure": "16:25" },
-    { "station": "Кијево", "departure": "16:27" },
-    { "station": "Ресник", "departure": "16:30" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7113",
-  "direction": "Лазаревац",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Земун", "departure": "16:16" },
-    { "station": "Тошин бунар", "departure": "16:20" },
-    { "station": "Нови Београд", "departure": "16:23" },
-    { "station": "Београд Центар", "departure": "16:27" },
-    { "station": "Раковица", "departure": "16:36" },
-    { "station": "Кнежевац", "departure": "16:39" },
-    { "station": "Кијево", "departure": "16:41" },
-    { "station": "Ресник (Arr)", "departure": "16:44" },
-    { "station": "Ресник (Dep)", "departure": "16:45" },
-    { "station": "Бела река", "departure": "16:54" },
-    { "station": "Барајево Центар", "departure": "17:02" },
-    { "station": "Велики Борак", "departure": "17:07" },
-    { "station": "Лесковац Колубарски", "departure": "17:10" },
-    { "station": "Степојевац", "departure": "17:12" },
-    { "station": "Вреоци", "departure": "17:26" },
-    { "station": "Лазаревац", "departure": "17:32" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8324",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "16:30" },
-    { "station": "Себеш", "departure": "16:34" },
-    { "station": "Крњача", "departure": "16:38" },
-    { "station": "Крњача мост", "departure": "16:40" },
-    { "station": "Панчевачки мост", "departure": "16:45" },
-    { "station": "Вуков споменик", "departure": "16:48" },
-    { "station": "Карађорђев парк", "departure": "16:51" },
-    { "station": "Раковица", "departure": "17:00" },
-    { "station": "Кнежевац", "departure": "17:03" },
-    { "station": "Кијево", "departure": "17:05" },
-    { "station": "Ресник", "departure": "17:08" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8326",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "17:30" },
-    { "station": "Себеш", "departure": "17:34" },
-    { "station": "Крњача", "departure": "17:38" },
-    { "station": "Крњача мост", "departure": "17:40" },
-    { "station": "Панчевачки мост", "departure": "17:45" },
-    { "station": "Вуков споменик", "departure": "17:48" },
-    { "station": "Карађорђев парк", "departure": "17:51" },
-    { "station": "Раковица", "departure": "18:00" },
-    { "station": "Кнежевац", "departure": "18:03" },
-    { "station": "Кијево", "departure": "18:05" },
-    { "station": "Ресник", "departure": "18:08" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8328",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "18:10" },
-    { "station": "Себеш", "departure": "18:14" },
-    { "station": "Крњача", "departure": "18:18" },
-    { "station": "Крњача мост", "departure": "18:20" },
-    { "station": "Панчевачки мост", "departure": "18:25" },
-    { "station": "Вуков споменик", "departure": "18:28" },
-    { "station": "Карађорђев парк", "departure": "18:31" },
-    { "station": "Раковица", "departure": "18:40" },
-    { "station": "Кнежевац", "departure": "18:43" },
-    { "station": "Кијево", "departure": "18:45" },
-    { "station": "Ресник", "departure": "18:48" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "7115",
-  "direction": "Лазаревац",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "18:30" },
-    { "station": "Себеш", "departure": "18:34" },
-    { "station": "Крњача", "departure": "18:38" },
-    { "station": "Крњача мост", "departure": "18:40" },
-    { "station": "Панчевачки мост", "departure": "18:45" },
-    { "station": "Вуков споменик", "departure": "18:48" },
-    { "station": "Карађорђев парк", "departure": "18:51" },
-    { "station": "Раковица", "departure": "19:00" },
-    { "station": "Кнежевац", "departure": "19:03" },
-    { "station": "Кијево", "departure": "19:05" },
-    { "station": "Ресник (Arr)", "departure": "19:08" },
-    { "station": "Ресник (Dep)", "departure": "19:10" },
-    { "station": "Бела река", "departure": "19:18" },
-    { "station": "Барајево", "departure": "19:24" },
-    { "station": "Барајево Центар", "departure": "19:26" },
-    { "station": "Велики Борак", "departure": "19:30" },
-    { "station": "Лесковац Колубарски", "departure": "19:33" },
-    { "station": "Степојевац", "departure": "19:36" },
-    { "station": "Вреоци", "departure": "19:48" },
-    { "station": "Лазаревац", "departure": "19:54" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8332",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "19:00" },
-    { "station": "Себеш", "departure": "19:04" },
-    { "station": "Крњача", "departure": "19:08" },
-    { "station": "Крњача мост", "departure": "19:10" },
-    { "station": "Панчевачки мост", "departure": "19:15" },
-    { "station": "Вуков споменик", "departure": "19:18" },
-    { "station": "Карађорђев парк", "departure": "19:21" },
-    { "station": "Раковица", "departure": "19:30" },
-    { "station": "Кнежевац", "departure": "19:33" },
-    { "station": "Кијево", "departure": "19:35" },
-    { "station": "Ресник", "departure": "19:38" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8334",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "19:50" },
-    { "station": "Себеш", "departure": "19:54" },
-    { "station": "Крњача", "departure": "19:58" },
-    { "station": "Крњача мост", "departure": "20:00" },
-    { "station": "Панчевачки мост", "departure": "20:05" },
-    { "station": "Вуков споменик", "departure": "20:08" },
-    { "station": "Карађорђев парк", "departure": "20:11" },
-    { "station": "Раковица", "departure": "20:20" },
-    { "station": "Кнежевац", "departure": "20:23" },
-    { "station": "Кијево", "departure": "20:25" },
-    { "station": "Ресник", "departure": "20:28" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8336",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "20:30" },
-    { "station": "Себеш", "departure": "20:34" },
-    { "station": "Крњача", "departure": "20:38" },
-    { "station": "Крњача мост", "departure": "20:40" },
-    { "station": "Панчевачки мост", "departure": "20:45" },
-    { "station": "Вуков споменик", "departure": "20:48" },
-    { "station": "Карађорђев парк", "departure": "20:51" },
-    { "station": "Раковица", "departure": "21:00" },
-    { "station": "Кнежевац", "departure": "21:03" },
-    { "station": "Кијево", "departure": "21:05" },
-    { "station": "Ресник", "departure": "21:08" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8338",
-  "direction": "Ресник",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "22:00" },
-    { "station": "Себеш", "departure": "22:04" },
-    { "station": "Крњача", "departure": "22:08" },
-    { "station": "Крњача мост", "departure": "22:10" },
-    { "station": "Панчевачки мост", "departure": "22:15" },
-    { "station": "Вуков споменик", "departure": "22:18" },
-    { "station": "Карађорђев парк", "departure": "22:21" },
-    { "station": "Раковица", "departure": "22:30" },
-    { "station": "Кнежевац", "departure": "22:33" },
-    { "station": "Кијево", "departure": "22:35" },
-    { "station": "Ресник", "departure": "22:38" }
-  ]
-},
-  {
-  "line": "BG:voz 2",
-  "train_id": "8340",
-  "direction": "Београд Центар",
-  "runs_on_weekends": true,
-  "holiday_exceptions": [],
-  "stops": [
-    { "station": "Овча", "departure": "22:35" },
-    { "station": "Себеш", "departure": "22:39" },
-    { "station": "Крњача", "departure": "22:43" },
-    { "station": "Крњача мост", "departure": "22:45" },
-    { "station": "Панчевачки мост", "departure": "22:51" },
-    { "station": "Вуков споменик", "departure": "22:54" },
-    { "station": "Карађорђев парк", "departure": "22:58" },
-    { "station": "Београд Центар", "departure": "23:01" }
-  ]
+
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#1a1f2c">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>БГ:воз</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #1a1f2c; 
+    --l1: #c0392b;
+    --l2: #1a6fc4;
+    --glass: rgba(255,255,255,0.12);
+    --glass-border: rgba(255,255,255,0.2); 
+    --text: #f0f0f0;
+    --dim: rgba(255,255,255,0.4);
+    --yellow: #f0c040;
+    --green: #3ddc84;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
 }
-]
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
+}
+
+body {
+    font-family: var(--sans);
+    background-color: var(--bg); 
+    color: var(--text);
+    height: 100dvh; 
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    padding-top: env(safe-area-inset-top, 0px);
+}
+
+body::before, body::after {
+    content: '';
+    position: fixed; 
+    top: -50%; left: -50%; 
+    width: 200%; height: 200%; 
+    z-index: -1;
+    filter: blur(80px);
+    pointer-events: none;
+}
+body::before {
+    background: radial-gradient(circle at center, rgba(192,57,43,0.6) 0%, transparent 50%);
+    animation: lavaRed 25s ease-in-out infinite alternate;
+}
+body::after {
+    background: radial-gradient(circle at center, rgba(26,111,196,0.6) 0%, transparent 50%);
+    animation: lavaBlue 30s ease-in-out infinite alternate-reverse;
+}
+
+/* ── PAGES ── */
+.page {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center;
+    z-index: 1;
+    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.35s;
+    padding-bottom: 110px;
+    overflow: hidden;
+    pointer-events: none; 
+    opacity: 0;
+}
+.page.visible { 
+    opacity: 1 !important; 
+    transform: translateY(0) !important; 
+    pointer-events: all !important; 
+    z-index: 10; 
+}
+
+/* ── LANDING ── */
+.landing-inner {
+    display: flex; flex-direction: column; align-items: center; 
+    justify-content: flex-start; height: 100%; width: 100%; 
+    padding: 8vh 28px 20px;
+}
+.brand { text-align: center; margin-bottom: 2vh; }
+.brand-icon svg { width: 52px; height: 52px; }
+.brand-name {
+    font-family: var(--mono); font-size: 2.4rem; font-weight: 700; letter-spacing: 0.12em;
+    background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.5));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.brand-sub { font-size: 0.7rem; opacity: 0.4; letter-spacing: 0.2em; text-transform: uppercase; }
+.landing-actions { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: auto; margin-bottom: auto; }
+.action-btn {
+    width: 100%; padding: 18px 24px; border-radius: 18px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px); color: var(--text); font-family: var(--sans); 
+    font-size: 0.9rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; display: flex; align-items: center; gap: 16px; transition: 0.2s;
+}
+.action-icon { width: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.action-icon svg { width: 24px; height: 24px; fill: white; opacity: 0.9; }
+.landing-qr { margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; animation: fadeIn 1.2s ease-out forwards; }
+.qr-wrap { background: white; padding: 6px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.qr-wrap img { width: 90px; height: 90px; display: block; border-radius: 4px; }
+
+/* ── SHARED PAGE CHROME ── */
+.page-header { width:100%; padding: 6vh 24px 0; flex-shrink:0; }
+.page-title { font-size:1.1rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; opacity:0.9; margin-bottom:20px; text-align:center; }
+
+/* ── GLASS SELECT ── */
+.g-select { width:100%; padding: 12px 16px; border-radius:14px; background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: blur(20px); color: white; font-family:var(--sans); font-size: 0.9rem; outline:none; appearance:none; cursor:pointer; }
+option { background:#111827; color:white; }
+optgroup { background:#0d1117; color:rgba(255,255,255,0.35); font-size:0.72rem; font-style:normal; letter-spacing:0.08em; }
+
+/* ── MONITOR ── */
+.monitor-body { width:100%; padding:0 20px; display:flex; flex-direction:column; gap:16px; height:auto; overflow-y:auto; }
+.pids-board { background:#000; border:2px solid #222; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; width:100%; margin-bottom:100px; }
+.pids-head { display:grid; grid-template-columns:80px 1fr 72px; padding:10px 16px; background:#111; border-bottom:1px solid #222; font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.35); }
+.pids-rows { overflow-y:visible; }
+.pids-row { display:grid; grid-template-columns:80px 1fr 72px; padding:14px 16px; border-bottom:1px solid #111; font-family:var(--mono); align-items:center; }
+.pids-id { font-size:0.7rem; color:var(--dim); }
+.pids-dir { font-weight:700; color:white; text-align:center; }
+.pids-time { font-weight:700; color:var(--yellow); text-align:right; }
+
+/* ── PIDS TICKER ── */
+.pids-ticker { background:#111; border-top:1px solid #222; padding:10px 0; overflow:hidden; white-space:nowrap; }
+.ticker-text { display:inline-block; font-family:var(--mono); font-size:0.75rem; color:#ff3333; font-weight:700; padding-left:100%; animation:marquee 35s linear infinite; }
+
+/* ── PLANNER ── */
+.planner-body { width:100%; padding:12px 16px; display:flex; flex-direction:column; gap:8px; flex:1; min-height:0; overflow:hidden; }
+.planner-selection-group { display:flex; align-items:center; gap:8px; width:100%; margin-bottom:4px; }
+.inputs-stack { display:flex; flex-direction:column; gap:6px; flex:1; }
+.swap-btn { width:40px; height:80px; border-radius:12px; background:var(--glass); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.1rem; color:white; transition:0.15s; }
+.swap-btn:active { background:rgba(255,255,255,0.2); }
+
+.results-scroll { flex:1; overflow-y:auto; padding:10px 0 100px; display:flex; flex-direction:column; gap:10px; }
+
+/* ── JOURNEY CARDS (new design) ── */
+.journey-card {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 16px; overflow: hidden; flex-shrink: 0;
+    transition: 0.2s; cursor: pointer;
+}
+.journey-card.past { opacity: 0.45; }
+
+/* Card header row */
+.jc-top {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+    padding: 14px 16px 10px;
+    gap: 8px;
+}
+.jc-train-id { font-family:var(--mono); font-size:0.68rem; color:var(--dim); }
+.jc-dest { font-weight:700; font-size:1rem; }
+.jc-dep { font-family:var(--mono); font-size:1.1rem; font-weight:700; color:var(--yellow); }
+
+/* Transfer badge row */
+.jc-badges { display:flex; align-items:center; gap:6px; padding:0 16px 12px; flex-wrap:wrap; }
+.jc-line-pill {
+    display: inline-flex; align-items:center; gap:5px;
+    padding: 3px 9px; border-radius: 20px;
+    font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: white;
+}
+.jc-line-dot { width:7px; height:7px; border-radius:50%; }
+.jc-transfer-arrow { font-size:0.75rem; opacity:0.4; }
+.jc-duration { font-family:var(--mono); font-size:0.68rem; color:var(--dim); margin-left:auto; }
+
+/* Expanded itinerary */
+.itinerary { max-height:0; overflow:hidden; transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1); background:rgba(0,0,0,0.2); }
+.journey-card.expanded .itinerary { max-height:2000px; border-top:1px solid var(--glass-border); }
+
+/* Segment within itinerary */
+.seg-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px 6px;
+}
+.seg-line-badge {
+    font-family:var(--mono); font-size:0.7rem; font-weight:700;
+    padding:2px 8px; border-radius:20px; color:white; flex-shrink:0;
+}
+.seg-train-info { font-family:var(--mono); font-size:0.7rem; color:var(--dim); }
+
+/* Transfer divider */
+.transfer-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    background: rgba(240,192,64,0.08);
+    border-top: 1px solid rgba(240,192,64,0.15);
+    border-bottom: 1px solid rgba(240,192,64,0.15);
+}
+.transfer-icon { font-size:0.9rem; }
+.transfer-label { font-family:var(--mono); font-size:0.72rem; color:var(--yellow); }
+.transfer-wait { font-family:var(--mono); font-size:0.68rem; color:var(--dim); margin-left:auto; }
+
+/* Stop timeline */
+.itin-inner { padding:10px 16px 16px; position:relative; margin-left:8px; }
+.itin-inner::before { content:''; position:absolute; left:23px; top:18px; bottom:8px; width:2px; background:rgba(255,255,255,0.08); }
+.itin-stop { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; position:relative; }
+.stop-name { margin-left:32px; font-size:0.88rem; flex:1; }
+.stop-name.bold { font-weight:700; }
+.stop-time { font-family:var(--mono); font-size:0.82rem; color:var(--dim); }
+.stop-dot { position:absolute; left:0px; width:10px; height:10px; border-radius:50%; background:#333; border:2px solid #555; z-index:2; }
+.dot-past { background:var(--l1); border-color:var(--l1); }
+.dot-current { background:var(--green); border-color:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 1.5s infinite; }
+.dot-l1 { background:var(--l1); border-color:var(--l1); }
+.dot-l2 { background:var(--l2); border-color:var(--l2); }
+.dot-terminus { background:white; border-color:white; width:12px; height:12px; left:-1px; }
+
+/* No results */
+.no-results { text-align:center; padding:40px 20px; opacity:0.45; font-family:var(--mono); font-size:0.85rem; line-height:1.9; }
+
+/* ── OLD result-card kept for monitor ── */
+.result-card { background:var(--glass); border:1px solid var(--glass-border); border-radius:16px; overflow:hidden; transition:0.3s; cursor:pointer; flex-shrink:0; }
+
+/* ── NAV BAR ── */
+.nav-bar { 
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%); 
+    width:calc(100% - 48px); max-width:320px; height:66px; 
+    background:var(--glass); backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px);
+    border:1px solid var(--glass-border); border-radius:33px; 
+    display:flex; justify-content:space-around; align-items:center; z-index:9999; 
+}
+.nav-btn { width:54px; height:54px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:50%; }
+.nav-btn svg { width:24px; height:24px; fill:rgba(255,255,255,0.5); }
+.nav-btn.active svg { fill:white; filter:drop-shadow(0 0 6px rgba(255,255,255,0.5)); }
+
+@keyframes lavaRed { 0%{transform:translate(-10%,-10%) scale(1)} 50%{transform:translate(15%,10%) scale(1.2)} 100%{transform:translate(-5%,20%) scale(1)} }
+@keyframes lavaBlue { 0%{transform:translate(10%,10%) scale(1.2)} 50%{transform:translate(-15%,-10%) scale(1)} 100%{transform:translate(5%,-20%) scale(1.1)} }
+@keyframes pulse { 0%{transform:scale(0.9);opacity:1} 70%{transform:scale(1.2);opacity:0.5} 100%{transform:scale(0.9);opacity:1} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING ══ -->
+<div id="page-landing" class="page visible">
+    <div class="landing-inner">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="6" width="36" height="30" rx="6" fill="none" stroke="white" stroke-width="2"/>
+                    <line x1="8" y1="22" x2="44" y2="22" stroke="white" stroke-width="2" opacity="0.5"/>
+                    <circle cx="17" cy="30" r="2.5" fill="white" opacity="0.8"/>
+                    <circle cx="35" cy="30" r="2.5" fill="white" opacity="0.8"/>
+                    <path d="M16 42 L14 36 M36 42 L38 36" stroke="white" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+                    <line x1="20" y1="42" x2="32" y2="42" stroke="white" stroke-width="2" opacity="0.3"/>
+                </svg>
+            </div>
+            <div class="brand-name">БГ:ВОЗ</div>
+            <div class="brand-sub">by: mikimisha93</div>
+        </div>
+        <div class="landing-actions">
+            <div class="action-btn" onclick="goMonitor()">
+                <div class="action-icon"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg></div>
+                Станични Монитор
+            </div>
+            <div class="action-btn" onclick="goPlanner()">
+                <div class="action-icon"><svg viewBox="0 0 24 24"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg></div>
+                Планирај Путовање
+            </div>
+        </div>
+        <div class="landing-qr">
+            <div class="qr-wrap">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=https://mikimisha93.github.io/BG-VOZ/&amp;margin=4" alt="QR">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MONITOR ══ -->
+<div id="page-monitor" class="page">
+    <div class="page-header"><div class="page-title">Станични Монитор</div></div>
+    <div class="monitor-body">
+        <select id="mon-station" class="g-select" onchange="renderPIDS()">
+            <option value="" disabled selected>Изаберите станицу...</option>
+        </select>
+        <div class="pids-board" id="pids-board" style="display:none">
+            <div class="pids-head">
+                <span style="text-align:left">Воз</span>
+                <span style="text-align:center">Смер</span>
+                <span style="text-align:right">Полазак</span>
+            </div>
+            <div class="pids-rows" id="pids-rows"></div>
+            <div class="pids-ticker">
+                <div class="ticker-text">
+                    :БГ:ВОЗ: &nbsp; :ВАЖНО: &nbsp; :ПРИКАЗАНА ВРЕМЕНА СЕ НЕ АЖУРИРАЈУ: &nbsp; :ПРИКАЗАНИ СУ ПЛАНИРАНИ ПОЛАЗЦИ: &nbsp; :ТЕЛЕФОН ЗА ДЕТАЉНИЈЕ ИНФОРМАЦИЈЕ: &nbsp; :011 360 28 99: &nbsp; :БГ:ВОЗ:
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ PLANNER ══ -->
+<div id="page-planner" class="page">
+    <div class="page-header"><div class="page-title">Планирај Путовање</div></div>
+    <div class="planner-body">
+        <div class="planner-selection-group">
+            <div class="inputs-stack">
+                <select id="plan-from" class="g-select" onchange="onPickersChange()" disabled>
+                    <option value="" disabled selected>Полазиште</option>
+                </select>
+                <select id="plan-to" class="g-select" onchange="onPickersChange()" disabled>
+                    <option value="" disabled selected>Одредиште</option>
+                </select>
+            </div>
+            <div class="swap-btn" onclick="swapStations()">⇄</div>
+        </div>
+        <div id="plan-results" class="results-scroll"></div>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <div class="nav-btn active" id="nav-home" onclick="goHome()"><svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
+    <div class="nav-btn" id="nav-mon" onclick="goMonitor()"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg></div>
+    <div class="nav-btn" id="nav-plan" onclick="goPlanner()"><svg viewBox="0 0 24 24"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg></div>
+</nav>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════════
+let ALL_TRAINS = [];
+
+// Strip "(Arr)" / "(Dep)" suffix and lowercase for comparison
+function norm(s) { return s ? s.replace(/\s*\((Arr|Dep)\)\s*$/i, '').trim() : ''; }
+function normLow(s) { return norm(s).toLowerCase(); }
+function nowHHMM() { return new Date().toTimeString().slice(0, 5); }
+
+function toMins(hhmm) {
+    if (!hhmm) return 0;
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 60 + m;
+}
+function fromMins(m) {
+    return `${String(Math.floor(m / 60) % 24).padStart(2,'0')}:${String(m % 60).padStart(2,'0')}`;
+}
+function diffMins(a, b) { return toMins(b) - toMins(a); }
+
+// ═══════════════════════════════════════════════════════════════════
+// GRAPH — built dynamically from trains.json
+// We build a graph where nodes = normalised station names,
+// edges = connections that exist on at least one real train.
+// Weight = actual travel time in minutes between stops.
+// This way we never need to hardcode topology — it's inferred
+// directly from the timetable data.
+// ═══════════════════════════════════════════════════════════════════
+
+let GRAPH = {};       // { stationName: [ { to, weight, lines[] } ] }
+let STATION_LINES = {}; // { stationName: Set<'BG:voz 1'|'BG:voz 2'> }
+
+function buildGraph() {
+    GRAPH = {};
+    STATION_LINES = {};
+
+    ALL_TRAINS.forEach(train => {
+        const stops = train.stops;
+        for (let i = 0; i < stops.length; i++) {
+            const sName = normLow(stops[i].station);
+
+            // Register station
+            if (!GRAPH[sName]) GRAPH[sName] = [];
+            if (!STATION_LINES[sName]) STATION_LINES[sName] = new Set();
+            STATION_LINES[sName].add(train.line);
+
+            // Add edge to next stop
+            if (i < stops.length - 1) {
+                const tName = normLow(stops[i + 1].station);
+                const w = Math.max(1, diffMins(stops[i].departure, stops[i + 1].departure));
+
+                // Check if this edge already exists for this line
+                const existing = GRAPH[sName].find(e => e.to === tName && e.lines.includes(train.line));
+                if (!existing) {
+                    // Check if edge exists for another line — add line to it
+                    const shared = GRAPH[sName].find(e => e.to === tName);
+                    if (shared) {
+                        if (!shared.lines.includes(train.line)) shared.lines.push(train.line);
+                    } else {
+                        GRAPH[sName].push({ to: tName, weight: w, lines: [train.line] });
+                    }
+                }
+
+                // Register reverse node too
+                if (!GRAPH[tName]) GRAPH[tName] = [];
+                if (!STATION_LINES[tName]) STATION_LINES[tName] = new Set();
+                STATION_LINES[tName].add(train.line);
+            }
+        }
+    });
+
+    // Add reverse edges (undirected graph)
+    const allNodes = Object.keys(GRAPH);
+    allNodes.forEach(from => {
+        GRAPH[from].forEach(edge => {
+            const reverseExists = GRAPH[edge.to]?.find(e => e.to === from);
+            if (!reverseExists) {
+                if (!GRAPH[edge.to]) GRAPH[edge.to] = [];
+                GRAPH[edge.to].push({ to: from, weight: edge.weight, lines: [...edge.lines] });
+            }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DIJKSTRA — time-weighted shortest path
+// Returns { dist, prev, prevLine } maps
+// ═══════════════════════════════════════════════════════════════════
+function dijkstra(source) {
+    const dist = {}, prev = {}, prevLine = {};
+    const visited = new Set();
+
+    Object.keys(GRAPH).forEach(id => { dist[id] = Infinity; prev[id] = null; prevLine[id] = null; });
+    dist[source] = 0;
+
+    // Simple min-heap via sorted array (graph is small)
+    const queue = [{ id: source, d: 0, line: null }];
+
+    while (queue.length) {
+        queue.sort((a, b) => a.d - b.d);
+        const { id: u, line: currentLine } = queue.shift();
+        if (visited.has(u)) continue;
+        visited.add(u);
+
+        for (const edge of (GRAPH[u] || [])) {
+            // Prefer to stay on same line (no transfer penalty needed —
+            // actual wait time is handled in timetable lookup)
+            const stayOnLine = currentLine && edge.lines.includes(currentLine);
+            const useLine = stayOnLine ? currentLine : edge.lines[0];
+            const alt = dist[u] + edge.weight;
+
+            if (alt < dist[edge.to]) {
+                dist[edge.to] = alt;
+                prev[edge.to] = u;
+                prevLine[edge.to] = useLine;
+                queue.push({ id: edge.to, d: alt, line: useLine });
+            }
+        }
+    }
+    return { dist, prev, prevLine };
+}
+
+function buildPath(prev, target) {
+    const path = []; let cur = target;
+    while (cur) { path.unshift(cur); cur = prev[cur]; }
+    return path;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SEGMENT INFERENCE
+// Walk the path and group consecutive stops into segments per line.
+// A segment break = a line transfer.
+// ═══════════════════════════════════════════════════════════════════
+function inferSegments(path) {
+    if (path.length < 2) return [];
+    const segments = [];
+    let curLine = null;
+    let curSeg = [path[0]];
+
+    for (let i = 1; i < path.length; i++) {
+        const from = path[i - 1], to = path[i];
+        const edge = GRAPH[from]?.find(e => e.to === to);
+        const edgeLines = edge ? edge.lines : [];
+
+        if (!curLine) {
+            curLine = edgeLines[0] || null;
+        }
+
+        if (edgeLines.includes(curLine)) {
+            curSeg.push(to);
+        } else {
+            // Transfer — close current segment
+            segments.push({ line: curLine, stations: [...curSeg] });
+            curLine = edgeLines[0] || null;
+            curSeg = [from, to];
+        }
+    }
+    segments.push({ line: curLine, stations: [...curSeg] });
+
+    // Merge adjacent segments on same line
+    return segments.reduce((acc, seg) => {
+        if (acc.length && acc[acc.length - 1].line === seg.line) {
+            const last = acc[acc.length - 1];
+            seg.stations.forEach((st, i) => {
+                if (i === 0 && last.stations[last.stations.length - 1] === st) return;
+                last.stations.push(st);
+            });
+        } else {
+            acc.push({ line: seg.line, stations: [...seg.stations] });
+        }
+        return acc;
+    }, []);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TIMETABLE LOOKUP
+// For a segment (line + from + to), find all real trains after a
+// given time. Uses actual trains.json data.
+// ═══════════════════════════════════════════════════════════════════
+function findTrains(line, fromName, toName, afterTime) {
+    const results = [];
+
+    ALL_TRAINS.filter(t => t.line === line).forEach(t => {
+        const fi = t.stops.findIndex(s => normLow(s.station) === fromName);
+        const ti = t.stops.findIndex(s => normLow(s.station) === toName);
+        if (fi === -1 || ti === -1 || fi >= ti) return;
+
+        const depStop = t.stops[fi];
+        const arrStop = t.stops[ti];
+        if (depStop.departure <= afterTime) return;
+
+        results.push({
+            train_id: t.train_id,
+            line: t.line,
+            direction: norm(t.direction),
+            dep: depStop.departure,
+            arr: arrStop.departure,
+            dur: diffMins(depStop.departure, arrStop.departure),
+            stops: t.stops.slice(fi, ti + 1).map(s => ({
+                name: norm(s.station),
+                time: s.departure,
+            })),
+        });
+    });
+
+    return results.sort((a, b) => a.dep.localeCompare(b.dep));
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MAIN PLANNER
+// Plans a journey from fromName (display) to toName (display),
+// returns array of journey options (direct + with transfer).
+// ═══════════════════════════════════════════════════════════════════
+function planJourney(fromDisplay, toDisplay, afterTime) {
+    const fromKey = fromDisplay.toLowerCase();
+    const toKey   = toDisplay.toLowerCase();
+
+    if (!GRAPH[fromKey] || !GRAPH[toKey] || fromKey === toKey) return [];
+
+    const { dist, prev } = dijkstra(fromKey);
+    if (dist[toKey] === Infinity) return [];
+
+    const path = buildPath(prev, toKey);
+    const segments = inferSegments(path);
+
+    // Enrich each segment with real train data
+    let minDep = afterTime;
+    const enriched = [];
+
+    for (let si = 0; si < segments.length; si++) {
+        const seg = segments[si];
+        const segFrom = seg.stations[0];
+        const segTo   = seg.stations[seg.stations.length - 1];
+        const trains  = findTrains(seg.line, segFrom, segTo, minDep);
+
+        // Advance minDep for next segment: use arr of first available train + 2min margin
+        if (trains.length > 0 && si < segments.length - 1) {
+            minDep = fromMins(toMins(trains[0].arr) + 2);
+        }
+
+        enriched.push({ ...seg, segFrom, segTo, trains });
+    }
+
+    return [{
+        segments: enriched,
+        totalMins: dist[toKey],
+        hasTransfer: segments.length > 1,
+    }];
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// BUILD PLANNER SELECTS
+// Populates from/to dropdowns with all stations grouped by line
+// ═══════════════════════════════════════════════════════════════════
+function buildPlannerSelects() {
+    // Canonical display name: get original casing from trains.json
+    const displayName = {}; // lowercased key → display name
+    ALL_TRAINS.forEach(t => {
+        t.stops.forEach(s => {
+            const key = normLow(s.station);
+            if (!displayName[key]) displayName[key] = norm(s.station);
+        });
+    });
+
+    // Group by line membership
+    const l1Only = [], l2Only = [], both = [];
+    Object.keys(STATION_LINES).forEach(key => {
+        const lines = STATION_LINES[key];
+        const name = displayName[key] || key;
+        if (lines.has('BG:voz 1') && lines.has('BG:voz 2')) both.push({ key, name });
+        else if (lines.has('BG:voz 1')) l1Only.push({ key, name });
+        else l2Only.push({ key, name });
+    });
+
+    // Sort each group alphabetically
+    const sort = arr => arr.sort((a, b) => a.name.localeCompare(b, 'sr'));
+    sort(l1Only); sort(l2Only); sort(both);
+
+    ['plan-from', 'plan-to'].forEach((elId, idx) => {
+        const el = document.getElementById(elId);
+        const placeholder = idx === 0 ? 'Полазиште' : 'Одредиште';
+        el.innerHTML = `<option value="" disabled selected>${placeholder}</option>`;
+
+        const addGroup = (label, stations) => {
+            if (!stations.length) return;
+            const og = document.createElement('optgroup');
+            og.label = label;
+            stations.forEach(({ key, name }) => {
+                const o = new Option(name, name);
+                og.appendChild(o);
+            });
+            el.appendChild(og);
+        };
+
+        addGroup('БГ:1 + БГ:2', both);
+        addGroup('БГ:1', l1Only);
+        addGroup('БГ:2', l2Only);
+
+        el.disabled = false;
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER RESULTS
+// ═══════════════════════════════════════════════════════════════════
+function renderPlanResults() {
+    const from = document.getElementById('plan-from').value;
+    const to   = document.getElementById('plan-to').value;
+    const now  = nowHHMM();
+    const container = document.getElementById('plan-results');
+    container.innerHTML = '';
+
+    if (!from || !to) return;
+    if (from === to) {
+        container.innerHTML = '<div class="no-results">Полазиште и одредиште су иста станица.</div>';
+        return;
+    }
+
+    const journeys = planJourney(from, to, now);
+
+    if (!journeys.length) {
+        container.innerHTML = `<div class="no-results">Нема доступних возова.<br>Покушајте касније или проверите вебсајт ЈП Железнице Србије.</div>`;
+        return;
+    }
+
+    journeys.forEach(journey => {
+        const firstSeg = journey.segments[0];
+        const lastSeg  = journey.segments[journey.segments.length - 1];
+        const firstTrain = firstSeg.trains[0];
+        const lastTrain  = lastSeg.trains[0];
+
+        // If no trains found at all
+        if (!firstTrain) {
+            container.innerHTML = `<div class="no-results">Нема возова за данас.<br>Сви возови на овој релацији су прошли.</div>`;
+            return;
+        }
+
+        const depTime = firstTrain.dep;
+        const arrTime = lastTrain ? lastTrain.arr : '—';
+        const totalDur = (lastTrain && depTime !== '—') ? diffMins(depTime, arrTime) : null;
+        const isPast = depTime < now;
+
+        const card = document.createElement('div');
+        card.className = `journey-card${isPast ? ' past' : ''}`;
+
+        // ── Line pills for header ──
+        const linePills = journey.segments.map((seg, si) => {
+            const isL1 = seg.line === 'BG:voz 1';
+            const color = isL1 ? 'var(--l1)' : 'var(--l2)';
+            const label = isL1 ? 'БГ:1' : 'БГ:2';
+            const arrow = si < journey.segments.length - 1 ? `<span class="jc-transfer-arrow">→</span>` : '';
+            return `<span class="jc-line-pill" style="background:${color}">
+                        <span class="jc-line-dot" style="background:rgba(255,255,255,0.7)"></span>${label}
+                    </span>${arrow}`;
+        }).join('');
+
+        card.innerHTML = `
+            <div class="jc-top">
+                <div class="jc-train-id">${firstTrain.train_id}</div>
+                <div class="jc-dest">${firstTrain.direction}</div>
+                <div class="jc-dep">${depTime}</div>
+            </div>
+            <div class="jc-badges">
+                ${linePills}
+                ${totalDur !== null ? `<span class="jc-duration">${totalDur} мин</span>` : ''}
+            </div>
+            <div class="itinerary">
+                ${buildItineraryHTML(journey, now)}
+            </div>`;
+
+        card.onclick = () => {
+            const alreadyExpanded = card.classList.contains('expanded');
+            document.querySelectorAll('.journey-card').forEach(c => c.classList.remove('expanded'));
+            if (!alreadyExpanded) {
+                card.classList.add('expanded');
+                setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
+            }
+        };
+
+        container.appendChild(card);
+    });
+
+    // Show next 2 upcoming departures below the main card
+    renderUpcomingDepartures(from, to, now, container);
+}
+
+function buildItineraryHTML(journey, now) {
+    let html = '';
+
+    journey.segments.forEach((seg, si) => {
+        const isL1 = seg.line === 'BG:voz 1';
+        const color = isL1 ? 'var(--l1)' : 'var(--l2)';
+        const label = isL1 ? 'БГ:1' : 'БГ:2';
+        const train = seg.trains[0];
+
+        // Transfer divider (between segments)
+        if (si > 0) {
+            const prevSeg = journey.segments[si - 1];
+            const prevTrain = prevSeg.trains[0];
+            const waitMins = (prevTrain && train)
+                ? diffMins(prevTrain.arr, train.dep)
+                : null;
+            html += `
+            <div class="transfer-row">
+                <span class="transfer-icon">⇄</span>
+                <span class="transfer-label">Пресед на ${seg.stations[0]}</span>
+                ${waitMins !== null ? `<span class="transfer-wait">чекање ${waitMins} мин</span>` : ''}
+            </div>`;
+        }
+
+        // Segment header
+        html += `
+        <div class="seg-header">
+            <span class="seg-line-badge" style="background:${color}">${label}</span>
+            ${train ? `<span class="seg-train-info">${train.train_id} · пр. ${train.direction}</span>` : ''}
+        </div>`;
+
+        if (!train) {
+            html += `<div class="itin-inner"><div style="font-family:var(--mono);font-size:0.78rem;opacity:0.4">Нема доступних возова за ову деоницу.</div></div>`;
+            return;
+        }
+
+        // Stop timeline
+        html += `<div class="itin-inner">`;
+        train.stops.forEach((stop, i) => {
+            const isFirst = i === 0;
+            const isLast  = i === train.stops.length - 1;
+            let dotClass = isL1 ? 'dot-l1' : 'dot-l2';
+            if (isFirst || isLast) dotClass = 'dot-terminus';
+            else if (stop.time < now) dotClass = 'dot-past';
+            else if (train.stops[i-1] && train.stops[i-1].time < now) dotClass = 'dot-current';
+
+            html += `
+            <div class="itin-stop">
+                <div class="stop-dot ${dotClass}"></div>
+                <span class="stop-name${(isFirst||isLast)?' bold':''}">${stop.name}</span>
+                <span class="stop-time">${stop.time}</span>
+            </div>`;
+        });
+        html += `</div>`;
+    });
+
+    return html;
+}
+
+// Show next few departures as compact chips below the main card
+function renderUpcomingDepartures(from, to, afterNow, container) {
+    const fromKey = from.toLowerCase();
+    const toKey   = to.toLowerCase();
+
+    // Collect all direct trains (both lines)
+    const upcoming = [];
+    ALL_TRAINS.forEach(t => {
+        const fi = t.stops.findIndex(s => normLow(s.station) === fromKey);
+        const ti = t.stops.findIndex(s => normLow(s.station) === toKey);
+        if (fi === -1 || ti === -1 || fi >= ti) return;
+        const dep = t.stops[fi].departure;
+        const arr = t.stops[ti].departure;
+        if (dep <= afterNow) return;
+        upcoming.push({ train_id: t.train_id, line: t.line, dep, arr, dur: diffMins(dep, arr) });
+    });
+
+    upcoming.sort((a, b) => a.dep.localeCompare(b.dep));
+
+    // Skip the very first one (already shown in main card) and show next 3
+    const next = upcoming.slice(1, 4);
+    if (!next.length) return;
+
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-top:2px;';
+
+    const label = document.createElement('div');
+    label.style.cssText = 'font-family:var(--mono);font-size:0.65rem;opacity:0.3;letter-spacing:0.12em;padding:2px 0;';
+    label.textContent = 'СЛЕДЕЋИ ПОЛАЗИ';
+    wrap.appendChild(label);
+
+    next.forEach(t => {
+        const isL1 = t.line === 'BG:voz 1';
+        const color = isL1 ? 'var(--l1)' : 'var(--l2)';
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;';
+        row.innerHTML = `
+            <div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></div>
+            <span style="font-family:var(--mono);font-size:0.68rem;opacity:0.5;">${t.train_id}</span>
+            <span style="font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--yellow)">${t.dep}</span>
+            <span style="opacity:0.25;font-size:0.8rem">→</span>
+            <span style="font-family:var(--mono);font-size:0.95rem;opacity:0.65">${t.arr}</span>
+            <span style="font-family:var(--mono);font-size:0.68rem;opacity:0.3;margin-left:auto">${t.dur} мин</span>`;
+        wrap.appendChild(row);
+    });
+
+    container.appendChild(wrap);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MONITOR (unchanged from original)
+// ═══════════════════════════════════════════════════════════════════
+function buildMonitorPicker() {
+    const monSet = new Set();
+    ALL_TRAINS.forEach(t => t.stops.forEach((s, i) => {
+        if (i < t.stops.length - 1) monSet.add(norm(s.station));
+    }));
+    const el = document.getElementById('mon-station');
+    [...monSet].sort().forEach(s => el.add(new Option(s, s)));
+}
+
+function renderPIDS() {
+    const station = document.getElementById('mon-station').value;
+    const now = nowHHMM();
+    const byDir = {};
+    ALL_TRAINS.forEach(t => {
+        const stop = t.stops.find(s => norm(s.station) === station);
+        if (stop && stop.departure > now && norm(t.direction) !== station) {
+            const dir = norm(t.direction);
+            if (!byDir[dir] || stop.departure < byDir[dir].dep) {
+                byDir[dir] = { id: t.train_id, dir, dep: stop.departure };
+            }
+        }
+    });
+    const rows = Object.values(byDir).sort((a, b) => a.dep.localeCompare(b.dep));
+    document.getElementById('pids-board').style.display = 'flex';
+    document.getElementById('pids-rows').innerHTML = rows.map(r => `
+        <div class="pids-row">
+            <span class="pids-id">${r.id}</span>
+            <span class="pids-dir">${r.dir}</span>
+            <span class="pids-time">${r.dep}</span>
+        </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PAGE NAV
+// ═══════════════════════════════════════════════════════════════════
+function showPage(name) {
+    ['landing', 'monitor', 'planner'].forEach(p => {
+        document.getElementById('page-' + p).classList.toggle('visible', p === name);
+    });
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const map = { landing:'nav-home', monitor:'nav-mon', planner:'nav-plan' };
+    document.getElementById(map[name]).classList.add('active');
+}
+
+function goHome() {
+    // Reset monitor
+    const monSelect = document.getElementById('mon-station');
+    if (monSelect) monSelect.selectedIndex = 0;
+    const pidsBoard = document.getElementById('pids-board');
+    if (pidsBoard) pidsBoard.style.display = 'none';
+    const pidsRows = document.getElementById('pids-rows');
+    if (pidsRows) pidsRows.innerHTML = '';
+
+    // Reset planner
+    const planFrom = document.getElementById('plan-from');
+    const planTo   = document.getElementById('plan-to');
+    if (planFrom) planFrom.value = '';
+    if (planTo)   planTo.value   = '';
+    const planResults = document.getElementById('plan-results');
+    if (planResults) planResults.innerHTML = '';
+
+    showPage('landing');
+}
+
+function goMonitor() { showPage('monitor'); }
+function goPlanner()  { showPage('planner'); }
+
+function swapStations() {
+    const f = document.getElementById('plan-from');
+    const t = document.getElementById('plan-to');
+    [f.value, t.value] = [t.value, f.value];
+    onPickersChange();
+}
+
+function onPickersChange() {
+    const f = document.getElementById('plan-from').value;
+    const t = document.getElementById('plan-to').value;
+    if (f && t) renderPlanResults();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+async function loadData() {
+    try {
+        const res = await fetch('trains.json');
+        ALL_TRAINS = await res.json();
+        buildGraph();
+        buildMonitorPicker();
+        buildPlannerSelects();
+    } catch(e) {
+        console.error('Error loading trains.json', e);
+    }
+}
+
+loadData();
+</script>
+</body>
+</html>
