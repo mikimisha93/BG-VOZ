@@ -233,7 +233,7 @@
             } catch (e) { console.error("Data load error", e); }
         }
 
-        const getCurrentTimeMin = () => {
+        const getTimeNow = () => {
             const now = new Date();
             return now.getHours() * 60 + now.getMinutes();
         };
@@ -244,47 +244,76 @@
             return h * 60 + m;
         };
 
-        // --- FIXED STATION MONITOR (Time filtered, 1 per direction) ---
+        // --- STATION MONITOR: One per direction, handles Next Day ---
         function updatePIDS(stationId) {
             const body = document.getElementById('pidsBody');
-            const display = document.getElementById('pidsDisplay');
             const selectedStationName = stationMap[stationId];
-            const nowMin = getCurrentTimeMin();
+            const nowMin = getTimeNow();
             
-            display.style.display = 'block';
+            document.getElementById('pidsDisplay').style.display = 'block';
             
-            let upcoming = [];
+            let directions = {};
+
             trainData.forEach(train => {
                 const stop = train.stops.find(s => s.station === selectedStationName);
-                if (stop && timeToMin(stop.departure) >= nowMin) {
-                    upcoming.push({
-                        v: train.train_id,
-                        d: train.direction,
-                        t: stop.departure,
-                        min: timeToMin(stop.departure)
-                    });
+                if (stop) {
+                    const depMin = timeToMin(stop.departure);
+                    const isNextDay = depMin < nowMin;
+                    // Sort priority: Today's upcoming first, then tomorrow's first
+                    const sortScore = isNextDay ? depMin + 1440 : depMin;
+
+                    if (!directions[train.direction] || sortScore < directions[train.direction].score) {
+                        directions[train.direction] = {
+                            v: train.train_id,
+                            d: train.direction,
+                            t: stop.departure,
+                            score: sortScore,
+                            nextDay: isNextDay
+                        };
+                    }
                 }
             });
 
-            // Sort and take the next few soonest trains
-            upcoming.sort((a, b) => a.min - b.min);
-            const nextTrains = upcoming.slice(0, 6); 
+            const results = Object.values(directions).sort((a, b) => a.score - b.score);
 
-            if (nextTrains.length === 0) {
-                body.innerHTML = `<div class="pids-row"><div class="col-vnum">--</div><div class="col-dir">END OF SERVICE</div><div class="col-time">--:--</div></div>`;
-                return;
-            }
-
-            body.innerHTML = nextTrains.map(dep => `
+            body.innerHTML = results.map(dep => `
                 <div class="pids-row">
                     <div class="col-vnum">${dep.v}</div>
-                    <div class="col-dir">${dep.d.toUpperCase()} ${dep.min - nowMin < 10 ? '<span class="blink" style="color:#ff3b30; font-size:0.7rem;">● DUE</span>' : ''}</div>
+                    <div class="col-dir">
+                        ${dep.d.toUpperCase()} 
+                        ${dep.nextDay ? '<span style="font-size:0.6rem; opacity:0.5;">(SUTRA)</span>' : ''}
+                    </div>
                     <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
                 </div>
             `).join('');
         }
 
-        // --- FIXED PLANNER (Prioritize Direct, Time aware) ---
+        // --- TRACKING LOGIC (Dots) ---
+        function getTrainStatusHtml(train, startStation, endStation) {
+            const nowMin = getTimeNow();
+            const stops = train.stops;
+            const sIdx = stops.findIndex(s => s.station === startStation);
+            const eIdx = stops.findIndex(s => s.station === endStation);
+            const relevantStops = stops.slice(sIdx, eIdx + 1);
+
+            const lastStopMin = timeToMin(stops[stops.length - 1].departure);
+            if (nowMin > lastStopMin) {
+                return `<div style="color:#ff3b30; font-size:0.7rem; margin-top:5px;">● Terminated at ${stops[stops.length-1].station}</div>`;
+            }
+
+            return `<div class="itinerary" style="margin-top:10px; border-left: 2px solid rgba(255,255,255,0.1); padding-left:15px;">
+                ${relevantStops.map((s, idx) => {
+                    const sMin = timeToMin(s.departure);
+                    const isHere = nowMin >= sMin && (idx === relevantStops.length - 1 || nowMin < timeToMin(relevantStops[idx+1].departure));
+                    const dot = isHere ? '<span class="blink" style="color:#4cd964;">●</span>' : '<span style="opacity:0.3;">○</span>';
+                    return `<div style="font-size:0.75rem; margin-bottom:4px; ${nowMin > sMin ? 'opacity:0.4;' : ''}">
+                        ${dot} ${s.departure} - ${s.station}
+                    </div>`;
+                }).join('')}
+            </div>`;
+        }
+
+        // --- TRIP PLANNER: Full Day, Transfer Logic, Clickable Expand ---
         function runPlanner() {
             const fromId = document.getElementById('fromPicker').value;
             const toId = document.getElementById('toPicker').value;
@@ -292,62 +321,50 @@
 
             const fromName = stationMap[fromId];
             const toName = stationMap[toId];
-            const nowMin = getCurrentTimeMin();
+            const nowMin = getTimeNow();
             let results = [];
 
-            // 1. FIND DIRECT FIRST
+            // 1. Direct
             trainData.forEach(train => {
                 const sIdx = train.stops.findIndex(s => s.station === fromName);
                 const eIdx = train.stops.findIndex(s => s.station === toName);
                 if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-                    const depMin = timeToMin(train.stops[sIdx].departure);
-                    if (depMin >= nowMin) {
-                        results.push({
-                            type: 'direct',
-                            depTime: train.stops[sIdx].departure,
-                            arrTime: train.stops[eIdx].departure,
-                            train1: train,
-                            totalMin: timeToMin(train.stops[eIdx].departure) - depMin,
-                            sortKey: depMin
-                        });
-                    }
+                    results.push({
+                        type: 'direct',
+                        depTime: train.stops[sIdx].departure,
+                        arrTime: train.stops[eIdx].departure,
+                        train1: train,
+                        isPast: timeToMin(train.stops[sIdx].departure) < nowMin,
+                        fromName, toName
+                    });
                 }
             });
 
-            // 2. ONLY SEARCH TRANSFERS IF NO DIRECT IS IMMINENT (OR FOR TRIANGLE TRIPS)
-            // Triangle logic still applies for West-South trips
+            // 2. Transfer (Nodes: Zemun, Prokop, K. Park)
             const nodes = ["Земун", "Београд Центар (Dep)", "Карађорђев парк"];
             trainData.forEach(t1 => {
                 const sIdx = t1.stops.findIndex(s => s.station === fromName);
                 if (sIdx === -1) return;
-                const depT1 = timeToMin(t1.stops[sIdx].departure);
-                if (depT1 < nowMin) return;
-
-                nodes.forEach(nodeName => {
-                    const nIdx = t1.stops.findIndex(s => s.station === nodeName);
+                
+                nodes.forEach(node => {
+                    const nIdx = t1.stops.findIndex(s => s.station === node);
                     if (nIdx === -1 || nIdx <= sIdx) return;
-                    const arrAtNode = t1.stops[nIdx].departure;
-                    
-                    trainData.forEach(t2 => {
-                        if (t1.train_id === t2.train_id) return;
-                        const nStartIdx = t2.stops.findIndex(s => s.station === nodeName);
-                        const destIdx = t2.stops.findIndex(s => s.station === toName);
+                    const arrNode = t1.stops[nIdx].departure;
 
+                    trainData.forEach(t2 => {
+                        const nStartIdx = t2.stops.findIndex(s => s.station === node);
+                        const destIdx = t2.stops.findIndex(s => s.station === toName);
                         if (nStartIdx !== -1 && destIdx !== -1 && nStartIdx < destIdx) {
-                            const depFromNode = t2.stops[nStartIdx].departure;
-                            const waitTime = timeToMin(depFromNode) - timeToMin(arrAtNode);
-                            if (waitTime >= 2 && waitTime <= 60) {
-                                // Filter out transfers that are slower than an existing direct train
-                                const totalTime = timeToMin(t2.stops[destIdx].departure) - depT1;
+                            const wait = timeToMin(t2.stops[nStartIdx].departure) - timeToMin(arrNode);
+                            if (wait >= 2 && wait <= 60) {
                                 results.push({
                                     type: 'transfer',
-                                    node: nodeName.replace(' (Dep)', ''),
+                                    node: node.replace(' (Dep)', ''),
                                     depTime: t1.stops[sIdx].departure,
                                     arrTime: t2.stops[destIdx].departure,
-                                    train1: t1,
-                                    train2: t2,
-                                    totalMin: totalTime,
-                                    sortKey: depT1
+                                    train1: t1, train2: t2,
+                                    isPast: timeToMin(t1.stops[sIdx].departure) < nowMin,
+                                    fromName, toName
                                 });
                             }
                         }
@@ -355,60 +372,46 @@
                 });
             });
 
-            // Final Filter: If a direct train and a transfer train depart at the same time, 
-            // always remove the transfer train.
-            results.sort((a, b) => a.sortKey - b.sortKey);
-            const filteredResults = results.filter((val, index, self) => 
-                val.type === 'direct' || !self.some(other => other.type === 'direct' && other.depTime === val.depTime)
-            );
-
-            renderTrips(filteredResults.slice(0, 5));
+            results.sort((a, b) => timeToMin(a.depTime) - timeToMin(b.depTime));
+            renderPlanner(results);
         }
 
-        function renderTrips(trips) {
+        function renderPlanner(trips) {
             const container = document.getElementById('plannerResults');
-            if (!trips.length) {
-                container.innerHTML = '<p style="text-align:center; opacity:0.5; margin-top:20px;">No upcoming routes found.</p>';
-                return;
-            }
-            container.innerHTML = trips.map(trip => {
+            container.innerHTML = trips.map((trip, idx) => {
                 const isTrans = trip.type === 'transfer';
-                const color = trip.train1.line.includes('1') ? 'var(--accent-blue)' : 'var(--accent-orange)';
-                const routeTxt = isTrans ? (currentLang === 'sr' ? `Преседање: ${trip.node}` : `Transfer: ${trip.node}`) : (currentLang === 'sr' ? 'Директно' : 'Direct');
+                const opacity = trip.isPast ? '0.4' : '1';
                 return `
-                    <div class="trip-card" onclick="this.classList.toggle('expanded')">
+                    <div class="trip-card ${trip.isPast ? '' : 'upcoming'}" style="opacity: ${opacity};" onclick="this.classList.toggle('expanded')">
                         <div class="trip-summary">
                             <div class="trip-time">${trip.depTime}</div>
                             <div class="trip-dest">
                                 ${isTrans ? '<span class="transfer-badge">TRANSFER</span><br>' : ''}
-                                <span class="line-dot" style="background:${color}"></span>${trip.train1.direction}
+                                <span class="line-dot" style="background:${trip.train1.line.includes('1') ? 'var(--accent-blue)' : 'var(--accent-orange)'}"></span>${trip.train1.direction}
                             </div>
                             <div class="trip-vnum">${trip.arrTime}</div>
                         </div>
                         <div class="trip-details">
-                            <p style="font-size:0.8rem; opacity:0.8; line-height:1.5;">
-                                <b>${routeTxt}</b><br>
-                                ${isTrans ? `Voz ${trip.train1.train_id} ➔ ${trip.train2.train_id}` : `Voz ${trip.train1.train_id}`}<br>
-                                ${currentLang === 'sr' ? 'Трајање' : 'Duration'}: ${trip.totalMin} min
-                            </p>
+                            <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-yellow); margin-bottom:5px;">
+                                ${isTrans ? `Leg 1: ${trip.train1.train_id} (${trip.node})` : `Direct: ${trip.train1.train_id}`}
+                            </div>
+                            ${getTrainStatusHtml(trip.train1, trip.fromName, isTrans ? trip.node : trip.toName)}
+                            ${isTrans ? `
+                                <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-yellow); margin:10px 0 5px 0;">Leg 2: ${trip.train2.train_id}</div>
+                                ${getTrainStatusHtml(trip.train2, trip.node, trip.toName)}
+                            ` : ''}
                         </div>
                     </div>`;
             }).join('');
         }
 
-        // --- NAVIGATION & UI ---
+        // --- CORE UI ---
         function goTo(screen) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(screen + '-page').classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             const nav = document.getElementById('nav-' + screen);
             if(nav) nav.classList.add('active');
-            if(screen === 'monitor') resetMonitor();
-        }
-
-        function resetMonitor() {
-            document.getElementById('stationPicker').selectedIndex = 0;
-            document.getElementById('pidsDisplay').style.display = 'none';
         }
 
         function toggleLanguage() {
@@ -419,25 +422,12 @@
 
         function applyTranslations() {
             const t = translations[currentLang];
-            document.getElementById('mainTitle').innerText = t.mainTitle;
-            document.getElementById('btnMonitor').innerText = t.btnMonitor;
-            document.getElementById('btnPlan').innerText = t.btnPlan;
-            document.getElementById('btnLines').innerText = t.btnLines;
-            document.getElementById('langBtn').innerText = t.langBtn;
-            document.getElementById('navHomeLabel').innerText = t.navHome;
-            document.getElementById('navMonitorLabel').innerText = t.navMonitor;
-            document.getElementById('navPlanLabel').innerText = t.navPlan;
-            document.getElementById('navLinesLabel').innerText = t.navLines;
-            document.getElementById('monTitle').innerText = t.monTitle;
-            document.getElementById('selectStationLbl').innerText = t.selectStationLbl;
-            document.getElementById('placeholderOpt').innerText = t.placeholderOpt;
+            document.querySelectorAll('[id]').forEach(el => {
+                if(t[el.id]) el.innerText = t[el.id];
+            });
+            // Update group labels manually
             document.getElementById('groupL1').label = t.groupL1;
             document.getElementById('groupL2').label = t.groupL2;
-            document.getElementById('colVnum').innerText = t.colVnum;
-            document.getElementById('colDir').innerText = t.colDir;
-            document.getElementById('colTime').innerText = t.colTime;
-            document.getElementById('pFrom').innerText = t.pFrom;
-            document.getElementById('pTo').innerText = t.pTo;
         }
 
         function swapStations() {
@@ -455,6 +445,8 @@
             document.getElementById('fromPicker').innerHTML += list;
             document.getElementById('toPicker').innerHTML += list;
             applyTranslations();
+            // Auto-refresh dots every minute
+            setInterval(() => { if(document.getElementById('plan-page').classList.contains('active')) runPlanner(); }, 60000);
         });
     </script>
 </body>
