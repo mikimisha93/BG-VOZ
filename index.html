@@ -251,7 +251,7 @@
             return 'white';
         };
 
-        // --- STATION MONITOR (UNTOUCHED) ---
+        // --- STATION MONITOR (STAYS UNTOUCHED) ---
         function updatePIDS(stationId) {
             const body = document.getElementById('pidsBody');
             const selectedStationName = stationMap[stationId];
@@ -280,40 +280,42 @@
             `).join('');
         }
 
-        // --- PLANNER: ITINERARY & LIVE DOTS ---
+        // --- PLANNER ITINERARY GENERATOR ---
         function getTrainStatusHtml(train, startStation, endStation) {
             const nowMin = getTimeNow();
-            const stops = train.stops;
-            const sIdx = stops.findIndex(s => s.station === startStation);
-            const eIdx = stops.findIndex(s => s.station === endStation);
-            const relevantStops = stops.slice(sIdx, eIdx + 1);
+            const sIdx = train.stops.findIndex(s => s.station === startStation);
+            const eIdx = train.stops.findIndex(s => s.station === endStation);
             
-            const lastStopTotal = timeToMin(stops[stops.length - 1].departure);
-            if (nowMin > lastStopTotal) {
-                return `<div style="color:#ff3b30; font-size:0.7rem; font-weight:bold; margin: 10px 0;">● ARRIVED AT LAST STATION</div>`;
+            if (sIdx === -1 || eIdx === -1) return `<div style="font-size:0.7rem; opacity:0.5;">Error loading stops</div>`;
+            
+            const relevantStops = train.stops.slice(sIdx, eIdx + 1);
+            const lastTripTime = timeToMin(train.stops[train.stops.length - 1].departure);
+
+            if (nowMin > lastTripTime) {
+                return `<div style="color:var(--accent-red); font-size:0.7rem; font-weight:bold; margin: 10px 0;">● ARRIVED AT DESTINATION</div>`;
             }
 
-            return `<div class="itinerary" style="margin-top:12px; border-left: 1px solid rgba(255,255,255,0.1); padding-left:15px; display:flex; flex-direction:column; gap:6px;">
+            return `<div class="itinerary-list" style="margin-top:12px; border-left: 1px solid rgba(255,255,255,0.1); padding-left:15px; display:flex; flex-direction:column; gap:8px;">
                 ${relevantStops.map((s, idx) => {
                     const sMin = timeToMin(s.departure);
                     const isPassed = nowMin > sMin;
                     const isCurrent = isPassed && (idx === relevantStops.length - 1 || nowMin < timeToMin(relevantStops[idx+1].departure));
                     
                     let dot = `<span style="color:rgba(255,255,255,0.2)">○</span>`;
-                    if (isCurrent) dot = `<span class="blink" style="color:#4cd964;">●</span>`;
+                    if (isCurrent) dot = `<span class="blink" style="color:#4cd964; text-shadow: 0 0 5px #4cd964;">●</span>`;
                     else if (isPassed) dot = `<span style="color:rgba(255,255,255,0.4)">●</span>`;
 
                     return `
-                        <div style="display:flex; align-items:center; gap:10px; font-size:0.75rem; font-family:monospace; ${isPassed && !isCurrent ? 'opacity:0.4' : 'opacity:1'}">
+                        <div style="display:flex; align-items:center; gap:12px; font-size:0.8rem; font-family:monospace; ${isPassed && !isCurrent ? 'opacity:0.3' : 'opacity:1'}">
                             <span style="width:12px; text-align:center;">${dot}</span>
-                            <span style="color:var(--accent-yellow);">${s.departure}</span>
-                            <span style="color:white; font-size:0.7rem;">${s.station}</span>
+                            <span style="color:var(--accent-yellow); font-weight:bold; min-width:45px;">${s.departure}</span>
+                            <span style="color:white; font-size:0.7rem; text-transform:uppercase;">${s.station}</span>
                         </div>`;
                 }).join('')}
             </div>`;
         }
 
-        // --- TRIP PLANNER LOGIC ---
+        // --- UPDATED PLANNER LOGIC ---
         function runPlanner() {
             const fromId = document.getElementById('fromPicker').value;
             const toId = document.getElementById('toPicker').value;
@@ -323,39 +325,50 @@
             const toName = stationMap[toId];
             const nowMin = getTimeNow();
             let results = [];
+            let directDepartureTimes = new Set();
 
-            // 1. Direct
+            // 1. DIRECT SEARCH (PRIORITY)
             trainData.forEach(train => {
                 const sIdx = train.stops.findIndex(s => s.station === fromName);
                 const eIdx = train.stops.findIndex(s => s.station === toName);
                 if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
+                    const depTime = train.stops[sIdx].departure;
+                    directDepartureTimes.add(depTime);
                     results.push({
-                        type: 'direct', depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure,
-                        train1: train, isPast: timeToMin(train.stops[sIdx].departure) < nowMin,
+                        type: 'direct', depTime, arrTime: train.stops[eIdx].departure,
+                        train1: train, isPast: timeToMin(depTime) < nowMin,
                         fromName, toName
                     });
                 }
             });
 
-            // 2. Transfer
+            // 2. TRANSFER SEARCH (ONLY IF NO DIRECT AT SAME TIME)
             const nodes = ["Земун", "Београд Центар (Dep)", "Карађорђев парк"];
             trainData.forEach(t1 => {
                 const sIdx = t1.stops.findIndex(s => s.station === fromName);
                 if (sIdx === -1) return;
+                
+                const depTimeT1 = t1.stops[sIdx].departure;
+                // SKIP transfer if we already have a direct train leaving at the exact same time
+                if (directDepartureTimes.has(depTimeT1)) return;
+
                 nodes.forEach(node => {
                     const nIdx = t1.stops.findIndex(s => s.station === node);
                     if (nIdx === -1 || nIdx <= sIdx) return;
                     const arrNode = t1.stops[nIdx].departure;
+
                     trainData.forEach(t2 => {
+                        if (t1.train_id === t2.train_id) return;
                         const nStartIdx = t2.stops.findIndex(s => s.station === node);
                         const destIdx = t2.stops.findIndex(s => s.station === toName);
+                        
                         if (nStartIdx !== -1 && destIdx !== -1 && nStartIdx < destIdx) {
                             const wait = timeToMin(t2.stops[nStartIdx].departure) - timeToMin(arrNode);
                             if (wait >= 2 && wait <= 60) {
                                 results.push({
                                     type: 'transfer', node: node.replace(' (Dep)', ''),
-                                    depTime: t1.stops[sIdx].departure, arrTime: t2.stops[destIdx].departure,
-                                    train1: t1, train2: t2, isPast: timeToMin(t1.stops[sIdx].departure) < nowMin,
+                                    depTime: depTimeT1, arrTime: t2.stops[destIdx].departure,
+                                    train1: t1, train2: t2, isPast: timeToMin(depTimeT1) < nowMin,
                                     fromName, toName
                                 });
                             }
@@ -370,6 +383,11 @@
 
         function renderPlanner(trips) {
             const container = document.getElementById('plannerResults');
+            if (!trips.length) {
+                container.innerHTML = `<p style="text-align:center; opacity:0.5; padding:20px;">No routes found.</p>`;
+                return;
+            }
+
             container.innerHTML = trips.map(trip => {
                 const isTrans = trip.type === 'transfer';
                 const opacity = trip.isPast ? '0.4' : '1';
@@ -387,15 +405,15 @@
                             </div>
                             <div class="trip-vnum">${trip.arrTime}</div>
                         </div>
-                        <div class="trip-details" style="padding:15px; background:rgba(255,255,255,0.02); border-radius:0 0 15px 15px;">
+                        <div class="trip-details" style="padding:15px; background:rgba(255,255,255,0.03); border-radius:0 0 15px 15px;">
                             <div style="font-size:0.8rem; font-weight:bold; color:${color1}; margin-bottom:5px;">
                                 ${trip.train1.line} • VOZ ${trip.train1.train_id}
                             </div>
                             ${getTrainStatusHtml(trip.train1, trip.fromName, isTrans ? trip.node : trip.toName)}
                             
                             ${isTrans ? `
-                                <div style="margin:15px 0; border-top:1px dashed rgba(255,255,255,0.1); text-align:center;">
-                                    <span style="font-size:0.6rem; opacity:0.5; position:relative; top:-8px; background:#0d1220; padding:0 8px;">PRESEDANJE: ${trip.node.toUpperCase()}</span>
+                                <div style="margin:20px 0; border-top:1px dashed rgba(255,255,255,0.1); text-align:center;">
+                                    <span style="font-size:0.6rem; opacity:0.5; position:relative; top:-8px; background:var(--panel); padding:0 8px;">PRESEDANJE: ${trip.node.toUpperCase()}</span>
                                 </div>
                                 <div style="font-size:0.8rem; font-weight:bold; color:${getLineColor(trip.train2.line)}; margin-bottom:5px;">
                                     ${trip.train2.line} • VOZ ${trip.train2.train_id}
@@ -407,7 +425,7 @@
             }).join('');
         }
 
-        // --- NAVIGATION & UI ---
+        // --- NAVIGATION ---
         function goTo(screen) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(screen + '-page').classList.add('active');
