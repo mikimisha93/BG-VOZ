@@ -244,76 +244,76 @@
             return h * 60 + m;
         };
 
-        // --- STATION MONITOR: One per direction, handles Next Day ---
+        const getLineColor = (lineName) => {
+            if (lineName.includes('1')) return 'var(--accent-blue)';
+            if (lineName.includes('2')) return 'var(--accent-orange)';
+            if (lineName.includes('3')) return 'var(--accent-yellow)';
+            return 'white';
+        };
+
+        // --- STATION MONITOR (UNTOUCHED) ---
         function updatePIDS(stationId) {
             const body = document.getElementById('pidsBody');
             const selectedStationName = stationMap[stationId];
             const nowMin = getTimeNow();
-            
             document.getElementById('pidsDisplay').style.display = 'block';
             
             let directions = {};
-
             trainData.forEach(train => {
                 const stop = train.stops.find(s => s.station === selectedStationName);
                 if (stop) {
                     const depMin = timeToMin(stop.departure);
                     const isNextDay = depMin < nowMin;
-                    // Sort priority: Today's upcoming first, then tomorrow's first
                     const sortScore = isNextDay ? depMin + 1440 : depMin;
-
                     if (!directions[train.direction] || sortScore < directions[train.direction].score) {
-                        directions[train.direction] = {
-                            v: train.train_id,
-                            d: train.direction,
-                            t: stop.departure,
-                            score: sortScore,
-                            nextDay: isNextDay
-                        };
+                        directions[train.direction] = { v: train.train_id, d: train.direction, t: stop.departure, score: sortScore, nextDay: isNextDay };
                     }
                 }
             });
-
             const results = Object.values(directions).sort((a, b) => a.score - b.score);
-
             body.innerHTML = results.map(dep => `
                 <div class="pids-row">
                     <div class="col-vnum">${dep.v}</div>
-                    <div class="col-dir">
-                        ${dep.d.toUpperCase()} 
-                        ${dep.nextDay ? '<span style="font-size:0.6rem; opacity:0.5;">(SUTRA)</span>' : ''}
-                    </div>
+                    <div class="col-dir">${dep.d.toUpperCase()} ${dep.nextDay ? '<span style="font-size:0.6rem; opacity:0.5;">(SUTRA)</span>' : ''}</div>
                     <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
                 </div>
             `).join('');
         }
 
-        // --- TRACKING LOGIC (Dots) ---
+        // --- PLANNER: ITINERARY & LIVE DOTS ---
         function getTrainStatusHtml(train, startStation, endStation) {
             const nowMin = getTimeNow();
             const stops = train.stops;
             const sIdx = stops.findIndex(s => s.station === startStation);
             const eIdx = stops.findIndex(s => s.station === endStation);
             const relevantStops = stops.slice(sIdx, eIdx + 1);
-
-            const lastStopMin = timeToMin(stops[stops.length - 1].departure);
-            if (nowMin > lastStopMin) {
-                return `<div style="color:#ff3b30; font-size:0.7rem; margin-top:5px;">● Terminated at ${stops[stops.length-1].station}</div>`;
+            
+            const lastStopTotal = timeToMin(stops[stops.length - 1].departure);
+            if (nowMin > lastStopTotal) {
+                return `<div style="color:#ff3b30; font-size:0.7rem; font-weight:bold; margin: 10px 0;">● ARRIVED AT LAST STATION</div>`;
             }
 
-            return `<div class="itinerary" style="margin-top:10px; border-left: 2px solid rgba(255,255,255,0.1); padding-left:15px;">
+            return `<div class="itinerary" style="margin-top:12px; border-left: 1px solid rgba(255,255,255,0.1); padding-left:15px; display:flex; flex-direction:column; gap:6px;">
                 ${relevantStops.map((s, idx) => {
                     const sMin = timeToMin(s.departure);
-                    const isHere = nowMin >= sMin && (idx === relevantStops.length - 1 || nowMin < timeToMin(relevantStops[idx+1].departure));
-                    const dot = isHere ? '<span class="blink" style="color:#4cd964;">●</span>' : '<span style="opacity:0.3;">○</span>';
-                    return `<div style="font-size:0.75rem; margin-bottom:4px; ${nowMin > sMin ? 'opacity:0.4;' : ''}">
-                        ${dot} ${s.departure} - ${s.station}
-                    </div>`;
+                    const isPassed = nowMin > sMin;
+                    const isCurrent = isPassed && (idx === relevantStops.length - 1 || nowMin < timeToMin(relevantStops[idx+1].departure));
+                    
+                    let dot = `<span style="color:rgba(255,255,255,0.2)">○</span>`;
+                    if (isCurrent) dot = `<span class="blink" style="color:#4cd964;">●</span>`;
+                    else if (isPassed) dot = `<span style="color:rgba(255,255,255,0.4)">●</span>`;
+
+                    return `
+                        <div style="display:flex; align-items:center; gap:10px; font-size:0.75rem; font-family:monospace; ${isPassed && !isCurrent ? 'opacity:0.4' : 'opacity:1'}">
+                            <span style="width:12px; text-align:center;">${dot}</span>
+                            <span style="color:var(--accent-yellow);">${s.departure}</span>
+                            <span style="color:white; font-size:0.7rem;">${s.station}</span>
+                        </div>`;
                 }).join('')}
             </div>`;
         }
 
-        // --- TRIP PLANNER: Full Day, Transfer Logic, Clickable Expand ---
+        // --- TRIP PLANNER LOGIC ---
         function runPlanner() {
             const fromId = document.getElementById('fromPicker').value;
             const toId = document.getElementById('toPicker').value;
@@ -330,27 +330,22 @@
                 const eIdx = train.stops.findIndex(s => s.station === toName);
                 if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
                     results.push({
-                        type: 'direct',
-                        depTime: train.stops[sIdx].departure,
-                        arrTime: train.stops[eIdx].departure,
-                        train1: train,
-                        isPast: timeToMin(train.stops[sIdx].departure) < nowMin,
+                        type: 'direct', depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure,
+                        train1: train, isPast: timeToMin(train.stops[sIdx].departure) < nowMin,
                         fromName, toName
                     });
                 }
             });
 
-            // 2. Transfer (Nodes: Zemun, Prokop, K. Park)
+            // 2. Transfer
             const nodes = ["Земун", "Београд Центар (Dep)", "Карађорђев парк"];
             trainData.forEach(t1 => {
                 const sIdx = t1.stops.findIndex(s => s.station === fromName);
                 if (sIdx === -1) return;
-                
                 nodes.forEach(node => {
                     const nIdx = t1.stops.findIndex(s => s.station === node);
                     if (nIdx === -1 || nIdx <= sIdx) return;
                     const arrNode = t1.stops[nIdx].departure;
-
                     trainData.forEach(t2 => {
                         const nStartIdx = t2.stops.findIndex(s => s.station === node);
                         const destIdx = t2.stops.findIndex(s => s.station === toName);
@@ -358,12 +353,9 @@
                             const wait = timeToMin(t2.stops[nStartIdx].departure) - timeToMin(arrNode);
                             if (wait >= 2 && wait <= 60) {
                                 results.push({
-                                    type: 'transfer',
-                                    node: node.replace(' (Dep)', ''),
-                                    depTime: t1.stops[sIdx].departure,
-                                    arrTime: t2.stops[destIdx].departure,
-                                    train1: t1, train2: t2,
-                                    isPast: timeToMin(t1.stops[sIdx].departure) < nowMin,
+                                    type: 'transfer', node: node.replace(' (Dep)', ''),
+                                    depTime: t1.stops[sIdx].departure, arrTime: t2.stops[destIdx].departure,
+                                    train1: t1, train2: t2, isPast: timeToMin(t1.stops[sIdx].departure) < nowMin,
                                     fromName, toName
                                 });
                             }
@@ -378,26 +370,36 @@
 
         function renderPlanner(trips) {
             const container = document.getElementById('plannerResults');
-            container.innerHTML = trips.map((trip, idx) => {
+            container.innerHTML = trips.map(trip => {
                 const isTrans = trip.type === 'transfer';
                 const opacity = trip.isPast ? '0.4' : '1';
+                const color1 = getLineColor(trip.train1.line);
+
                 return `
-                    <div class="trip-card ${trip.isPast ? '' : 'upcoming'}" style="opacity: ${opacity};" onclick="this.classList.toggle('expanded')">
+                    <div class="trip-card" style="opacity: ${opacity};" onclick="this.classList.toggle('expanded')">
                         <div class="trip-summary">
                             <div class="trip-time">${trip.depTime}</div>
                             <div class="trip-dest">
                                 ${isTrans ? '<span class="transfer-badge">TRANSFER</span><br>' : ''}
-                                <span class="line-dot" style="background:${trip.train1.line.includes('1') ? 'var(--accent-blue)' : 'var(--accent-orange)'}"></span>${trip.train1.direction}
+                                <span class="line-dot" style="background:${color1}"></span>
+                                <span style="font-weight:bold; font-size:0.7rem; opacity:0.7; margin-right:4px;">${trip.train1.line}</span>
+                                ${trip.train1.direction}
                             </div>
                             <div class="trip-vnum">${trip.arrTime}</div>
                         </div>
-                        <div class="trip-details">
-                            <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-yellow); margin-bottom:5px;">
-                                ${isTrans ? `Leg 1: ${trip.train1.train_id} (${trip.node})` : `Direct: ${trip.train1.train_id}`}
+                        <div class="trip-details" style="padding:15px; background:rgba(255,255,255,0.02); border-radius:0 0 15px 15px;">
+                            <div style="font-size:0.8rem; font-weight:bold; color:${color1}; margin-bottom:5px;">
+                                ${trip.train1.line} • VOZ ${trip.train1.train_id}
                             </div>
                             ${getTrainStatusHtml(trip.train1, trip.fromName, isTrans ? trip.node : trip.toName)}
+                            
                             ${isTrans ? `
-                                <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-yellow); margin:10px 0 5px 0;">Leg 2: ${trip.train2.train_id}</div>
+                                <div style="margin:15px 0; border-top:1px dashed rgba(255,255,255,0.1); text-align:center;">
+                                    <span style="font-size:0.6rem; opacity:0.5; position:relative; top:-8px; background:#0d1220; padding:0 8px;">PRESEDANJE: ${trip.node.toUpperCase()}</span>
+                                </div>
+                                <div style="font-size:0.8rem; font-weight:bold; color:${getLineColor(trip.train2.line)}; margin-bottom:5px;">
+                                    ${trip.train2.line} • VOZ ${trip.train2.train_id}
+                                </div>
                                 ${getTrainStatusHtml(trip.train2, trip.node, trip.toName)}
                             ` : ''}
                         </div>
@@ -405,29 +407,13 @@
             }).join('');
         }
 
-        // --- CORE UI ---
+        // --- NAVIGATION & UI ---
         function goTo(screen) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(screen + '-page').classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             const nav = document.getElementById('nav-' + screen);
             if(nav) nav.classList.add('active');
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'sr' ? 'en' : 'sr';
-            applyTranslations();
-            if(document.getElementById('fromPicker').value) runPlanner();
-        }
-
-        function applyTranslations() {
-            const t = translations[currentLang];
-            document.querySelectorAll('[id]').forEach(el => {
-                if(t[el.id]) el.innerText = t[el.id];
-            });
-            // Update group labels manually
-            document.getElementById('groupL1').label = t.groupL1;
-            document.getElementById('groupL2').label = t.groupL2;
         }
 
         function swapStations() {
@@ -439,14 +425,44 @@
             runPlanner();
         }
 
+        function toggleLanguage() {
+            currentLang = currentLang === 'sr' ? 'en' : 'sr';
+            applyTranslations();
+            if(document.getElementById('fromPicker').value) runPlanner();
+        }
+
+        function applyTranslations() {
+            const t = translations[currentLang];
+            document.getElementById('mainTitle').innerText = t.mainTitle;
+            document.getElementById('btnMonitor').innerText = t.btnMonitor;
+            document.getElementById('btnPlan').innerText = t.btnPlan;
+            document.getElementById('btnLines').innerText = t.btnLines;
+            document.getElementById('langBtn').innerText = t.langBtn;
+            document.getElementById('navHomeLabel').innerText = t.navHome;
+            document.getElementById('navMonitorLabel').innerText = t.navMonitor;
+            document.getElementById('navPlanLabel').innerText = t.navPlan;
+            document.getElementById('navLinesLabel').innerText = t.navLines;
+            document.getElementById('monTitle').innerText = t.monTitle;
+            document.getElementById('selectStationLbl').innerText = t.selectStationLbl;
+            document.getElementById('placeholderOpt').innerText = t.placeholderOpt;
+            document.getElementById('groupL1').label = t.groupL1;
+            document.getElementById('groupL2').label = t.groupL2;
+            document.getElementById('colVnum').innerText = t.colVnum;
+            document.getElementById('colDir').innerText = t.colDir;
+            document.getElementById('colTime').innerText = t.colTime;
+            document.getElementById('pFrom').innerText = t.pFrom;
+            document.getElementById('pTo').innerText = t.pTo;
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             await loadTrainData();
             const list = document.getElementById('stationPicker').innerHTML;
             document.getElementById('fromPicker').innerHTML += list;
             document.getElementById('toPicker').innerHTML += list;
             applyTranslations();
-            // Auto-refresh dots every minute
-            setInterval(() => { if(document.getElementById('plan-page').classList.contains('active')) runPlanner(); }, 60000);
+            setInterval(() => { 
+                if(document.getElementById('plan-page').classList.contains('active')) runPlanner(); 
+            }, 30000);
         });
     </script>
 </body>
