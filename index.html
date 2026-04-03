@@ -216,7 +216,6 @@
         let currentLang = 'sr'; 
         let trainData = [];
 
-        // Mapping UI IDs to JSON Station Names
         const stationMap = {
             'batajnica': 'Батајница', 'kamendin': 'Камендин', 'zemun_polje': 'Земунско поље',
             'altina': 'Алтина', 'zemun': 'Земун', 'tosin_bunar': 'Тошин бунар',
@@ -234,81 +233,95 @@
             } catch (e) { console.error("Data load error", e); }
         }
 
+        const getCurrentTimeMin = () => {
+            const now = new Date();
+            return now.getHours() * 60 + now.getMinutes();
+        };
+
         const timeToMin = (t) => {
             if (!t) return 0;
             const [h, m] = t.split(':').map(Number);
             return h * 60 + m;
         };
 
-        // --- STATION MONITOR LOGIC (RESTORED & IMPROVED) ---
+        // --- FIXED STATION MONITOR (Time filtered, 1 per direction) ---
         function updatePIDS(stationId) {
             const body = document.getElementById('pidsBody');
             const display = document.getElementById('pidsDisplay');
             const selectedStationName = stationMap[stationId];
+            const nowMin = getCurrentTimeMin();
             
             display.style.display = 'block';
             
-            // Filter trains that stop at this station
-            let departures = [];
+            let upcoming = [];
             trainData.forEach(train => {
                 const stop = train.stops.find(s => s.station === selectedStationName);
-                if (stop) {
-                    departures.push({
+                if (stop && timeToMin(stop.departure) >= nowMin) {
+                    upcoming.push({
                         v: train.train_id,
                         d: train.direction,
-                        t: stop.departure
+                        t: stop.departure,
+                        min: timeToMin(stop.departure)
                     });
                 }
             });
 
-            // Sort by time
-            departures.sort((a, b) => timeToMin(a.t) - timeToMin(b.t));
+            // Sort and take the next few soonest trains
+            upcoming.sort((a, b) => a.min - b.min);
+            const nextTrains = upcoming.slice(0, 6); 
 
-            if (departures.length === 0) {
-                body.innerHTML = `<div class="pids-row"><div class="col-vnum">--</div><div class="col-dir">NO TRAINS FOUND</div><div class="col-time">--:--</div></div>`;
+            if (nextTrains.length === 0) {
+                body.innerHTML = `<div class="pids-row"><div class="col-vnum">--</div><div class="col-dir">END OF SERVICE</div><div class="col-time">--:--</div></div>`;
                 return;
             }
 
-            body.innerHTML = departures.map(dep => `
+            body.innerHTML = nextTrains.map(dep => `
                 <div class="pids-row">
                     <div class="col-vnum">${dep.v}</div>
-                    <div class="col-dir">${dep.d.toUpperCase()}</div>
+                    <div class="col-dir">${dep.d.toUpperCase()} ${dep.min - nowMin < 10 ? '<span class="blink" style="color:#ff3b30; font-size:0.7rem;">● DUE</span>' : ''}</div>
                     <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
                 </div>
             `).join('');
         }
 
-        // --- TRIP PLANNER LOGIC ---
+        // --- FIXED PLANNER (Prioritize Direct, Time aware) ---
         function runPlanner() {
             const fromId = document.getElementById('fromPicker').value;
             const toId = document.getElementById('toPicker').value;
-            const container = document.getElementById('plannerResults');
             if (!fromId || !toId || fromId === toId) return;
 
             const fromName = stationMap[fromId];
             const toName = stationMap[toId];
-            let possibleTrips = [];
+            const nowMin = getCurrentTimeMin();
+            let results = [];
 
-            // 1. DIRECT SEARCH
+            // 1. FIND DIRECT FIRST
             trainData.forEach(train => {
                 const sIdx = train.stops.findIndex(s => s.station === fromName);
                 const eIdx = train.stops.findIndex(s => s.station === toName);
                 if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-                    possibleTrips.push({
-                        type: 'direct',
-                        depTime: train.stops[sIdx].departure,
-                        arrTime: train.stops[eIdx].departure,
-                        train1: train,
-                        totalMin: timeToMin(train.stops[eIdx].departure) - timeToMin(train.stops[sIdx].departure)
-                    });
+                    const depMin = timeToMin(train.stops[sIdx].departure);
+                    if (depMin >= nowMin) {
+                        results.push({
+                            type: 'direct',
+                            depTime: train.stops[sIdx].departure,
+                            arrTime: train.stops[eIdx].departure,
+                            train1: train,
+                            totalMin: timeToMin(train.stops[eIdx].departure) - depMin,
+                            sortKey: depMin
+                        });
+                    }
                 }
             });
 
-            // 2. TRANSFER SEARCH (Triangle Nodes)
+            // 2. ONLY SEARCH TRANSFERS IF NO DIRECT IS IMMINENT (OR FOR TRIANGLE TRIPS)
+            // Triangle logic still applies for West-South trips
             const nodes = ["Земун", "Београд Центар (Dep)", "Карађорђев парк"];
             trainData.forEach(t1 => {
                 const sIdx = t1.stops.findIndex(s => s.station === fromName);
                 if (sIdx === -1) return;
+                const depT1 = timeToMin(t1.stops[sIdx].departure);
+                if (depT1 < nowMin) return;
 
                 nodes.forEach(nodeName => {
                     const nIdx = t1.stops.findIndex(s => s.station === nodeName);
@@ -324,14 +337,17 @@
                             const depFromNode = t2.stops[nStartIdx].departure;
                             const waitTime = timeToMin(depFromNode) - timeToMin(arrAtNode);
                             if (waitTime >= 2 && waitTime <= 60) {
-                                possibleTrips.push({
+                                // Filter out transfers that are slower than an existing direct train
+                                const totalTime = timeToMin(t2.stops[destIdx].departure) - depT1;
+                                results.push({
                                     type: 'transfer',
                                     node: nodeName.replace(' (Dep)', ''),
                                     depTime: t1.stops[sIdx].departure,
                                     arrTime: t2.stops[destIdx].departure,
                                     train1: t1,
                                     train2: t2,
-                                    totalMin: timeToMin(t2.stops[destIdx].departure) - timeToMin(t1.stops[sIdx].departure)
+                                    totalMin: totalTime,
+                                    sortKey: depT1
                                 });
                             }
                         }
@@ -339,14 +355,20 @@
                 });
             });
 
-            possibleTrips.sort((a, b) => timeToMin(a.arrTime) - timeToMin(b.arrTime));
-            renderTrips(possibleTrips.slice(0, 5));
+            // Final Filter: If a direct train and a transfer train depart at the same time, 
+            // always remove the transfer train.
+            results.sort((a, b) => a.sortKey - b.sortKey);
+            const filteredResults = results.filter((val, index, self) => 
+                val.type === 'direct' || !self.some(other => other.type === 'direct' && other.depTime === val.depTime)
+            );
+
+            renderTrips(filteredResults.slice(0, 5));
         }
 
         function renderTrips(trips) {
             const container = document.getElementById('plannerResults');
             if (!trips.length) {
-                container.innerHTML = '<p style="text-align:center; opacity:0.5; margin-top:20px;">No routes found.</p>';
+                container.innerHTML = '<p style="text-align:center; opacity:0.5; margin-top:20px;">No upcoming routes found.</p>';
                 return;
             }
             container.innerHTML = trips.map(trip => {
@@ -374,7 +396,21 @@
             }).join('');
         }
 
-        // --- COMMON UI FUNCTIONS ---
+        // --- NAVIGATION & UI ---
+        function goTo(screen) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(screen + '-page').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const nav = document.getElementById('nav-' + screen);
+            if(nav) nav.classList.add('active');
+            if(screen === 'monitor') resetMonitor();
+        }
+
+        function resetMonitor() {
+            document.getElementById('stationPicker').selectedIndex = 0;
+            document.getElementById('pidsDisplay').style.display = 'none';
+        }
+
         function toggleLanguage() {
             currentLang = currentLang === 'sr' ? 'en' : 'sr';
             applyTranslations();
@@ -402,14 +438,6 @@
             document.getElementById('colTime').innerText = t.colTime;
             document.getElementById('pFrom').innerText = t.pFrom;
             document.getElementById('pTo').innerText = t.pTo;
-        }
-
-        function goTo(screen) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(screen + '-page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            const nav = document.getElementById('nav-' + screen);
-            if(nav) nav.classList.add('active');
         }
 
         function swapStations() {
