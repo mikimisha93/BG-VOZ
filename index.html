@@ -143,6 +143,76 @@
         
         .transfer-badge { display: inline-block; padding: 2px 8px; border-radius: 5px; background: var(--accent-orange); color: black; font-size: 0.6rem; font-weight: 900; margin-bottom: 6px; }
         .line-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+        /* Lines UI Specific */
+.lines-container {
+    width: 100%;
+    padding: 0 20px;
+}
+
+.line-section {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.line-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.route-map {
+    position: relative;
+    padding-left: 20px;
+}
+
+.route-map::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: rgba(255,255,255,0.2);
+}
+
+.route-step {
+    position: relative;
+    padding: 8px 0 8px 20px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.route-step::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 14px;
+    width: 12px;
+    height: 12px;
+    background: #1a0505;
+    border: 2px solid white;
+    border-radius: 50%;
+    z-index: 2;
+}
+.route-step {
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.route-step:active {
+    opacity: 0.5;
+    background: rgba(255,255,255,0.05);
+}
+
+.line-1-accent::before { border-color: var(--accent-blue); }
+.line-2-accent::before { border-color: var(--accent-orange); }
     </style>
 </head>
 <body>
@@ -224,7 +294,51 @@
         <div id="plannerResults" style="width: 100%; margin-top: 5px;"></div>
     </div>
 
-    <div id="lines-page" class="page"><h1>ЛИНИЈЕ</h1></div>
+    <div id="lines-page" class="page">
+    <div class="lines-container">
+        <div class="line-section">
+            <div class="line-title">
+                <span class="line-dot" style="background: var(--accent-blue); width: 15px; height: 15px;"></span>
+                ЛИНИЈА 1
+            </div>
+            <div class="route-map">
+                <div class="route-step line-1-accent" onclick="quickView('batajnica')">Батајница</div>
+                <div class="route-step line-1-accent" onclick="quickView('kamendin')">Камендин</div>
+                <div class="route-step line-1-accent" onclick="quickView('zemun_polje')">Земунско поље</div>
+                <div class="route-step line-1-accent" onclick="quickView('altina')">Алтина</div>
+                <div class="route-step line-1-accent" onclick="quickView('zemun')">Земун</div>
+                <div class="route-step line-1-accent" onclick="quickView('tosin_bunar')">Тошин бунар</div>
+                <div class="route-step line-1-accent" onclick="quickView('novi_beograd')">Нови Београд</div>
+                <div class="route-step line-1-accent" onclick="quickView('beograd_centar')">Београд Центар</div>
+                <div class="route-step line-1-accent" onclick="quickView('karadjordjev_park')">Карађорђев парк</div>
+                <div class="route-step line-1-accent" onclick="quickView('vukov_spomenik')">Вуков споменик</div>
+                <div class="route-step line-1-accent" onclick="quickView('pancevacki_most')">Панчевачки мост</div>
+                <div class="route-step line-1-accent" onclick="quickView('krnjaca_most')">Крњача мост</div>
+                <div class="route-step line-1-accent" onclick="quickView('krnjaca')">Крњача</div>
+                <div class="route-step line-1-accent" onclick="quickView('sebes')">Себеш</div>
+                <div class="route-step line-1-accent" onclick="quickView('ovca')">Овча</div>
+            </div>
+        </div>
+
+        <div class="line-section">
+            <div class="line-title">
+                <span class="line-dot" style="background: var(--accent-orange); width: 15px; height: 15px;"></span>
+                ЛИНИЈА 2 (РЕСНИК - ЗЕМУН)
+            </div>
+            <div class="route-map">
+                <div class="route-step line-2-accent" onclick="quickView('resnik')">Ресник</div>
+                <div class="route-step line-2-accent" onclick="quickView('kijevo')">Кијево</div>
+                <div class="route-step line-2-accent" onclick="quickView('knezevac')">Кнежевац</div>
+                <div class="route-step line-2-accent" onclick="quickView('rakovica')">Раковица</div>
+                <div class="route-step line-2-accent" onclick="quickView('karadjordjev_park')">Карађорђев парк</div>
+                <div class="route-step line-2-accent" onclick="quickView('beograd_centar')">Београд Центар</div>
+                <div class="route-step line-2-accent" onclick="quickView('novi_beograd')">Нови Београд</div>
+                <div class="route-step line-2-accent" onclick="quickView('tosin_bunar')">Тошин бунар</div>
+                <div class="route-step line-2-accent" onclick="quickView('zemun')">Земун</div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <nav class="nav-bar">
         <div class="nav-item active" id="nav-home" onclick="goTo('home')">
@@ -344,44 +458,130 @@
             const nowMin = getTimeNow();
             let results = [];
 
-            trainData.forEach(train => {
-                const sIdx = train.stops.findIndex(s => s.station === fromName);
-                const eIdx = train.stops.findIndex(s => s.station === toName);
-                if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
+            const zapad = ['Батајница', 'Камендин', 'Земунско поље', 'Алтина', 'Земун', 'Тошин бунар', 'Нови Београд'];
+            const jug = ['Раковица', 'Кнежевац', 'Кијево', 'Ресник'];
+
+            trainData.forEach(t1 => {
+                const s1Idx = t1.stops.findIndex(s => s.station === fromName);
+                if (s1Idx === -1) return;
+
+                // 1. DIREKTNA LINIJA
+                const e1Idx = t1.stops.findIndex(s => s.station === toName);
+                if (e1Idx !== -1 && s1Idx < e1Idx) {
                     results.push({
-                        type: 'direct', depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure,
-                        train1: train, isPast: timeToMin(train.stops[sIdx].departure) < nowMin,
+                        type: 'direct',
+                        depTime: t1.stops[s1Idx].departure,
+                        arrTime: t1.stops[e1Idx].departure,
+                        train1: t1,
+                        isPast: timeToMin(t1.stops[s1Idx].departure) < nowMin,
                         fromName, toName
                     });
                 }
+
+                // 2. LOGIKA PRESEDANJA (BATAJNICA -> RESNIK)
+                if (zapad.includes(fromName) && jug.includes(toName)) {
+                    findSpecificTransfer(t1, s1Idx, 'Београд Центар', toName, results, nowMin, fromName);
+                    findSpecificTransfer(t1, s1Idx, 'Карађорђев парк', toName, results, nowMin, fromName);
+                }
+
+                // 3. LOGIKA PRESEDANJA (RESNIK -> BATAJNICA)
+                if (jug.includes(fromName) && zapad.includes(toName)) {
+                    findSpecificTransfer(t1, s1Idx, 'Београд Центар', toName, results, nowMin, fromName);
+                    findSpecificTransfer(t1, s1Idx, 'Карађорђев парк', toName, results, nowMin, fromName);
+                }
             });
 
-            results.sort((a, b) => timeToMin(a.depTime) - timeToMin(b.depTime));
-            renderPlanner(results);
+            function findSpecificTransfer(t1, s1Idx, hubName, finalDest, resArray, now, startName) {
+                const h1Idx = t1.stops.findIndex(s => s.station === hubName);
+                if (h1Idx === -1 || h1Idx < s1Idx) return;
+                const arrivalAtHub = timeToMin(t1.stops[h1Idx].departure);
+
+                trainData.forEach(t2 => {
+                    if (t1.train_id === t2.train_id) return;
+                    const h2Idx = t2.stops.findIndex(s => s.station === hubName);
+                    const e2Idx = t2.stops.findIndex(s => s.station === finalDest);
+
+                    if (h2Idx !== -1 && e2Idx !== -1 && h2Idx < e2Idx) {
+                        const departureFromHub = timeToMin(t2.stops[h2Idx].departure);
+                        const wait = departureFromHub - arrivalAtHub;
+                        if (wait >= 4 && wait <= 45) {
+                            resArray.push({
+                                type: 'transfer',
+                                hub: hubName,
+                                depTime: t1.stops[s1Idx].departure,
+                                arrTime: t2.stops[e2Idx].departure,
+                                train1: t1,
+                                train2: t2,
+                                waitTime: wait,
+                                isPast: timeToMin(t1.stops[s1Idx].departure) < now,
+                                fromName: startName, toName: finalDest
+                            });
+                        }
+                    }
+                });
+            }
+
+            results.sort((a, b) => timeToMin(a.arrTime) - timeToMin(b.arrTime));
+            const finalResults = results.filter((v, i, a) => a.findIndex(t => t.depTime === v.depTime && t.arrTime === v.arrTime) === i);
+            renderPlanner(finalResults.slice(0, 10));
         }
 
         function renderPlanner(trips) {
             const container = document.getElementById('plannerResults');
+            if (trips.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:20px; opacity:0.5;">Нема пронађених путовања.</div>`;
+                return;
+            }
+
             container.innerHTML = trips.map(trip => {
                 const color1 = getLineColor(trip.train1.line);
-                return `
-                    <div class="trip-card" style="opacity: ${trip.isPast ? '0.4' : '1'};" onclick="this.classList.toggle('expanded')">
-                        <div class="trip-summary">
-                            <div class="trip-time">${trip.depTime}</div>
-                            <div class="trip-dest">
-                                <span class="line-dot" style="background:${color1}"></span>
-                                <span style="font-weight:bold; font-size:0.7rem; opacity:0.7; margin-right:4px;">${trip.train1.line}</span>
-                                ${trip.train1.direction}
+                
+                if (trip.type === 'direct') {
+                    return `
+                        <div class="trip-card" style="opacity: ${trip.isPast ? '0.4' : '1'};" onclick="this.classList.toggle('expanded')">
+                            <div class="trip-summary">
+                                <div class="trip-time">${trip.depTime}</div>
+                                <div class="trip-dest">
+                                    <span class="line-dot" style="background:${color1}"></span>
+                                    <span style="font-weight:bold; font-size:0.7rem; opacity:0.7; margin-right:4px;">${trip.train1.line}</span>
+                                    ${trip.train1.direction}
+                                </div>
+                                <div class="trip-vnum">${trip.arrTime}</div>
                             </div>
-                            <div class="trip-vnum">${trip.arrTime}</div>
-                        </div>
-                        <div class="trip-details">
-                            <div style="font-size:0.8rem; font-weight:bold; color:${color1}; margin-bottom:5px;">
-                                ${trip.train1.line} • ВОЗ ${trip.train1.train_id}
+                            <div class="trip-details">
+                                <div style="font-size:0.8rem; font-weight:bold; color:${color1}; margin-bottom:5px;">
+                                    ${trip.train1.line} • ВОЗ ${trip.train1.train_id}
+                                </div>
+                                ${getTrainStatusHtml(trip.train1, trip.fromName, trip.toName)}
                             </div>
-                            ${getTrainStatusHtml(trip.train1, trip.fromName, trip.toName)}
-                        </div>
-                    </div>`;
+                        </div>`;
+                } else {
+                    const color2 = getLineColor(trip.train2.line);
+                    return `
+                        <div class="trip-card" style="opacity: ${trip.isPast ? '0.4' : '1'}; border-left: 4px solid var(--accent-orange);" onclick="this.classList.toggle('expanded')">
+                            <div class="trip-summary">
+                                <div class="trip-time">${trip.depTime}</div>
+                                <div class="trip-dest">
+                                    <span class="transfer-badge">ПРЕСЕДАЊЕ: ${trip.hub}</span><br>
+                                    Stiže u ${trip.arrTime}
+                                </div>
+                                <div class="trip-vnum" style="color:var(--accent-yellow)">${trip.arrTime}</div>
+                            </div>
+                            <div class="trip-details">
+                                <div style="margin-bottom: 10px;">
+                                    <div style="font-size:0.7rem; color:${color1}; font-weight:bold;">1. ${trip.train1.line} (до станице ${trip.hub})</div>
+                                    ${getTrainStatusHtml(trip.train1, trip.fromName, trip.hub)}
+                                </div>
+                                <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; margin: 10px 0; font-size: 0.7rem; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                                    ⏱️ Чекање на presedanje: ${trip.waitTime} мин
+                                </div>
+                                <div>
+                                    <div style="font-size:0.7rem; color:${color2}; font-weight:bold;">2. ${trip.train2.line} (од стаnice ${trip.hub})</div>
+                                    ${getTrainStatusHtml(trip.train2, trip.hub, trip.toName)}
+                                </div>
+                            </div>
+                        </div>`;
+                }
             }).join('');
         }
 
@@ -398,6 +598,21 @@
             const temp = f.value; f.value = t.value; t.value = temp;
             runPlanner();
         }
+        function quickView(stationId) {
+    const picker = document.getElementById('stationPicker');
+    
+    // 1. Postavi vrednost u select-u na monitoru
+    picker.value = stationId;
+    
+    // 2. Pozovi tvoju postojeću funkciju za ažuriranje PIDS-a
+    updatePIDS(stationId);
+    
+    // 3. Prebaci na monitor stranicu
+    goTo('monitor');
+    
+    // Opciono: Skroluj na vrh ekrana monitora
+    document.getElementById('monitor-page').scrollTop = 0;
+}
 
         document.addEventListener('DOMContentLoaded', async () => {
             await loadTrainData();
@@ -407,6 +622,8 @@
             setInterval(() => { 
                 if(document.getElementById('plan-page').classList.contains('active')) runPlanner(); 
             }, 30000);
+            
+            
         });
     </script>
 </body>
