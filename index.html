@@ -1,179 +1,149 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>BG:VOZ Live</title>
-<style>
-:root {
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --accent-yellow: #FFD700;
-  --accent-red: #FF3B30;
-  --text-main: #FFFFFF;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: -apple-system, sans-serif;
-  color: var(--text-main);
-  background: #050a14;
-  height: 100vh; width: 100vw; overflow: hidden;
-}
-
-.page {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 60px 20px; opacity: 0; pointer-events: none; overflow-y: auto;
-}
-.page.active { opacity: 1; pointer-events: auto; }
-
-/* UI Elements */
-.info-card {
-  background: rgba(255, 59, 48, 0.15); border: 1px solid var(--accent-red);
-  padding: 15px; border-radius: 15px; margin-top: 20px; width: 100%; font-size: 0.8rem;
-}
-.btn-large { width: 100%; padding: 20px; margin-bottom: 10px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; color: white; text-align: center; font-weight: bold; cursor: pointer; }
-.plan-select { width: 100%; padding: 15px; background: #1a1a2e; border: 1px solid var(--glass-border); border-radius: 15px; color: white; font-size: 1rem; margin-bottom: 10px; }
-
-/* Nav */
-.nav-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 300px; height: 60px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 30px; display: flex; justify-content: space-around; align-items: center; }
-.nav-item { color: white; opacity: 0.5; cursor: pointer; }
-.nav-item.active { opacity: 1; }
-
-.pids-row { display: grid; grid-template-columns: 60px 1fr 70px; padding: 15px; border-bottom: 1px solid #222; background: #000; width: 100%; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BG:VOZ Live</title>
+    <style>
+        :root { --glass: rgba(255,255,255,0.1); --red: #FF3B30; --gold: #FFD700; }
+        body { font-family: sans-serif; background: #050a14; color: white; margin: 0; padding: 0; overflow-x: hidden; }
+        .page { display: none; padding: 60px 20px; flex-direction: column; align-items: center; min-height: 100vh; }
+        .page.active { display: flex; }
+        .btn-large { width: 100%; padding: 20px; background: var(--glass); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; margin-bottom: 10px; text-align: center; font-weight: bold; cursor: pointer; }
+        .plan-select { width: 100%; padding: 15px; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; font-size: 1rem; margin-bottom: 10px; }
+        .info-card { background: rgba(255, 59, 48, 0.1); border: 1px solid var(--red); padding: 15px; border-radius: 15px; margin-top: 20px; font-size: 0.85rem; width: 100%; box-sizing: border-box;}
+        .nav-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 280px; height: 60px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 30px; display: flex; justify-content: space-around; align-items: center; border: 1px solid rgba(255,255,255,0.2); }
+        .nav-item { color: white; opacity: 0.5; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+        .nav-item.active { opacity: 1; color: var(--gold); }
+        .pids-row { display: grid; grid-template-columns: 60px 1fr 70px; padding: 15px; border-bottom: 1px solid #222; background: #000; width: 100%; box-sizing: border-box;}
+    </style>
 </head>
 <body>
 
 <div id="home-page" class="page active">
-  <h1 style="margin-bottom: 30px;">BG:VOZ</h1>
-  <div class="btn-large" onclick="goTo('monitor')">MONITOR (PIDS)</div>
-  <div class="btn-large" onclick="goTo('plan')">PLANER PUTA</div>
-  
-  <div class="info-card">
-    <strong style="color: var(--accent-red);">INFO / IZUZECI:</strong><br><br>
-    • <b>Voz 8021:</b> Ne saobraća vikendom i praznikom.<br>
-    • <b>Pančevački most:</b> Proverite tablu za smer Ovča.
-  </div>
+    <h1>BG:VOZ</h1>
+    <div class="btn-large" onclick="goTo('monitor')">STANIČNI RED VOŽNJE</div>
+    <div class="btn-large" onclick="goTo('plan')">PLANIRAJ PUTOVANJE</div>
+    
+    <div class="info-card">
+        <strong style="color: var(--red);">VAŽNE INFO / IZUZECI:</strong><br><br>
+        • <b>Voz 8021:</b> Ne saobraća vikendom i praznikom.<br>
+        • <b>Pančevački most:</b> Proverite tablu za produžetke ka Ovči.
+    </div>
 </div>
 
 <div id="monitor-page" class="page">
-  <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
-    <option value="" disabled selected>Učitavanje stanica...</option>
-  </select>
-  <div id="pidsBody" style="width: 100%; margin-top: 10px; border-radius: 10px; overflow: hidden;"></div>
+    <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)"></select>
+    <div id="pidsBody" style="width: 100%;"></div>
 </div>
 
 <div id="plan-page" class="page">
-  <select id="fromPicker" class="plan-select" onchange="runPlanner()"></select>
-  <select id="toPicker" class="plan-select" onchange="runPlanner()"></select>
-  <div id="plannerResults" style="width: 100%; margin-top: 10px;"></div>
+    <select id="fromPicker" class="plan-select" onchange="runPlanner()"></select>
+    <select id="toPicker" class="plan-select" onchange="runPlanner()"></select>
+    <div id="plannerResults" style="width: 100%;"></div>
 </div>
 
 <nav class="nav-bar">
-  <div class="nav-item active" id="nav-home" onclick="goTo('home')">HOME</div>
-  <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')">PIDS</div>
-  <div class="nav-item" id="nav-plan" onclick="goTo('plan')">PLAN</div>
+    <div class="nav-item active" id="nav-home" onclick="goTo('home')">HOME</div>
+    <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')">MONITOR</div>
+    <div class="nav-item" id="nav-plan" onclick="goTo('plan')">PLANER</div>
 </nav>
 
 <script>
 let trainData = [];
-// This list is the source of truth for your dropdowns
 const stationMap = {
-  'batajnica': 'Batajnica', 'kamendin': 'Kamendin', 'zemun_polje': 'Zemun Polje',
-  'altina': 'Altina', 'zemun': 'Zemun', 'tosin_bunar': 'Tosin Bunar',
-  'novi_beograd': 'Novi Beograd', 'beograd_centar': 'Beograd Centar',
-  'karadjordjev_park': 'Karadjordjev Park', 'vukov_spomenik': 'Vukov Spomenik',
-  'pancevacki_most': 'Pancevacki Most', 'krnjaca_most': 'Krnjaca Most',
-  'krnjaca': 'Krnjaca', 'sebes': 'Sebes', 'ovca': 'Ovca',
-  'resnik': 'Resnik', 'kijevo': 'Kijevo', 'knezevac': 'Knezevac', 'rakovica': 'Rakovica'
+    'batajnica': 'Batajnica', 'kamendin': 'Kamendin', 'zemun_polje': 'Zemun Polje',
+    'altina': 'Altina', 'zemun': 'Zemun', 'tosin_bunar': 'Tosin Bunar',
+    'novi_beograd': 'Novi Beograd', 'beograd_centar': 'Beograd Centar',
+    'karadjordjev_park': 'Karadjordjev Park', 'vukov_spomenik': 'Vukov Spomenik',
+    'pancevacki_most': 'Pancevacki Most', 'krnjaca_most': 'Krnjaca Most',
+    'krnjaca': 'Krnjaca', 'sebes': 'Sebes', 'ovca': 'Ovca',
+    'resnik': 'Resnik', 'kijevo': 'Kijevo', 'knezevac': 'Knezevac', 'rakovica': 'Rakovica'
 };
 
-function populateDropdowns() {
-  const sorted = Object.entries(stationMap).sort((a, b) => a[1].localeCompare(b[1]));
-  let html = '<option value="" disabled selected>Izaberi stanicu...</option>';
-  sorted.forEach(([id, name]) => {
-    html += `<option value="${id}">${name}</option>`;
-  });
+// 1. POPULATE IMMEDIATELY (Don't wait for JSON)
+function init() {
+    const sorted = Object.entries(stationMap).sort((a, b) => a[1].localeCompare(b[1]));
+    let options = '<option value="" disabled selected>Izaberi stanicu...</option>';
+    sorted.forEach(([id, name]) => {
+        options += `<option value="${id}">${name}</option>`;
+    });
 
-  document.getElementById('stationPicker').innerHTML = html;
-  document.getElementById('fromPicker').innerHTML = html;
-  document.getElementById('toPicker').innerHTML = html;
-  console.log("Dropdowns populated");
+    document.getElementById('stationPicker').innerHTML = options;
+    document.getElementById('fromPicker').innerHTML = options;
+    document.getElementById('toPicker').innerHTML = options;
+    
+    loadData(); // Attempt to load JSON after UI is ready
 }
 
 async function loadData() {
-  try {
-    const res = await fetch('trains.json');
-    if (!res.ok) throw new Error("File not found");
-    trainData = await res.json();
-    console.log("Data loaded:", trainData.length, "trains");
-    populateDropdowns();
-  } catch (e) {
-    console.error("Load error:", e);
-    // Fallback if JSON fails so dropdowns still show up
-    populateDropdowns();
-  }
+    try {
+        const response = await fetch('trains.json');
+        trainData = await response.json();
+        console.log("Data loaded successfully");
+    } catch (e) {
+        console.error("JSON Load Failed. Are you running on a local server?");
+        // If it fails, the stations are already there so the user isn't stuck with a blank screen.
+    }
 }
 
 function updatePIDS(sid) {
-  const sName = stationMap[sid];
-  const now = new Date();
-  const nowMin = now.getHours() * 60 + now.getMinutes();
-  
-  const results = trainData.flatMap(train => {
-    const stop = train.stops.find(s => s.station === sName);
-    if (!stop) return [];
-    const [h, m] = stop.departure.split(':').map(Number);
-    const tMin = h * 60 + m;
-    if (tMin < nowMin) return [];
-    return [{ id: train.train_id, dir: train.direction, time: stop.departure, min: tMin }];
-  }).sort((a, b) => a.min - b.min);
+    if (trainData.length === 0) { alert("Podaci se još učitavaju ili trains.json nije pronađen."); return; }
+    const sName = stationMap[sid];
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    
+    const results = trainData.flatMap(train => {
+        const stop = train.stops.find(s => s.station === sName);
+        if (!stop) return [];
+        const [h, m] = stop.departure.split(':').map(Number);
+        const tMin = h * 60 + m;
+        if (tMin < nowMin) return [];
+        return [{ id: train.train_id, dir: train.direction, time: stop.departure, min: tMin }];
+    }).sort((a, b) => a.min - b.min);
 
-  document.getElementById('pidsBody').innerHTML = results.slice(0, 10).map(r => `
-    <div class="pids-row">
-      <div style="color: #888; font-size: 0.8rem;">${r.id}</div>
-      <div style="color: var(--accent-yellow); font-weight: bold;">${r.dir.toUpperCase()}</div>
-      <div style="text-align: right; font-weight: bold;">${r.time}</div>
-    </div>`).join('') || '<div style="text-align:center; padding:20px;">Nema više polazaka danas</div>';
+    document.getElementById('pidsBody').innerHTML = results.slice(0, 10).map(r => `
+        <div class="pids-row">
+            <div style="color: #888; font-size: 0.8rem;">${r.id}</div>
+            <div style="color: var(--gold); font-weight: bold;">${r.dir.toUpperCase()}</div>
+            <div style="text-align: right; font-weight: bold;">${r.time}</div>
+        </div>`).join('') || '<div style="padding:20px;">Nema više polazaka danas.</div>';
 }
 
 function runPlanner() {
-  const f = document.getElementById('fromPicker').value;
-  const t = document.getElementById('toPicker').value;
-  if (!f || !t || f === t) return;
+    const f = document.getElementById('fromPicker').value;
+    const t = document.getElementById('toPicker').value;
+    if (!f || !t || f === t) return;
 
-  const results = [];
-  trainData.forEach(train => {
-    const sIdx = train.stops.findIndex(s => s.station === stationMap[f]);
-    const eIdx = train.stops.findIndex(s => s.station === stationMap[t]);
-    if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-      results.push({
-        id: train.train_id,
-        dep: train.stops[sIdx].departure,
-        arr: train.stops[eIdx].departure,
-        min: train.stops[sIdx].departure.split(':').reduce((h, m) => h * 60 + +m)
-      });
-    }
-  });
+    const results = [];
+    trainData.forEach(train => {
+        const sIdx = train.stops.findIndex(s => s.station === stationMap[f]);
+        const eIdx = train.stops.findIndex(s => s.station === stationMap[t]);
+        if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
+            results.push({
+                id: train.train_id,
+                dep: train.stops[sIdx].departure,
+                arr: train.stops[eIdx].departure,
+                min: train.stops[sIdx].departure.split(':').reduce((h, m) => h * 60 + +m)
+            });
+        }
+    });
 
-  document.getElementById('plannerResults').innerHTML = results.sort((a, b) => a.min - b.min).map(r => `
-    <div style="background:var(--glass-bg); padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid var(--glass-border); display:flex; justify-content:space-between;">
-      <div><b>${r.dep}</b> → ${r.arr}</div>
-      <div style="opacity:0.6;">Voz ${r.id} ${r.id === '8021' ? '⚠️' : ''}</div>
-    </div>`).join('') || '<div style="text-align:center; padding:20px;">Nema direktnih linija</div>';
+    document.getElementById('plannerResults').innerHTML = results.sort((a, b) => a.min - b.min).map(r => `
+        <div style="background:var(--glass); padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between;">
+            <div><b>${r.dep}</b> → ${r.arr}</div>
+            <div style="opacity:0.6;">Voz ${r.id} ${r.id === '8021' ? '⚠️' : ''}</div>
+        </div>`).join('') || '<div style="padding:20px;">Nema direktnih linija.</div>';
 }
 
 function goTo(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(id + '-page').classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('nav-' + id).classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id + '-page').classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('nav-' + id).classList.add('active');
 }
 
-// Initial Kickoff
-loadData();
+init();
 </script>
 </body>
 </html>
