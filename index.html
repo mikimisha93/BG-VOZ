@@ -35,43 +35,34 @@ body {
 }
 .page.active { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-/* BOARD STYLING */
 .pids-board { width: 100%; background: #000; border: 1px solid #222; border-radius: 15px; overflow: hidden; margin-top: 10px; }
 .pids-row { display: grid; grid-template-columns: 70px 1fr 100px; padding: 18px 15px; border-bottom: 1px solid #111; align-items: center; }
-.col-vnum { text-align: left; color: #666; font-family: monospace; font-size: 0.85rem; }
-.col-dir { text-align: left; padding-left: 5px; color: var(--accent-yellow); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; }
+.col-vnum { color: #666; font-family: monospace; font-size: 0.85rem; }
+.col-dir { color: var(--accent-yellow); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; }
 .col-time { text-align: right; color: var(--accent-yellow); font-family: monospace; font-size: 1.2rem; font-weight: bold; }
 
-/* Navigation */
-.nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 280px; height: 70px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
-.nav-item { height: 100%; display: flex; align-items: center; justify-content: center; color: white; opacity: 0.4; transition: all 0.3s; cursor: pointer; flex: 1; }
+.nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 280px; height: 70px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
+.nav-item { height: 100%; display: flex; align-items: center; justify-content: center; color: white; opacity: 0.4; transition: 0.3s; cursor: pointer; flex: 1; }
 .nav-item.active { opacity: 1; }
 .nav-item svg { width: 28px; height: 28px; }
 
-/* Home Header */
 .top-section { text-align: center; margin-bottom: 30px; }
 .modern-train-icon { width: 64px; height: 64px; margin-bottom: 10px; }
 h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .center-section { width: 100%; padding: 0 32px; display: flex; flex-direction: column; gap: 12px; }
 .btn-large { width: 100%; padding: 20px; font-size: 0.8rem; font-weight: 700; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-transform: uppercase; text-align: center; cursor: pointer; }
 
-/* QR Code */
 .qr-container { margin-top: 20px; display: flex; justify-content: center; width: 100%; }
-.qr-card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 16px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 150px; }
+.qr-card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 16px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 150px; }
 .qr-image { width: 110px; height: 110px; border-radius: 10px; }
-.qr-text { font-size: 0.6rem; font-weight: 800; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; }
 
-/* Planner */
 .plan-controls { width: 100%; padding: 0 20px; margin-top: 10px; position: relative; }
 .input-group { background: var(--glass-bg); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; backdrop-filter: var(--glass-blur); }
 .plan-select { width: 100%; padding: 18px; background: transparent; border: none; color: white !important; font-size: 1rem; outline: none; appearance: none; display: block; }
 .plan-select option { background: #1a1a2e; color: white; }
-
-/* RESTORED SWAP BUTTON */
 .swap-btn { position: absolute; right: 35px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border); z-index: 10; cursor: pointer; }
 
-.trip-card { background: var(--glass-bg); margin: 8px 20px; border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
-.trip-summary { padding: 18px 20px; }
+.trip-card { background: var(--glass-bg); margin: 8px 20px; border-radius: 20px; border: 1px solid var(--glass-border); padding: 18px 20px; }
 .transfer-label { font-size: 0.65rem; color: #4CD964; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; display: block; }
 </style>
 </head>
@@ -97,26 +88,18 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 </div>
 
 <div id="monitor-page" class="page">
-  <div class="plan-controls">
-    <div class="input-group">
-      <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
-        <option value="" disabled selected>Izaberi stanicu</option>
-      </select>
-    </div>
-  </div>
+  <div class="plan-controls"><div class="input-group"><select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)"><option value="" disabled selected>Izaberi stanicu</option></select></div></div>
   <div id="pidsDisplay" style="display:none; width: 100%; padding: 0 20px; margin-top:15px;"><div class="pids-board"><div id="pidsBody"></div></div></div>
 </div>
 
 <div id="plan-page" class="page">
   <div class="plan-controls">
     <div class="input-group">
-      <select id="fromPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected>Polazak</option></select>
+      <select id="fromPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected hidden>Polazak</option></select>
       <div style="height:1px; background:var(--glass-border); margin:0 15px;"></div>
-      <select id="toPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected>Dolazak</option></select>
+      <select id="toPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected hidden>Dolazak</option></select>
     </div>
-    <button class="swap-btn" onclick="swapStations()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
-    </button>
+    <button class="swap-btn" onclick="swapStations()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg></button>
   </div>
   <div id="plannerResults" style="width: 100%; margin-top: 10px;"></div>
 </div>
@@ -128,90 +111,70 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 </nav>
 
 <script>
-const stationMap = {
-  'batajnica': 'Batajnica', 'kamendin': 'Kamendin', 'zemun_polje': 'Zemun Polje', 'altina': 'Altina', 'zemun': 'Zemun', 'tosin_bunar': 'Tosin Bunar', 'novi_beograd': 'Novi Beograd', 'beograd_centar': 'Beograd Centar', 'karadjordjev_park': 'Karadjordjev Park', 'vukov_spomenik': 'Vukov Spomenik', 'pancevacki_most': 'Pancevacki Most', 'krnjaca_most': 'Krnjaca Most', 'krnjaca': 'Krnjaca', 'sebes': 'Sebes', 'ovca': 'Ovca', 'resnik': 'Resnik', 'kijevo': 'Kijevo', 'knezevac': 'Knezevac', 'rakovica': 'Rakovica'
-};
+// Exact values from your trains.json
+const stations = ["Batajnica", "Kamendin", "Zemun polje", "Altina", "Zemun", "Tošin bunar", "Novi Beograd", "Beograd centar (Prokop)", "Karađorđev park", "Vukov spomenik", "Pančevački most", "Krnjača most", "Krnjača", "Sebeš", "Ovča", "Rakovica", "Kneževac", "Kijevo", "Resnik"];
+const hubs = ["Beograd centar (Prokop)", "Karađorđev park", "Vukov spomenik", "Pančevački most"];
 
-const hubs = ['Beograd Centar', 'Karadjordjev Park', 'Vukov Spomenik', 'Pancevacki Most'];
 let trainData = [];
-
-// Helper to clean names for matching (e.g. "Tosin Bunar" vs "Tošin Bunar")
-const clean = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/đ/g, 'dj').trim();
 const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
 
 function populatePickers() {
-  const sorted = Object.entries(stationMap).sort((a, b) => a[1].localeCompare(b[1]));
-  let html = `<option value="" disabled selected>Izaberi stanicu...</option>`;
-  sorted.forEach(([id, name]) => html += `<option value="${id}">${name}</option>`);
-  document.getElementById('stationPicker').innerHTML = html;
-  document.getElementById('fromPicker').innerHTML = html;
-  document.getElementById('toPicker').innerHTML = html;
+  const sorted = [...stations].sort((a,b) => a.localeCompare(b));
+  let h = `<option value="" disabled selected>Izaberi stanicu...</option>`;
+  sorted.forEach(s => h += `<option value="${s}">${s}</option>`);
+  document.getElementById('stationPicker').innerHTML = h;
+  document.getElementById('fromPicker').innerHTML = h;
+  document.getElementById('toPicker').innerHTML = h;
 }
 
 async function loadTrainData() {
   try {
     const res = await fetch('trains.json');
     trainData = await res.json();
-    console.log("Loaded", trainData.length, "trains");
-  } catch (e) { console.error("JSON Error:", e); }
+  } catch (e) { console.error("Data error"); }
 }
 
-function updatePIDS(sid) {
-  const target = clean(stationMap[sid]);
-  const now = new Date();
-  const nowMin = now.getHours() * 60 + now.getMinutes();
-  let html = '';
-  
-  trainData.forEach(train => {
-    const stop = train.stops.find(s => clean(s.station) === target);
-    if(stop) {
-      const depMin = timeToMin(stop.departure);
-      if(depMin >= nowMin) {
-        html += `<div class="pids-row">
-          <div class="col-vnum">${train.train_id}</div>
-          <div class="col-dir">${train.direction.toUpperCase()}</div>
-          <div class="col-time">${stop.departure}</div>
-        </div>`;
-      }
+function updatePIDS(val) {
+  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+  let h = '';
+  trainData.forEach(tr => {
+    const s = tr.stops.find(st => st.station === val);
+    if(s && timeToMin(s.departure) >= nowMin) {
+      h += `<div class="pids-row"><div class="col-vnum">${tr.train_id}</div><div class="col-dir">${tr.direction}</div><div class="col-time">${s.departure}</div></div>`;
     }
   });
   document.getElementById('pidsDisplay').style.display = 'block';
-  document.getElementById('pidsBody').innerHTML = html || '<p style="padding:20px; text-align:center;">Nema polazaka.</p>';
+  document.getElementById('pidsBody').innerHTML = h || '<p style="padding:20px; text-align:center; opacity:0.5;">Nema polazaka.</p>';
 }
 
 function runPlanner() {
   const f = document.getElementById('fromPicker').value, t = document.getElementById('toPicker').value;
   if(!f || !t || f === t) return;
-  const startStation = clean(stationMap[f]), endStation = clean(stationMap[t]);
   let routes = [];
 
-  // 1. Direct Search
-  trainData.forEach(train => {
-    const sIdx = train.stops.findIndex(s => clean(s.station) === startStation);
-    const eIdx = train.stops.findIndex(s => clean(s.station) === endStation);
-    if(sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-      routes.push({ type: 'DIRECT', t1: train, dep: train.stops[sIdx].departure, arr: train.stops[eIdx].departure, depMin: timeToMin(train.stops[sIdx].departure) });
+  // Direct
+  trainData.forEach(tr => {
+    const si = tr.stops.findIndex(s => s.station === f), ei = tr.stops.findIndex(s => s.station === t);
+    if(si !== -1 && ei !== -1 && si < ei) {
+      routes.push({ type:'DIRECT', tr1:tr, dep:tr.stops[si].departure, arr:tr.stops[ei].departure, dMin:timeToMin(tr.stops[si].departure) });
     }
   });
 
-  // 2. Transfer Search
+  // Transfer
   trainData.forEach(tr1 => {
-    const sIdx = tr1.stops.findIndex(s => clean(s.station) === startStation);
-    if(sIdx === -1) return;
-    hubs.forEach(hubName => {
-      const cleanHub = clean(hubName);
-      const hIdx = tr1.stops.findIndex(s => clean(s.station) === cleanHub);
-      if(hIdx !== -1 && hIdx > sIdx) {
-        const hubArrTime = timeToMin(tr1.stops[hIdx].departure);
+    const si = tr1.stops.findIndex(s => s.station === f);
+    if(si === -1) return;
+    hubs.forEach(hub => {
+      const hi = tr1.stops.findIndex(s => s.station === hub);
+      if(hi !== -1 && hi > si) {
+        const hArr = timeToMin(tr1.stops[hi].departure);
         trainData.forEach(tr2 => {
           if(tr1.train_id === tr2.train_id) return;
-          const h2Idx = tr2.stops.findIndex(s => clean(s.station) === cleanHub);
-          const eIdx = tr2.stops.findIndex(s => clean(s.station) === endStation);
-          if(h2Idx !== -1 && eIdx !== -1 && eIdx > h2Idx) {
-            const hubDepTime = timeToMin(tr2.stops[h2Idx].departure);
-            const wait = hubDepTime - hubArrTime;
-            if(wait >= 3 && wait <= 60) {
-              routes.push({ type: 'TRANSFER', t1: tr1, t2: tr2, hub: hubName, dep: tr1.stops[sIdx].departure, arr: tr2.stops[eIdx].departure, depMin: timeToMin(tr1.stops[sIdx].departure) });
+          const h2i = tr2.stops.findIndex(s => s.station === hub), ti = tr2.stops.findIndex(s => s.station === t);
+          if(h2i !== -1 && ti !== -1 && ti > h2i) {
+            const hDep = timeToMin(tr2.stops[h2i].departure);
+            if(hDep - hArr >= 2 && hDep - hArr <= 45) {
+              routes.push({ type:'TRANSFER', tr1, tr2, hub, dep:tr1.stops[si].departure, arr:tr2.stops[ti].departure, dMin:timeToMin(tr1.stops[si].departure) });
             }
           }
         });
@@ -219,39 +182,31 @@ function runPlanner() {
     });
   });
 
-  document.getElementById('plannerResults').innerHTML = routes.sort((a,b) => a.depMin - b.depMin).slice(0, 10).map(r => `
+  document.getElementById('plannerResults').innerHTML = routes.sort((a,b) => a.dMin - b.dMin).map(r => `
     <div class="trip-card">
-      <div class="trip-summary">
-        ${r.type === 'TRANSFER' ? `<span class="transfer-label">Presedanje: ${r.hub}</span>` : ''}
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-size:1.2rem; font-weight:bold; color:var(--accent-yellow);">${r.dep} → ${r.arr}</div>
-          <div style="font-size:0.75rem; opacity:0.6; text-align:right;">
-            ${r.type === 'DIRECT' ? `Voz ${r.t1.train_id}` : `Voz ${r.t1.train_id} + ${r.t2.train_id}`}
-          </div>
-        </div>
+      ${r.type==='TRANSFER' ? `<span class="transfer-label">Presedanje: ${r.hub}</span>`:''}
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-size:1.2rem; font-weight:bold; color:var(--accent-yellow);">${r.dep} → ${r.arr}</div>
+        <div style="font-size:0.75rem; opacity:0.6; text-align:right;">${r.type==='DIRECT' ? 'Voz '+r.tr1.train_id : 'Voz '+r.tr1.train_id+' + '+r.tr2.train_id}</div>
       </div>
-    </div>`).join('') || '<p style="text-align:center; padding:40px; opacity:0.5;">Nema dostupnih linija.</p>';
+    </div>`).join('') || '<p style="text-align:center; padding:40px; opacity:0.5;">Nema rezultata.</p>';
 }
 
 function swapStations() {
   const f = document.getElementById('fromPicker'), t = document.getElementById('toPicker');
-  const temp = f.value; f.value = t.value; t.value = temp; runPlanner();
+  const tmp = f.value; f.value = t.value; t.value = tmp; runPlanner();
 }
 
-function goTo(screen) {
+function goTo(s) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(screen + '-page').classList.add('active');
+  document.getElementById(s + '-page').classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('nav-' + screen).classList.add('active');
-}
-
-function generateQRCode() {
-  document.getElementById('pwa-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}&color=ffffff&bgcolor=333333`;
+  document.getElementById('nav-' + s).classList.add('active');
 }
 
 populatePickers();
 loadTrainData();
-generateQRCode();
+document.getElementById('pwa-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}&color=ffffff&bgcolor=333333`;
 </script>
 </body>
 </html>
