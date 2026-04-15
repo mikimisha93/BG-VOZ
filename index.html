@@ -182,7 +182,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     <div class="input-group">
       <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
         <option value="" disabled selected>Izaberite stanicu...</option>
-        <optgroup label="Linija 1">
+        <optgroup label="Zajedničke / Linija 1">
           <option value="batajnica">Batajnica</option>
           <option value="kamendin">Kamendin</option>
           <option value="zemun_polje">Zemun Polje</option>
@@ -199,19 +199,11 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
           <option value="sebes">Sebes</option>
           <option value="ovca">Ovca</option>
         </optgroup>
-        <optgroup label="Linija 2">
+        <optgroup label="Zajedničke / Linija 2">
           <option value="resnik">Resnik</option>
           <option value="kijevo">Kijevo</option>
           <option value="knezevac">Knezevac</option>
           <option value="rakovica">Rakovica</option>
-          <option value="karadjordjev_park">Karadjordjev Park</option>
-          <option value="beograd_centar">Beograd Centar</option>
-          <option value="vukov_spomenik">Vukov Spomenik</option>
-          <option value="pancevacki_most">Pancevacki Most</option>
-          <option value="krnjaca_most">Krnjaca Most</option>
-          <option value="krnjaca">Krnjaca</option>
-          <option value="sebes">Sebes</option>
-          <option value="ovca">Ovca</option>
         </optgroup>
       </select>
     </div>
@@ -364,9 +356,11 @@ const timeToMin = (t) => {
   return h * 60 + m;
 };
 
+// Updated to detect line color from the specific train result
 const getLineColor = (lineName) => {
   if (lineName && lineName.includes('1')) return 'var(--accent-blue)';
   if (lineName && lineName.includes('2')) return 'var(--accent-orange)';
+  if (lineName && lineName.includes('4')) return 'var(--accent-red)';
   return 'white';
 };
 
@@ -423,23 +417,28 @@ function selectLine(line) {
   document.getElementById('plannerResults').innerHTML = '';
 }
 
+// Incorporating the SMART FILTER logic
 function runPlanner() {
   const fromId = document.getElementById('fromPicker').value;
   const toId = document.getElementById('toPicker').value;
-  if (!fromId || !toId || fromId === toId || !selectedLine) return;
+  if (!fromId || !toId || fromId === toId) return;
 
   const targetFrom = normalize(stationMap[fromId] || fromId);
   const targetTo = normalize(stationMap[toId] || toId);
   const nowMin = getTimeNow();
 
   let results = [];
-  trainData.filter(t => t.line === selectedLine).forEach(train => {
+  
+  // Scans ALL train data regardless of selectedLine
+  trainData.forEach(train => {
     const sIdx = train.stops.findIndex(s => normalize(s.station) === targetFrom);
     const eIdx = train.stops.findIndex(s => normalize(s.station) === targetTo);
 
     if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
       results.push({
-        train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure,
+        train, 
+        depTime: train.stops[sIdx].departure, 
+        arrTime: train.stops[eIdx].departure,
         stops: train.stops.slice(sIdx, eIdx + 1),
         depMin: timeToMin(train.stops[sIdx].departure),
         isPast: timeToMin(train.stops[sIdx].departure) < nowMin
@@ -448,12 +447,11 @@ function runPlanner() {
   });
 
   results.sort((a, b) => a.depMin - b.depMin);
-  renderPlanner(results, nowMin);
+  renderPlanner(results);
 }
 
-function renderPlanner(trips, nowMin) {
+function renderPlanner(trips) {
   const container = document.getElementById('plannerResults');
-  const lineColor = getLineColor(selectedLine);
   if (trips.length === 0) {
     container.innerHTML = `<div style="text-align:center; padding:30px; opacity:0.5; font-size:0.9rem;">Nema polazaka.</div>`;
     return;
@@ -461,11 +459,15 @@ function renderPlanner(trips, nowMin) {
   container.innerHTML = trips.map((trip, idx) => {
     const dur = timeToMin(trip.arrTime) - trip.depMin;
     const stopsHtml = trip.stops.map((s, si) => `<div class="stop-row ${si === 0 ? 'stop-from' : (si === trip.stops.length-1 ? 'stop-to' : '')}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
+    
+    // Dynamically get color based on the actual train line in the result
+    const dotColor = getLineColor(trip.train.line);
+    
     return `
       <div class="trip-card ${trip.isPast ? 'past-trip' : ''}" onclick="expandTrip(${idx})">
         <div class="trip-summary" id="trip-${idx}">
           <div class="trip-time">${trip.depTime}</div>
-          <div><div class="trip-dest"><span class="line-dot" style="background:${lineColor}"></span>Voz ${trip.train.train_id}</div><div style="font-size:0.7rem; opacity:0.5;">⏱ ${dur} min</div></div>
+          <div><div class="trip-dest"><span class="line-dot" style="background:${dotColor}"></span>Voz ${trip.train.train_id}</div><div style="font-size:0.7rem; opacity:0.5;">⏱ ${dur} min</div></div>
           <div class="trip-arr">${trip.arrTime}</div>
         </div>
         <div class="trip-details"><div class="stop-list">${stopsHtml}</div></div>
@@ -500,7 +502,7 @@ function quickView(id) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadTrainData();
-  setInterval(() => { if (document.getElementById('plan-page').classList.contains('active')) runPlanner(); }, 30000);
+  // Auto-refresh logic removed from here to keep it clean, but can be added back if needed
 });
 </script>
 </body>
