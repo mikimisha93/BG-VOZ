@@ -43,21 +43,9 @@ body {
 .page.active { opacity: 1; pointer-events: auto; transform: scale(1); }
 
 /* PIDS BOARD */
-.pids-board {
-  width: 100%; background: #000; border: 1px solid #222; border-radius: 15px; overflow: hidden; margin-top: 10px;
-}
-.pids-header, .pids-row {
-  display: grid; grid-template-columns: 70px 1fr 100px; padding: 12px 15px; align-items: center;
-}
-.pids-header {
-  background: #111; border-bottom: 1px solid #222; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; color: #FFFFFF; letter-spacing: 0.05em;
-}
-.pids-announcement {
-  background: #111; border-bottom: 1px solid #222; color: var(--accent-red); font-size: 0.8rem; font-weight: bold; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative;
-}
-.marquee-text { display: inline-block; padding-left: 100%; animation: marquee 15s linear infinite; }
-@keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-
+.pids-board { width: 100%; background: #000; border: 1px solid #222; border-radius: 15px; overflow: hidden; margin-top: 10px; }
+.pids-header, .pids-row { display: grid; grid-template-columns: 70px 1fr 100px; padding: 12px 15px; align-items: center; }
+.pids-header { background: #111; border-bottom: 1px solid #222; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; color: #FFFFFF; letter-spacing: 0.05em; }
 .pids-row { padding: 18px 15px; border-bottom: 1px solid #111; }
 .col-vnum { text-align: left; color: #666; font-family: monospace; font-size: 0.85rem; }
 .col-dir { text-align: left; padding-left: 5px; color: var(--accent-yellow); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; }
@@ -66,7 +54,7 @@ body {
 @keyframes blinker { 50% { opacity: 0; } }
 
 /* Navigation */
-.nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 400px; height: 70px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
+.nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 280px; height: 70px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
 .nav-item { height: 100%; display: flex; align-items: center; justify-content: center; color: white; opacity: 0.4; transition: all 0.3s; cursor: pointer; flex: 1; }
 .nav-item.active { opacity: 1; }
 .nav-item svg { width: 28px; height: 28px; }
@@ -77,6 +65,36 @@ body {
 h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .center-section { width: 100%; padding: 0 32px; display: flex; flex-direction: column; gap: 12px; }
 .btn-large { width: 100%; padding: 20px; font-size: 0.8rem; font-weight: 700; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-transform: uppercase; text-align: center; cursor: pointer; }
+
+/* QR Code Styling */
+.qr-container { margin-top: 20px; display: flex; justify-content: center; width: 100%; }
+.qr-card { 
+  background: var(--glass-bg); 
+  backdrop-filter: var(--glass-blur); 
+  -webkit-backdrop-filter: var(--glass-blur); 
+  border: 1px solid var(--glass-border); 
+  padding: 16px; 
+  border-radius: 24px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 10px; 
+  width: 150px; 
+}
+.qr-image { 
+  width: 110px; 
+  height: 110px; 
+  border-radius: 10px; 
+  mix-blend-mode: screen; 
+  filter: brightness(1.2); 
+}
+.qr-text { 
+  font-size: 0.6rem; 
+  font-weight: 800; 
+  letter-spacing: 0.1em; 
+  color: rgba(255, 255, 255, 0.5); 
+  text-transform: uppercase; 
+}
 
 /* Planner UI */
 .plan-controls { width: 100%; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; position: relative; }
@@ -112,17 +130,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; }
 
 .transfer-info { padding: 10px; margin: 10px 0; background: rgba(255,215,0,0.1); border-radius: 10px; border: 1px dashed var(--accent-yellow); font-size: 0.75rem; text-align: center; }
-
-/* Lines UI */
-.lines-container { width: 100%; padding: 0 20px; }
-.line-section { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; margin-bottom: 20px; padding: 20px; }
-.line-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-.route-map { position: relative; padding-left: 20px; }
-.route-map::before { content: ''; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 2px; background: rgba(255,255,255,0.2); }
-.route-step { position: relative; padding: 8px 0 8px 20px; font-size: 0.9rem; text-transform: uppercase; font-weight: 600; cursor: pointer; }
-.route-step::before { content: ''; position: absolute; left: -1px; top: 14px; width: 12px; height: 12px; background: #1a0505; border: 2px solid white; border-radius: 50%; z-index: 2; }
-.line-1-accent::before { border-color: var(--accent-blue); }
-.line-2-accent::before { border-color: var(--accent-orange); }
 </style>
 </head>
 <body>
@@ -136,9 +143,15 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     <h1>BG:VOZ</h1>
   </header>
   <main class="center-section">
-    <div class="btn-large" onclick="goTo('monitor')">STANIČNI MONITOR</div>
+    <div class="btn-large" onclick="goTo('monitor')">STANIČNI RED VOŽNJE</div>
     <div class="btn-large" onclick="goTo('plan')">PLANIRAJ PUTOVANJE</div>
-    <div class="btn-large" onclick="goTo('lines')">LINIJE</div>
+    
+    <div class="qr-container">
+      <div class="qr-card">
+        <img src="qr-code.png" alt="PWA" class="qr-image">
+        <p class="qr-text">mikimisha93</p>
+      </div>
+    </div>
   </main>
 </div>
 
@@ -146,7 +159,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   <div class="plan-controls">
     <div class="input-group">
       <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
-        <option value="" disabled selected>Izaberite stanicu...</option>
+        <option value="" disabled selected>Izaberi stanicu</option>
       </select>
     </div>
   </div>
@@ -167,11 +180,11 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     <div class="plan-controls">
       <div class="input-group" style="position:relative;">
         <select id="fromPicker" class="plan-select" onchange="runPlanner()">
-          <option value="" disabled selected hidden>Polazna stanica...</option>
+          <option value="" disabled selected hidden>Polazak</option>
         </select>
         <div class="divider"></div>
         <select id="toPicker" class="plan-select" onchange="runPlanner()">
-          <option value="" disabled selected hidden>Odredišna stanica...</option>
+          <option value="" disabled selected hidden>Dolazak</option>
         </select>
         <button class="swap-btn" onclick="swapStations()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
@@ -180,10 +193,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     </div>
   </div>
   <div id="plannerResults" style="width: 100%; margin-top: 5px;"></div>
-</div>
-
-<div id="lines-page" class="page">
-  <div class="lines-container" id="linesList"></div>
 </div>
 
 <nav class="nav-bar">
@@ -195,9 +204,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   </div>
   <div class="nav-item" id="nav-plan" onclick="goTo('plan')">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg>
-  </div>
-  <div class="nav-item" id="nav-lines" onclick="goTo('lines')">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5,18.5L9.5,12.5L13.5,16.5L22,6.91L20.59,5.5L13.5,13.5L9.5,9.5L2,17L3.5,18.5Z"/></svg>
   </div>
 </nav>
 
@@ -253,7 +259,7 @@ function updatePIDS(stationId) {
       const depMin = timeToMin(stop.departure);
       const score = depMin < nowMin ? depMin + 1440 : depMin;
       if (!directions[train.direction] || score < directions[train.direction].score) {
-        directions[train.direction] = { v: train.train_id, d: train.direction, t: stop.departure, note: train.note || "", score };
+        directions[train.direction] = { v: train.train_id, d: train.direction, t: stop.departure, score };
       }
     }
   });
@@ -275,18 +281,21 @@ function runPlanner() {
   const targetFrom = normalize(stationMap[fromId]);
   const targetTo = normalize(stationMap[toId]);
   const nowMin = getTimeNow();
-  let results = [];
+  
+  let directResults = [];
+  let transferResults = [];
 
-  // 1. Direct
   trainData.forEach(train => {
     const sIdx = train.stops.findIndex(s => normalize(s.station) === targetFrom);
     const eIdx = train.stops.findIndex(s => normalize(s.station) === targetTo);
     if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-      results.push({ type: 'direct', train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure, stops: train.stops.slice(sIdx, eIdx + 1), depMin: timeToMin(train.stops[sIdx].departure) });
+      directResults.push({
+        type: 'direct', train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure,
+        stops: train.stops.slice(sIdx, eIdx + 1), depMin: timeToMin(train.stops[sIdx].departure)
+      });
     }
   });
 
-  // 2. Transfers
   hubs.forEach(hubName => {
     const targetHub = normalize(hubName);
     if (targetHub === targetFrom || targetHub === targetTo) return;
@@ -302,27 +311,30 @@ function runPlanner() {
     });
 
     leg1s.forEach(t1 => {
+      const depTime = t1.stops.find(st => normalize(st.station) === targetFrom).departure;
+      const depMin = timeToMin(depTime);
       const t1ArrMin = timeToMin(t1.stops.find(st => normalize(st.station) === targetHub).departure);
+
       leg2s.forEach(t2 => {
         const t2DepMin = timeToMin(t2.stops.find(st => normalize(st.station) === targetHub).departure);
+        const t2ArrTime = t2.stops.find(st => normalize(st.station) === targetTo).departure;
         const layover = t2DepMin - t1ArrMin;
+
         if (layover >= 5 && layover <= 45) {
-          results.push({
-            type: 'transfer', hub: hubName, leg1: t1, leg2: t2,
-            depTime: t1.stops.find(st => normalize(st.station) === targetFrom).departure,
-            arrTime: t2.stops.find(st => normalize(st.station) === targetTo).departure,
-            depMin: timeToMin(t1.stops.find(st => normalize(st.station) === targetFrom).departure),
-            layover,
-            stops1: t1.stops.slice(t1.stops.findIndex(s => normalize(s.station) === targetFrom), t1.stops.findIndex(s => normalize(s.station) === targetHub) + 1),
-            stops2: t2.stops.slice(t2.stops.findIndex(s => normalize(s.station) === targetHub), t2.stops.findIndex(s => normalize(s.station) === targetTo) + 1)
-          });
+          if (!directResults.some(d => d.depMin === depMin)) {
+            transferResults.push({
+              type: 'transfer', hub: hubName, leg1: t1, leg2: t2, depTime, arrTime: t2ArrTime, depMin, layover,
+              stops1: t1.stops.slice(t1.stops.findIndex(s => normalize(s.station) === targetFrom), t1.stops.findIndex(s => normalize(s.station) === targetHub) + 1),
+              stops2: t2.stops.slice(t2.stops.findIndex(s => normalize(s.station) === targetHub), t2.stops.findIndex(s => normalize(s.station) === targetTo) + 1)
+            });
+          }
         }
       });
     });
   });
 
-  results.sort((a, b) => a.depMin - b.depMin);
-  renderPlanner(results, nowMin);
+  let allResults = [...directResults, ...transferResults].sort((a, b) => a.depMin - b.depMin);
+  renderPlanner(allResults, nowMin);
 }
 
 function renderPlanner(trips, nowMin) {
@@ -352,7 +364,7 @@ function renderPlanner(trips, nowMin) {
         </div>
         <div class="trip-details">
           <div class="stop-list">${s1}</div>
-          <div class="transfer-info">Izmena vozova: <b>${trip.hub}</b> (Pauza ${trip.layover} min)</div>
+          <div class="transfer-info">Izmena: <b>${trip.hub}</b> (Pauza ${trip.layover} min)</div>
           <div class="stop-list">${s2}</div>
         </div>
       </div>`;
