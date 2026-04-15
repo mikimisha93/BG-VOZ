@@ -377,7 +377,7 @@ function renderPlanner(trips, nowMin) {
     
     // Header Info - What shows on the card before expanding
     const trainID = isDirect ? trip.train.train_id : `${trip.leg1.train_id} ➜ ${trip.leg2.train_id}`;
-    const topDirection = isDirect ? trip.train.direction : `IZMENA: ${trip.hub}`;
+    const topDirection = isDirect ? trip.train.direction : `presedanje: ${trip.hub}`;
 
     const generateStopsHtml = (stops) => stops.map((s, i) => {
       const sMin = timeToMin(s.departure);
