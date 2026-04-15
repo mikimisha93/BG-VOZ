@@ -1,1 +1,62 @@
-[]
+[
+    {
+        "train_id": "8000",
+        "line": "BG:voz 1",
+        "direction": "OVCA",
+        "stops": [
+            {"station": "Batajnica", "departure": "06:00"},
+            {"station": "Kamendin", "departure": "06:04"},
+            {"station": "Zemun Polje", "departure": "06:07"},
+            {"station": "Altina", "departure": "06:10"},
+            {"station": "Zemun", "departure": "06:13"},
+            {"station": "Tosin Bunar", "departure": "06:16"},
+            {"station": "Novi Beograd", "departure": "06:19"},
+            {"station": "Beograd Centar", "departure": "06:24"},
+            {"station": "Karadjordjev Park", "departure": "06:28"},
+            {"station": "Vukov Spomenik", "departure": "06:31"},
+            {"station": "Pancevacki Most", "departure": "06:34"},
+            {"station": "Krnjaca Most", "departure": "06:37"},
+            {"station": "Krnjaca", "departure": "06:40"},
+            {"station": "Sebes", "departure": "06:43"},
+            {"station": "Ovca", "departure": "06:48"}
+        ]
+    },
+    {
+        "train_id": "8001",
+        "line": "BG:voz 1",
+        "direction": "BATAJNICA",
+        "stops": [
+            {"station": "Ovca", "departure": "07:10"},
+            {"station": "Sebes", "departure": "07:14"},
+            {"station": "Krnjaca", "departure": "07:17"},
+            {"station": "Krnjaca Most", "departure": "07:20"},
+            {"station": "Pancevacki Most", "departure": "07:23"},
+            {"station": "Vukov Spomenik", "departure": "07:26"},
+            {"station": "Karadjordjev Park", "departure": "07:29"},
+            {"station": "Beograd Centar", "departure": "07:34"},
+            {"station": "Novi Beograd", "departure": "07:38"},
+            {"station": "Tosin Bunar", "departure": "07:41"},
+            {"station": "Zemun", "departure": "07:44"},
+            {"station": "Altina", "departure": "07:47"},
+            {"station": "Zemun Polje", "departure": "07:50"},
+            {"station": "Kamendin", "departure": "07:53"},
+            {"station": "Batajnica", "departure": "07:58"}
+        ]
+    },
+    {
+        "train_id": "8100",
+        "line": "BG:voz 2",
+        "direction": "OVCA",
+        "stops": [
+            {"station": "Resnik", "departure": "06:30"},
+            {"station": "Kijevo", "departure": "06:33"},
+            {"station": "Knezevac", "departure": "06:36"},
+            {"station": "Rakovica", "departure": "06:40"},
+            {"station": "Beograd Centar", "departure": "06:50"},
+            {"station": "Karadjordjev Park", "departure": "06:54"},
+            {"station": "Vukov Spomenik", "departure": "06:57"},
+            {"station": "Pancevacki Most", "departure": "07:00"},
+            {"station": "Ovca", "departure": "07:15"}
+        ]
+    }
+]
