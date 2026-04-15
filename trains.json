@@ -912,6 +912,167 @@
       {"station": "Rakovica", "departure": "23:33"}, {"station": "Knezevac", "departure": "23:37"},
       {"station": "Kijevo", "departure": "23:39"}, {"station": "Resnik", "departure": "23:42"}
     ]
+  },
+  {
+    "train_id": "8200",
+    "line": "BG:voz 4",
+    "direction": "OVCA",
+    "stops": [
+      {"station": "Lazarevac", "departure": "06:08"}, {"station": "Vreoci", "departure": "06:15"},
+      {"station": "Stepojevac", "departure": "06:23"}, {"station": "Leskovac Kolubarski", "departure": "06:28"},
+      {"station": "Barajevo", "departure": "06:36"}, {"station": "Bela Reka", "departure": "06:44"},
+      {"station": "Resnik", "departure": "06:54"}, {"station": "Rakovica", "departure": "07:03"},
+      {"station": "Beograd Centar", "departure": "07:13"}, {"station": "Vukov Spomenik", "departure": "07:21"},
+      {"station": "Pancevacki Most", "departure": "07:25"}, {"station": "Ovca", "departure": "07:40"}
+    ]
+  },
+  {
+    "train_id": "8202",
+    "line": "BG:voz 4",
+    "direction": "BEOGRAD CENTAR",
+    "stops": [
+      {"station": "Lazarevac", "departure": "07:45"}, {"station": "Vreoci", "departure": "07:52"},
+      {"station": "Stepojevac", "departure": "08:00"}, {"station": "Barajevo", "departure": "08:13"},
+      {"station": "Bela Reka", "departure": "08:21"}, {"station": "Resnik", "departure": "08:31"},
+      {"station": "Rakovica", "departure": "08:40"}, {"station": "Beograd Centar", "departure": "08:50"}
+    ]
+  },
+  {
+    "train_id": "8204",
+    "line": "BG:voz 4",
+    "direction": "OVCA",
+    "stops": [
+      {"station": "Lazarevac", "departure": "11:05"}, {"station": "Vreoci", "departure": "11:12"},
+      {"station": "Stepojevac", "departure": "11:20"}, {"station": "Barajevo", "departure": "11:33"},
+      {"station": "Resnik", "departure": "11:51"}, {"station": "Rakovica", "departure": "12:00"},
+      {"station": "Beograd Centar", "departure": "12:10"}, {"station": "Vukov Spomenik", "departure": "12:18"},
+      {"station": "Ovca", "departure": "12:35"}
+    ]
+  },
+  {
+    "train_id": "8201",
+    "line": "BG:voz 4",
+    "direction": "LAZAREVAC",
+    "stops": [
+      {"station": "Ovca", "departure": "04:50"}, {"station": "Vukov Spomenik", "departure": "05:06"},
+      {"station": "Beograd Centar", "departure": "05:15"}, {"station": "Rakovica", "departure": "05:25"},
+      {"station": "Resnik", "departure": "05:35"}, {"station": "Bela Reka", "departure": "05:44"},
+      {"station": "Barajevo", "departure": "05:52"}, {"station": "Stepojevac", "departure": "06:05"},
+      {"station": "Vreoci", "departure": "06:13"}, {"station": "Lazarevac", "departure": "06:20"}
+    ]
+  },
+  {
+    "train_id": "8203",
+    "line": "BG:voz 4",
+    "direction": "LAZAREVAC",
+    "stops": [
+      {"station": "Beograd Centar", "departure": "09:30"}, {"station": "Rakovica", "departure": "09:40"},
+      {"station": "Resnik", "departure": "09:50"}, {"station": "Bela Reka", "departure": "09:59"},
+      {"station": "Barajevo", "departure": "10:07"}, {"station": "Stepojevac", "departure": "10:20"},
+      {"station": "Vreoci", "departure": "10:28"}, {"station": "Lazarevac", "departure": "10:35"}
+    ]
+  },
+  {
+    "train_id": "8205",
+    "line": "BG:voz 4",
+    "direction": "LAZAREVAC",
+    "stops": [
+      {"station": "Ovca", "departure": "12:50"}, {"station": "Sebes", "departure": "12:54"},
+      {"station": "Krnjaca", "departure": "12:58"}, {"station": "Pancevacki Most", "departure": "13:06"},
+      {"station": "Vukov Spomenik", "departure": "13:10"}, {"station": "Karadjordjev Park", "departure": "13:14"},
+      {"station": "Beograd Centar", "departure": "13:17"}, {"station": "Rakovica", "departure": "13:27"},
+      {"station": "Resnik", "departure": "13:37"}, {"station": "Barajevo", "departure": "13:54"},
+      {"station": "Stepojevac", "departure": "14:07"}, {"station": "Vreoci", "departure": "14:15"}, {"station": "Lazarevac", "departure": "14:22"}
+    ]
+  },
+  {
+    "train_id": "8207",
+    "line": "BG:voz 4",
+    "direction": "LAZAREVAC",
+    "stops": [
+      {"station": "Beograd Centar", "departure": "14:32"}, {"station": "Rakovica", "departure": "14:42"},
+      {"station": "Resnik", "departure": "14:52"}, {"station": "Bela Reka", "departure": "15:01"},
+      {"station": "Barajevo", "departure": "15:09"}, {"station": "Stepojevac", "departure": "15:22"},
+      {"station": "Vreoci", "departure": "15:30"}, {"station": "Lazarevac", "departure": "15:37"}
+    ]
+  },
+  {
+    "train_id": "8209",
+    "line": "BG:voz 4",
+    "direction": "LAZAREVAC",
+    "stops": [
+      {"station": "Ovca", "departure": "15:50"}, {"station": "Vukov Spomenik", "departure": "16:06"},
+      {"station": "Beograd Centar", "departure": "16:15"}, {"station": "Rakovica", "departure": "16:25"},
+      {"station": "Resnik", "departure": "16:35"}, {"station": "Bela Reka", "departure": "16:44"},
+      {"station": "Barajevo", "departure": "16:52"}, {"station": "Stepojevac", "departure": "17:05"},
+      {"station": "Vreoci", "departure": "17:13"}, {"station": "Lazarevac", "departure": "17:20"}
+    ]
+  },
+  {
+    "train_id": "8211",
+    "line": "BG:voz 4",
+    "direction": "LAZAREVAC",
+    "stops": [
+      {"station": "Beograd Centar", "departure": "17:40"}, {"station": "Rakovica", "departure": "17:50"},
+      {"station": "Resnik", "departure": "18:00"}, {"station": "Barajevo", "departure": "18:17"},
+      {"station": "Stepojevac", "departure": "18:30"}, {"station": "Vreoci", "departure": "18:38"}, {"station": "Lazarevac", "departure": "18:45"}
+    ]
+  },
+  {
+    "train_id": "8206",
+    "line": "BG:voz 4",
+    "direction": "BEOGRAD CENTAR",
+    "stops": [
+      {"station": "Lazarevac", "departure": "15:52"}, {"station": "Vreoci", "departure": "15:59"},
+      {"station": "Stepojevac", "departure": "16:07"}, {"station": "Barajevo", "departure": "16:20"},
+      {"station": "Resnik", "departure": "16:38"}, {"station": "Rakovica", "departure": "16:47"},
+      {"station": "Beograd Centar", "departure": "16:57"}
+    ]
+  },
+  {
+    "train_id": "8213",
+    "line": "BG:voz 4",
+    "direction": "LAZAREVAC",
+    "stops": [
+      {"station": "Ovca", "departure": "19:10"}, {"station": "Vukov Spomenik", "departure": "19:26"},
+      {"station": "Beograd Centar", "departure": "19:35"}, {"station": "Rakovica", "departure": "19:45"},
+      {"station": "Resnik", "departure": "19:55"}, {"station": "Bela Reka", "departure": "20:04"},
+      {"station": "Barajevo", "departure": "20:12"}, {"station": "Stepojevac", "departure": "20:25"},
+      {"station": "Vreoci", "departure": "20:33"}, {"station": "Lazarevac", "departure": "20:40"}
+    ]
+  },
+  {
+    "train_id": "8215",
+    "line": "BG:voz 4",
+    "direction": "LAZAREVAC",
+    "stops": [
+      {"station": "Beograd Centar", "departure": "21:30"}, {"station": "Rakovica", "departure": "21:40"},
+      {"station": "Resnik", "departure": "21:50"}, {"station": "Bela Reka", "departure": "21:59"},
+      {"station": "Barajevo", "departure": "22:07"}, {"station": "Stepojevac", "departure": "22:20"},
+      {"station": "Vreoci", "departure": "22:28"}, {"station": "Lazarevac", "departure": "22:35"}
+    ]
+  },
+  {
+    "train_id": "8208",
+    "line": "BG:voz 4",
+    "direction": "OVCA",
+    "stops": [
+      {"station": "Lazarevac", "departure": "18:12"}, {"station": "Vreoci", "departure": "18:19"},
+      {"station": "Stepojevac", "departure": "18:27"}, {"station": "Barajevo", "departure": "18:40"},
+      {"station": "Resnik", "departure": "18:58"}, {"station": "Rakovica", "departure": "19:07"},
+      {"station": "Beograd Centar", "departure": "19:17"}, {"station": "Vukov Spomenik", "departure": "19:25"},
+      {"station": "Ovca", "departure": "19:40"}
+    ]
+  },
+  {
+    "train_id": "8210",
+    "line": "BG:voz 4",
+    "direction": "BEOGRAD CENTAR",
+    "stops": [
+      {"station": "Lazarevac", "departure": "21:10"}, {"station": "Vreoci", "departure": "21:17"},
+      {"station": "Stepojevac", "departure": "21:25"}, {"station": "Barajevo", "departure": "21:38"},
+      {"station": "Resnik", "departure": "21:56"}, {"station": "Rakovica", "departure": "22:05"},
+      {"station": "Beograd Centar", "departure": "22:15"}
+    ]
   }
-]
 ]
