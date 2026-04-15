@@ -19,104 +19,140 @@ body {
   font-family: var(--font-ios);
   color: var(--text-main);
   height: 100vh; width: 100vw; overflow: hidden;
-  background: linear-gradient(-45deg, #050a14, #1a0505, #0a1428, #140514);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
+  background: #050a14;
 }
-@keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
 .page {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   display: flex; flex-direction: column; align-items: center;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  padding-top: 80px; padding-bottom: 120px;
-  opacity: 0; pointer-events: none; transform: scale(1.1);
+  transition: all 0.4s ease-out;
+  padding-top: 60px; padding-bottom: 100px;
+  opacity: 0; pointer-events: none;
   overflow-y: auto;
 }
-.page.active { opacity: 1; pointer-events: auto; transform: scale(1); }
+.page.active { opacity: 1; pointer-events: auto; }
 
-.pids-board { width: 100%; background: #000; border: 1px solid #222; border-radius: 15px; overflow: hidden; margin-top: 10px; }
-.pids-row { display: grid; grid-template-columns: 70px 1fr 100px; padding: 18px 15px; border-bottom: 1px solid #111; align-items: center; }
-.col-vnum { color: #666; font-family: monospace; font-size: 0.85rem; }
-.col-dir { color: var(--accent-yellow); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; }
-.col-time { text-align: right; color: var(--accent-yellow); font-family: monospace; font-size: 1.2rem; font-weight: bold; }
+/* LAYOUT FIXES */
+.plan-controls { width: 100%; padding: 0 20px; position: relative; margin-bottom: 15px; }
+.input-group { 
+    background: var(--glass-bg); 
+    border-radius: 20px; 
+    border: 1px solid var(--glass-border); 
+    display: flex; 
+    flex-direction: column; 
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+}
+.plan-select { 
+    width: 100%; 
+    padding: 22px; 
+    background: transparent; 
+    border: none; 
+    color: white !important; 
+    font-size: 1rem; 
+    outline: none; 
+    appearance: none;
+}
+.plan-select option { background: #0a1428; color: white; }
 
-.nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 280px; height: 70px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
-.nav-item { height: 100%; display: flex; align-items: center; justify-content: center; color: white; opacity: 0.4; transition: 0.3s; cursor: pointer; flex: 1; }
-.nav-item.active { opacity: 1; }
-.nav-item svg { width: 28px; height: 28px; }
+/* SWAP BUTTON */
+.swap-btn { 
+    position: absolute; 
+    right: 35px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    width: 44px; 
+    height: 44px; 
+    background: #1a1a1a; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border: 1px solid var(--glass-border); 
+    z-index: 10; 
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
 
-.top-section { text-align: center; margin-bottom: 30px; }
-.modern-train-icon { width: 64px; height: 64px; margin-bottom: 10px; }
-h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
-.center-section { width: 100%; padding: 0 32px; display: flex; flex-direction: column; gap: 12px; }
-.btn-large { width: 100%; padding: 20px; font-size: 0.8rem; font-weight: 700; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-transform: uppercase; text-align: center; cursor: pointer; }
+/* RESULTS LIST */
+.pids-board { width: 100%; background: #000; border-radius: 15px; border: 1px solid #222; margin-top: 10px; overflow: hidden; }
+.pids-row { display: grid; grid-template-columns: 70px 1fr 80px; padding: 18px; border-bottom: 1px solid #111; align-items: center; }
+.col-vnum { color: #666; font-size: 0.8rem; font-family: monospace; }
+.col-dir { color: var(--accent-yellow); font-weight: 700; text-transform: uppercase; }
+.col-time { text-align: right; color: var(--accent-yellow); font-weight: bold; font-family: monospace; font-size: 1.1rem; }
 
-.qr-container { margin-top: 20px; display: flex; justify-content: center; width: 100%; }
-.qr-card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 16px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 150px; }
-.qr-image { width: 110px; height: 110px; border-radius: 10px; }
-
-.plan-controls { width: 100%; padding: 0 20px; margin-top: 10px; position: relative; }
-.input-group { background: var(--glass-bg); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; backdrop-filter: var(--glass-blur); }
-.plan-select { width: 100%; padding: 18px; background: transparent; border: none; color: white !important; font-size: 1rem; outline: none; appearance: none; display: block; }
-.plan-select option { background: #1a1a2e; color: white; }
-.swap-btn { position: absolute; right: 35px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border); z-index: 10; cursor: pointer; }
-
-.trip-card { background: var(--glass-bg); margin: 8px 20px; border-radius: 20px; border: 1px solid var(--glass-border); padding: 18px 20px; }
-.transfer-label { font-size: 0.65rem; color: #4CD964; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; display: block; }
+/* NAVIGATION */
+.nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 260px; height: 65px; background: rgba(20,20,20,0.85); backdrop-filter: var(--glass-blur); border-radius: 35px; border: 1px solid var(--glass-border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+.nav-item { opacity: 0.3; transition: 0.3s; padding: 10px; }
+.nav-item.active { opacity: 1; transform: scale(1.1); }
+.nav-item svg { width: 26px; height: 26px; fill: white; }
 </style>
 </head>
 <body>
 
 <div id="home-page" class="page active">
-  <header class="top-section">
-    <svg class="modern-train-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-      <rect x="5" y="2" width="14" height="16" rx="3"/><line x1="5" y1="12" x2="19" y2="12"/>
-      <circle cx="9" cy="15" r="1" fill="white"/><circle cx="15" cy="15" r="1" fill="white"/>
-    </svg>
-    <h1>BG:VOZ</h1>
-  </header>
-  <main class="center-section">
-    <div class="btn-large" onclick="goTo('monitor')">STANIČNI RED VOŽNJE</div>
-    <div class="btn-large" onclick="goTo('plan')">PLANIRAJ PUTOVANJE</div>
-    <div class="qr-container">
-      <div class="qr-card">
-        <img id="pwa-qr" src="" alt="QR" class="qr-image">
-      </div>
+  <div style="margin-top: 50px; text-align:center;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 30px; letter-spacing: 2px;">BG:VOZ</h1>
+    <div style="display:flex; flex-direction:column; gap:15px; width:280px;">
+        <div style="background:var(--glass-bg); padding:20px; border-radius:20px; border:1px solid var(--glass-border); cursor:pointer; font-weight: bold;" onclick="goTo('monitor')">STANIČNI MONITOR</div>
+        <div style="background:var(--glass-bg); padding:20px; border-radius:20px; border:1px solid var(--glass-border); cursor:pointer; font-weight: bold;" onclick="goTo('plan')">PLANER PUTA</div>
     </div>
-  </main>
+  </div>
 </div>
 
 <div id="monitor-page" class="page">
-  <div class="plan-controls"><div class="input-group"><select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)"><option value="" disabled selected>Izaberi stanicu</option></select></div></div>
-  <div id="pidsDisplay" style="display:none; width: 100%; padding: 0 20px; margin-top:15px;"><div class="pids-board"><div id="pidsBody"></div></div></div>
+  <div class="plan-controls">
+    <div class="input-group">
+      <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
+        <option value="" disabled selected>Izaberi stanicu...</option>
+      </select>
+    </div>
+  </div>
+  <div id="pidsDisplay" style="width: 100%; padding: 0 20px;">
+    <div id="pidsBody"></div>
+  </div>
 </div>
 
 <div id="plan-page" class="page">
   <div class="plan-controls">
     <div class="input-group">
-      <select id="fromPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected hidden>Polazak</option></select>
-      <div style="height:1px; background:var(--glass-border); margin:0 15px;"></div>
-      <select id="toPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected hidden>Dolazak</option></select>
+      <select id="fromPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected>Polazak</option></select>
+      <div style="height:1px; background:rgba(255,255,255,0.1); margin:0 20px;"></div>
+      <select id="toPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected>Dolazak</option></select>
     </div>
-    <button class="swap-btn" onclick="swapStations()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg></button>
+    <button class="swap-btn" onclick="swapStations()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+    </button>
   </div>
   <div id="plannerResults" style="width: 100%; margin-top: 10px;"></div>
 </div>
 
 <nav class="nav-bar">
-  <div class="nav-item active" id="nav-home" onclick="goTo('home')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
-  <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-  <div class="nav-item" id="nav-plan" onclick="goTo('plan')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg></div>
+  <div class="nav-item active" id="nav-home" onclick="goTo('home')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+  <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg></div>
+  <div class="nav-item" id="nav-plan" onclick="goTo('plan')"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
 </nav>
 
 <script>
-// Exact values from your trains.json
 const stations = ["Batajnica", "Kamendin", "Zemun polje", "Altina", "Zemun", "Tošin bunar", "Novi Beograd", "Beograd centar (Prokop)", "Karađorđev park", "Vukov spomenik", "Pančevački most", "Krnjača most", "Krnjača", "Sebeš", "Ovča", "Rakovica", "Kneževac", "Kijevo", "Resnik"];
-const hubs = ["Beograd centar (Prokop)", "Karađorđev park", "Vukov spomenik", "Pančevački most"];
 
 let trainData = [];
-const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+
+// Helper to normalize strings (trim and lower)
+const normalize = (s) => s ? s.trim().toLowerCase() : "";
+
+async function loadData() {
+  try {
+    // Relative path for GitHub Pages
+    const response = await fetch('./trains.json');
+    if (!response.ok) throw new Error("File not found");
+    trainData = await response.json();
+    populatePickers();
+  } catch (e) {
+    document.getElementById('pidsBody').innerHTML = "<p style='text-align:center; padding-top:20px;'>Greska: Ne mogu da ucitam podatke.</p>";
+    console.error(e);
+  }
+}
 
 function populatePickers() {
   const sorted = [...stations].sort((a,b) => a.localeCompare(b));
@@ -127,74 +163,64 @@ function populatePickers() {
   document.getElementById('toPicker').innerHTML = h;
 }
 
-async function loadTrainData() {
-  try {
-    const res = await fetch('trains.json');
-    trainData = await res.json();
-  } catch (e) { console.error("Data error"); }
-}
+const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
 
 function updatePIDS(val) {
-  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
-  let h = '';
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  let html = '';
+  
   trainData.forEach(tr => {
-    const s = tr.stops.find(st => st.station === val);
-    if(s && timeToMin(s.departure) >= nowMin) {
-      h += `<div class="pids-row"><div class="col-vnum">${tr.train_id}</div><div class="col-dir">${tr.direction}</div><div class="col-time">${s.departure}</div></div>`;
+    // Robust station matching
+    const stop = tr.stops.find(s => normalize(s.station) === normalize(val));
+    if(stop) {
+      const depMin = timeToMin(stop.departure);
+      if(depMin >= nowMin) {
+        html += `<div class="pids-row">
+          <div class="col-vnum">${tr.train_id}</div>
+          <div class="col-dir">${tr.direction}</div>
+          <div class="col-time">${stop.departure}</div>
+        </div>`;
+      }
     }
   });
-  document.getElementById('pidsDisplay').style.display = 'block';
-  document.getElementById('pidsBody').innerHTML = h || '<p style="padding:20px; text-align:center; opacity:0.5;">Nema polazaka.</p>';
+  
+  const container = document.getElementById('pidsBody');
+  container.innerHTML = html ? `<div class="pids-board">${html}</div>` : `<p style='text-align:center; padding:40px; opacity:0.5;'>Nema preostalih polazaka.</p>`;
 }
 
 function runPlanner() {
-  const f = document.getElementById('fromPicker').value, t = document.getElementById('toPicker').value;
+  const f = document.getElementById('fromPicker').value;
+  const t = document.getElementById('toPicker').value;
   if(!f || !t || f === t) return;
+  
   let routes = [];
+  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
 
-  // Direct
   trainData.forEach(tr => {
-    const si = tr.stops.findIndex(s => s.station === f), ei = tr.stops.findIndex(s => s.station === t);
-    if(si !== -1 && ei !== -1 && si < ei) {
-      routes.push({ type:'DIRECT', tr1:tr, dep:tr.stops[si].departure, arr:tr.stops[ei].departure, dMin:timeToMin(tr.stops[si].departure) });
+    const sIdx = tr.stops.findIndex(s => normalize(s.station) === normalize(f));
+    const eIdx = tr.stops.findIndex(s => normalize(s.station) === normalize(t));
+    if(sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
+      if(timeToMin(tr.stops[sIdx].departure) >= nowMin) {
+        routes.push({ tr, dep: tr.stops[sIdx].departure, arr: tr.stops[eIdx].departure, dMin: timeToMin(tr.stops[sIdx].departure) });
+      }
     }
   });
 
-  // Transfer
-  trainData.forEach(tr1 => {
-    const si = tr1.stops.findIndex(s => s.station === f);
-    if(si === -1) return;
-    hubs.forEach(hub => {
-      const hi = tr1.stops.findIndex(s => s.station === hub);
-      if(hi !== -1 && hi > si) {
-        const hArr = timeToMin(tr1.stops[hi].departure);
-        trainData.forEach(tr2 => {
-          if(tr1.train_id === tr2.train_id) return;
-          const h2i = tr2.stops.findIndex(s => s.station === hub), ti = tr2.stops.findIndex(s => s.station === t);
-          if(h2i !== -1 && ti !== -1 && ti > h2i) {
-            const hDep = timeToMin(tr2.stops[h2i].departure);
-            if(hDep - hArr >= 2 && hDep - hArr <= 45) {
-              routes.push({ type:'TRANSFER', tr1, tr2, hub, dep:tr1.stops[si].departure, arr:tr2.stops[ti].departure, dMin:timeToMin(tr1.stops[si].departure) });
-            }
-          }
-        });
-      }
-    });
-  });
-
-  document.getElementById('plannerResults').innerHTML = routes.sort((a,b) => a.dMin - b.dMin).map(r => `
-    <div class="trip-card">
-      ${r.type==='TRANSFER' ? `<span class="transfer-label">Presedanje: ${r.hub}</span>`:''}
+  const resDiv = document.getElementById('plannerResults');
+  resDiv.innerHTML = routes.length > 0 ? routes.sort((a,b) => a.dMin - b.dMin).map(r => `
+    <div style="background:var(--glass-bg); margin:10px 20px; border-radius:18px; border:1px solid var(--glass-border); padding:15px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div style="font-size:1.2rem; font-weight:bold; color:var(--accent-yellow);">${r.dep} → ${r.arr}</div>
-        <div style="font-size:0.75rem; opacity:0.6; text-align:right;">${r.type==='DIRECT' ? 'Voz '+r.tr1.train_id : 'Voz '+r.tr1.train_id+' + '+r.tr2.train_id}</div>
+        <div style="font-size:1.3rem; font-weight:800; color:var(--accent-yellow);">${r.dep} → ${r.arr}</div>
+        <div style="font-size:0.75rem; opacity:0.6;">Voz ${r.tr.train_id}</div>
       </div>
-    </div>`).join('') || '<p style="text-align:center; padding:40px; opacity:0.5;">Nema rezultata.</p>';
+    </div>`).join('') : `<p style='text-align:center; padding:40px; opacity:0.5;'>Nema direktnih rezultata.</p>`;
 }
 
 function swapStations() {
   const f = document.getElementById('fromPicker'), t = document.getElementById('toPicker');
-  const tmp = f.value; f.value = t.value; t.value = tmp; runPlanner();
+  const tmp = f.value; f.value = t.value; t.value = tmp;
+  runPlanner();
 }
 
 function goTo(s) {
@@ -204,9 +230,7 @@ function goTo(s) {
   document.getElementById('nav-' + s).classList.add('active');
 }
 
-populatePickers();
-loadTrainData();
-document.getElementById('pwa-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}&color=ffffff&bgcolor=333333`;
+window.onload = loadData;
 </script>
 </body>
 </html>
