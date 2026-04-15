@@ -2,9 +2,12 @@ name: Update Train Data
 
 on:
   schedule:
-    # This runs at 04:00 AM UTC every day
+    # Runs at 04:00 AM UTC (approx. 06:00 AM Belgrade time)
     - cron: '0 4 * * *'
-  workflow_dispatch: # Allows you to run it manually for testing
+  workflow_dispatch: # Allows manual run button in Actions tab
+
+permissions:
+  contents: write # CRITICAL: Allows the action to save trains.json to your repo
 
 jobs:
   build:
@@ -29,5 +32,6 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add trains.json
-          git commit -m "Auto-update train data" || exit 0
+          # The "exit 0" prevents the action from failing if there are no changes
+          git commit -m "Auto-update train data: $(date)" || exit 0
           git push
