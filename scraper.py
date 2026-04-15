@@ -1,82 +1,63 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import unicodedata
 from datetime import datetime
 
-# We will scrape the main line routes to catch all trains passing through
-ROUTES = [
-    {"from": "16204", "to": "16212", "name": "Line 1: Batajnica-Ovca"},
-    {"from": "16212", "to": "16204", "name": "Line 1: Ovca-Batajnica"},
-    {"from": "16101", "to": "16212", "name": "Line 2: Resnik-Ovca"},
-    {"from": "16212", "to": "16101", "name": "Line 2: Ovca-Resnik"}
-]
+# Let's test just ONE station first to see if we can break the wall
+STATIONS = {
+    "Batajnica": "16204", "Beograd Centar": "16050", "Vukov Spomenik": "16210", "Ovca": "16212"
+}
 
 today = datetime.now().strftime("%d.%m.%Y")
-master_trains = {}
-
-def normalize_text(text):
-    if not text: return ""
-    text = text.replace('đ', 'dj').replace('Đ', 'Dj')
-    return "".join(c for c in unicodedata.normalize('NFD', text)
-                  if unicodedata.category(c) != 'Mn')
 
 def scrape():
-    session = requests.Session()
-    # Using an even more generic header set
-    session.headers.update({
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
-    })
+    # iPhone User-Agent is often the "Golden Ticket" to bypass bot detection
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'sr-RS,sr;q=0.9',
+        'Referer': 'https://www.srbvoz.rs/'
+    }
 
-    for route in ROUTES:
-        print(f"Checking Route: {route['name']}...")
-        # This is the SEARCH URL, which is usually less restricted than the MONITOR URL
-        url = f"https://w3.srbvoz.rs/redvoznje//direktni/{route['from']}/{route['to']}/{today}/0000/sr"
+    master_trains = {}
+
+    for name, s_id in STATIONS.items():
+        print(f"Attempting {name}...")
+        # We'll use the simplest URL possible
+        url = f"https://w3.srbvoz.rs/redvoznje//stanicni/BEOGRAD/{s_id}/{today}/0000/polazak/999/sr"
         
         try:
-            response = session.get(url, timeout=30)
+            response = requests.get(url, headers=headers, timeout=20)
+            print(f"  HTTP Status: {response.status_code}")
+            
             soup = BeautifulSoup(response.text, 'html.parser')
+            # Check if there is ANY table on the page
+            table = soup.find('table')
             
-            # Search results use a different table structure
-            # We look for the train ID and the details link
-            rows = soup.find_all('tr')
-            
+            if not table:
+                print("  -> No table found. Site might be blocking or page is empty.")
+                continue
+
+            rows = table.find_all('tr')
             for row in rows:
                 cols = row.find_all('td')
-                if len(cols) < 5: continue
-                
-                # In search: Col 0 is Train Type/ID, Col 1 is Dep, Col 2 is Arr
-                train_info = cols[0].get_text(strip=True)
-                
-                if "BG:VOZ" in train_info.upper() or "БГ:ВОЗ" in train_info.upper():
-                    # Extract the 4-digit ID
-                    train_id = "".join(filter(str.isdigit, train_info))
-                    if not train_id: continue
-
-                    dep_time = cols[1].get_text(strip=True)
-                    arrival_time = cols[2].get_text(strip=True)
-                    
-                    if train_id not in master_trains:
-                        master_trains[train_id] = {
-                            "train_id": train_id,
-                            "line": "BG:voz 2" if "Line 2" in route['name'] else "BG:voz 1",
-                            "direction": "OVCA" if route['to'] == "16212" else ("BATAJNICA" if route['to'] == "16204" else "RESNIK"),
-                            "stops": []
-                        }
-                    
-                    # Note: Search results only give start and end. 
-                    # This is a fallback to at least show the train exists.
-                    print(f"  -> Found Train {train_id}")
+                if len(cols) >= 3:
+                    train_id = cols[1].get_text(strip=True)
+                    if train_id.isdigit():
+                        if train_id not in master_trains:
+                            master_trains[train_id] = {"id": train_id, "stops": []}
+                        master_trains[train_id]["stops"].append(name)
+            
+            print(f"  -> Successfully read page for {name}")
 
         except Exception as e:
             print(f"  -> Error: {e}")
 
-    # Save data
-    output = list(master_trains.values())
-    with open('trains.json', 'w', encoding='utf-8') as f:
-        json.dump(output, f, indent=4, ensure_ascii=False)
+    print(f"\nFinal Test Count: {len(master_trains)} unique trains.")
     
-    print(f"\nFinal count: {len(output)} trains found via Search Method.")
+    # Save empty list or data so the app doesn't crash
+    with open('trains.json', 'w') as f:
+        json.dump(list(master_trains.values()), f)
 
 if __name__ == "__main__":
     scrape()
