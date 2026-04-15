@@ -1,630 +1,535 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>БГ:ВОЗ Live</title>
-    <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-blur: blur(25px);
-            --accent-yellow: #FFD700;
-            --accent-orange: #FF9500;
-            --accent-blue: #007AFF;
-            --accent-red: #FF3B30;
-            --text-main: #FFFFFF;
-            --font-ios: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: var(--font-ios);
-            color: var(--text-main);
-            height: 100vh; width: 100vw; overflow: hidden;
-            background: linear-gradient(-45deg, #050a14, #1a0505, #0a1428, #140514);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-        }
-
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        .page {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: flex-start;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            padding-top: 80px;
-            padding-bottom: 120px;
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(1.1);
-            overflow-y: auto;
-        }
-
-        .page.active { opacity: 1; pointer-events: auto; transform: scale(1); }
-
-        /* PIDS BOARD */
-.pids-board { 
-    width: 100%; 
-    background: #000; 
-    border: 1px solid #222; 
-    border-radius: 15px; 
-    overflow: hidden; 
-    margin-top: 10px; 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>БГ:ВОЗ Live</title>
+<style>
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-blur: blur(25px);
+  --accent-yellow: #FFD700;
+  --accent-orange: #FF9500;
+  --accent-blue: #007AFF;
+  --accent-red: #FF3B30;
+  --text-main: #FFFFFF;
+  --font-ios: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
 }
 
-.pids-header, .pids-row { 
-    display: grid; 
-    grid-template-columns: 70px 1fr 100px; 
-    padding: 12px 15px; 
-    align-items: center; 
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: var(--font-ios);
+  color: var(--text-main);
+  height: 100vh; width: 100vw; overflow: hidden;
+  background: linear-gradient(-45deg, #050a14, #1a0505, #0a1428, #140514);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
 }
+@keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-/* Header is now pure white and slightly less bold for contrast */
-.pids-header { 
-    background: #111; 
-    border-bottom: 1px solid #222; 
-    font-size: 0.65rem; 
-    font-weight: 600; 
-    text-transform: uppercase; 
-    color: #FFFFFF; 
-    letter-spacing: 0.05em;
+.page {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-start;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-top: 80px;
+  padding-bottom: 120px;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.1);
+  overflow-y: auto;
 }
+.page.active { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-/* Header specific columns forced to white */
-.pids-header div {
-    color: #FFFFFF !important;
+/* PIDS BOARD */
+.pids-board {
+  width: 100%;
+  background: #000;
+  border: 1px solid #222;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-top: 10px;
 }
-
-/* Data rows */
-.pids-row { 
-    padding: 18px 15px; 
-    border-bottom: 1px solid #111; 
+.pids-header, .pids-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 100px;
+  padding: 12px 15px;
+  align-items: center;
 }
-
-.col-vnum { 
-    text-align: left; 
-    color: #666; /* Train number stays grey/subtle */
-    font-family: monospace; 
-    font-size: 0.85rem; 
+.pids-header {
+  background: #111;
+  border-bottom: 1px solid #222;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  letter-spacing: 0.05em;
 }
+.pids-row { padding: 18px 15px; border-bottom: 1px solid #111; }
+.col-vnum { text-align: left; color: #666; font-family: monospace; font-size: 0.85rem; }
+.col-dir { text-align: left; padding-left: 5px; color: var(--accent-yellow); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; }
+.col-time { text-align: right; color: var(--accent-yellow); font-family: monospace; font-size: 1.2rem; font-weight: bold; }
+.blink { animation: blinker 1s linear infinite; }
+@keyframes blinker { 50% { opacity: 0; } }
 
-/* Results/Data are now the only things in Yellow */
-.col-dir { 
-    text-align: left; 
-    padding-left: 5px; 
-    color: var(--accent-yellow); 
-    font-weight: 700; 
-    font-size: 0.95rem; 
-    text-transform: uppercase; 
+/* Navigation */
+.nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 400px; height: 70px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
+.nav-item { height: 100%; display: flex; align-items: center; justify-content: center; color: white; opacity: 0.4; transition: all 0.3s; cursor: pointer; flex: 1; }
+.nav-item.active { opacity: 1; }
+.nav-item svg { width: 28px; height: 28px; }
+
+/* Home Header */
+.top-section { text-align: center; margin-bottom: 30px; }
+.modern-train-icon { width: 64px; height: 64px; margin-bottom: 10px; }
+h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
+.center-section { width: 100%; padding: 0 32px; display: flex; flex-direction: column; gap: 12px; }
+.btn-large { width: 100%; padding: 20px; font-size: 0.8rem; font-weight: 700; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-transform: uppercase; text-align: center; cursor: pointer; }
+
+/* Planner UI */
+.plan-controls { width: 100%; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; position: relative; }
+.input-group { background: var(--glass-bg); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; backdrop-filter: var(--glass-blur); }
+.plan-select { width: 100%; padding: 18px; background: transparent; border: none; color: white; font-size: 1rem; outline: none; appearance: none; }
+.plan-select option { background: #1a1a2e; color: white; }
+.divider { height: 1px; background: var(--glass-border); margin: 0 16px; }
+.swap-btn { position: absolute; right: 35px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border); z-index: 10; cursor: pointer; }
+
+/* Line Selector Buttons */
+.line-selector { width: 100%; padding: 0 20px; display: flex; gap: 12px; margin-bottom: 4px; }
+.line-btn {
+  flex: 1; padding: 16px; font-size: 0.9rem; font-weight: 800;
+  border-radius: 16px; border: 2px solid transparent;
+  background: var(--glass-bg); color: white; cursor: pointer;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  transition: all 0.25s;
+  text-align: center;
 }
+.line-btn.active-line1 { border-color: var(--accent-blue); background: rgba(0,122,255,0.15); color: var(--accent-blue); }
+.line-btn.active-line2 { border-color: var(--accent-orange); background: rgba(255,149,0,0.15); color: var(--accent-orange); }
 
-.col-time { 
-    text-align: right; 
-    color: var(--accent-yellow); 
-    font-family: monospace; 
-    font-size: 1.2rem; 
-    font-weight: bold; 
+/* Trip cards */
+.trip-card {
+  background: var(--glass-bg);
+  margin: 6px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  transition: opacity 0.2s;
 }
+.trip-card.past-trip { opacity: 0.38; }
+.trip-summary { padding: 18px 20px; display: grid; grid-template-columns: 70px 1fr 60px; align-items: center; cursor: pointer; gap: 4px; }
+.trip-time { font-family: monospace; font-weight: 800; font-size: 1.2rem; color: var(--accent-yellow); }
+.trip-dest { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; }
+.trip-arr { font-family: monospace; font-size: 0.85rem; color: rgba(255,255,255,0.5); text-align: right; }
+.trip-details { max-height: 0; padding: 0 20px; opacity: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease; background: rgba(0,0,0,0.15); }
+.trip-card.expanded .trip-details { max-height: 600px; padding: 16px 20px; opacity: 1; border-top: 1px solid var(--glass-border); }
 
-        .blink { animation: blinker 1s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+.line-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
 
-        /* Navigation */
-        .nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 400px; height: 70px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
-        .nav-item { height: 100%; display: flex; align-items: center; justify-content: center; color: white; opacity: 0.4; transition: all 0.3s; cursor: pointer; flex: 1; }
-        .nav-item.active { opacity: 1; }
-        .nav-item svg { width: 28px; height: 28px; }
-        
-        /* Home Header */
-        .top-section { text-align: center; margin-bottom: 30px; }
-        .modern-train-icon { width: 64px; height: 64px; margin-bottom: 10px; }
-        h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
-        .center-section { width: 100%; padding: 0 32px; display: flex; flex-direction: column; gap: 12px; }
-        .btn-large { width: 100%; padding: 20px; font-size: 0.8rem; font-weight: 700; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-transform: uppercase; text-align: center; }
-
-        /* Planner UI */
-        .plan-controls { width: 100%; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; position: relative; }
-        .input-group { background: var(--glass-bg); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; backdrop-filter: var(--glass-blur); }
-        .plan-select { width: 100%; padding: 18px; background: transparent; border: none; color: white; font-size: 1rem; outline: none; appearance: none; }
-        .divider { height: 1px; background: var(--glass-border); margin: 0 16px; }
-        .swap-btn { position: absolute; right: 35px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border); z-index: 10; cursor: pointer; }
-
-        .trip-card { background: var(--glass-bg); margin: 12px 20px; border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
-        .trip-summary { padding: 20px; display: grid; grid-template-columns: 70px 1fr 60px; align-items: center; cursor: pointer; }
-        .trip-time { font-family: monospace; font-weight: 800; font-size: 1.2rem; color: var(--accent-yellow); }
-        .trip-dest { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; }
-        .trip-vnum { font-family: monospace; font-size: 0.75rem; opacity: 0.4; text-align: right; }
-        
-        .trip-details { max-height: 0; padding: 0 20px; opacity: 0; overflow: hidden; transition: all 0.4s ease; background: rgba(0,0,0,0.15); }
-        .trip-card.expanded .trip-details { max-height: 500px; padding: 20px; opacity: 1; border-top: 1px solid var(--glass-border); }
-        
-        .transfer-badge { display: inline-block; padding: 2px 8px; border-radius: 5px; background: var(--accent-orange); color: black; font-size: 0.6rem; font-weight: 900; margin-bottom: 6px; }
-        .line-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-        /* Lines UI Specific */
-.lines-container {
-    width: 100%;
-    padding: 0 20px;
+/* Stop list inside expanded trip */
+.stop-list { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
+.stop-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 7px 0;
+  font-size: 0.82rem;
+  font-family: monospace;
+  border-left: 2px solid rgba(255,255,255,0.12);
+  padding-left: 14px;
+  position: relative;
 }
+.stop-row::before {
+  content: '';
+  position: absolute;
+  left: -5px; top: 50%; transform: translateY(-50%);
+  width: 8px; height: 8px;
+  background: #1a0a28;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+}
+.stop-row.stop-from::before, .stop-row.stop-to::before {
+  width: 11px; height: 11px;
+  left: -6px;
+  border-color: var(--accent-yellow);
+  background: #1a0a28;
+}
+.stop-row.stop-past { opacity: 0.3; }
+.stop-time { color: var(--accent-yellow); font-weight: bold; min-width: 44px; }
+.stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
 
-.line-section {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    margin-bottom: 20px;
-    padding: 20px;
-}
-
-.line-title {
-    font-size: 1.2rem;
-    font-weight: 800;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.route-map {
-    position: relative;
-    padding-left: 20px;
-}
-
-.route-map::before {
-    content: '';
-    position: absolute;
-    left: 4px;
-    top: 10px;
-    bottom: 10px;
-    width: 2px;
-    background: rgba(255,255,255,0.2);
-}
-
-.route-step {
-    position: relative;
-    padding: 8px 0 8px 20px;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.route-step::before {
-    content: '';
-    position: absolute;
-    left: -1px;
-    top: 14px;
-    width: 12px;
-    height: 12px;
-    background: #1a0505;
-    border: 2px solid white;
-    border-radius: 50%;
-    z-index: 2;
-}
-.route-step {
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-.route-step:active {
-    opacity: 0.5;
-    background: rgba(255,255,255,0.05);
-}
-
+/* Lines UI */
+.lines-container { width: 100%; padding: 0 20px; }
+.line-section { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; margin-bottom: 20px; padding: 20px; }
+.line-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+.route-map { position: relative; padding-left: 20px; }
+.route-map::before { content: ''; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 2px; background: rgba(255,255,255,0.2); }
+.route-step { position: relative; padding: 8px 0 8px 20px; font-size: 0.9rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; transition: opacity 0.2s; }
+.route-step::before { content: ''; position: absolute; left: -1px; top: 14px; width: 12px; height: 12px; background: #1a0505; border: 2px solid white; border-radius: 50%; z-index: 2; }
+.route-step:active { opacity: 0.5; background: rgba(255,255,255,0.05); }
 .line-1-accent::before { border-color: var(--accent-blue); }
 .line-2-accent::before { border-color: var(--accent-orange); }
-    </style>
+
+/* Planner section header */
+.planner-section-label {
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; opacity: 0.5; padding: 2px 20px 0;
+}
+</style>
 </head>
 <body>
 
-    <div id="home-page" class="page active">
-        <header class="top-section">
-            <svg class="modern-train-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                <rect x="5" y="2" width="14" height="16" rx="3"/><line x1="5" y1="12" x2="19" y2="12"/>
-                <circle cx="9" cy="15" r="1" fill="white"/><circle cx="15" cy="15" r="1" fill="white"/>
-            </svg>
-            <h1>БГ:ВОЗ</h1>
-        </header>
-        <main class="center-section">
-            <div class="btn-large" onclick="goTo('monitor')">СТАНИЧНИ МОНИТОР</div>
-            <div class="btn-large" onclick="goTo('plan')">ПЛАНИРАЈ ПУТОВАЊЕ</div>
-            <div class="btn-large" onclick="goTo('lines')">ЛИНИЈЕ</div>
-        </main>
-    </div>
-
-    <div id="monitor-page" class="page">
-        <div class="plan-controls">
-            <div class="input-group">
-                <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
-                    <option value="" disabled selected>Изаберите станицу...</option>
-                    <optgroup label="Линија 1">
-                        <option value="batajnica">Батајница</option>
-                        <option value="kamendin">Камендин</option>
-                        <option value="zemun_polje">Земунско поље</option>
-                        <option value="altina">Алтина</option>
-                        <option value="zemun">Земун</option>
-                        <option value="tosin_bunar">Тошин бунар</option>
-                        <option value="novi_beograd">Нови Београд</option>
-                        <option value="beograd_centar">Београд Центар</option>
-                        <option value="karadjordjev_park">Карађорђев парк</option>
-                        <option value="vukov_spomenik">Вуков споменик</option>
-                        <option value="pancevacki_most">Панчевачки мост</option>
-                        <option value="krnjaca_most">Крњача мост</option>
-                        <option value="krnjaca">Крњача</option>
-                        <option value="sebes">Себеш</option>
-                        <option value="ovca">Овча</option>
-                    </optgroup>
-                    <optgroup label="Линија 2">
-                        <option value="resnik">Ресник</option>
-                        <option value="kijevo">Кијево</option>
-                        <option value="knezevac">Кнежевац</option>
-                        <option value="rakovica">Раковица</option>
-                    </optgroup>
-                </select>
-            </div>
-        </div>
-
-        <div id="pidsDisplay" style="display:none; width: 100%; padding: 0 20px; margin-top:15px;">
-            <div class="pids-board">
-               <div class="pids-header">
-    <div class="col-vnum">ВОЗ</div>
-    <div class="col-dir">СМЕР</div>
-    <div class="col-time">ВРЕМЕ</div>
-</div>
-                <div id="pidsBody"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="plan-page" class="page">
-        <div class="plan-controls">
-            <div class="input-group">
-                <select id="fromPicker" class="plan-select" onchange="runPlanner()">
-                    <option value="" disabled selected hidden>Полазна станица...</option>
-                </select>
-                <div class="divider"></div>
-                <select id="toPicker" class="plan-select" onchange="runPlanner()">
-                    <option value="" disabled selected hidden>Одредишна станица...</option>
-                </select>
-            </div>
-            <button class="swap-btn" onclick="swapStations()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
-            </button>
-        </div>
-        <div id="plannerResults" style="width: 100%; margin-top: 5px;"></div>
-    </div>
-
-    <div id="lines-page" class="page">
-    <div class="lines-container">
-        <div class="line-section">
-            <div class="line-title">
-                <span class="line-dot" style="background: var(--accent-blue); width: 15px; height: 15px;"></span>
-                ЛИНИЈА 1
-            </div>
-            <div class="route-map">
-                <div class="route-step line-1-accent" onclick="quickView('batajnica')">Батајница</div>
-                <div class="route-step line-1-accent" onclick="quickView('kamendin')">Камендин</div>
-                <div class="route-step line-1-accent" onclick="quickView('zemun_polje')">Земунско поље</div>
-                <div class="route-step line-1-accent" onclick="quickView('altina')">Алтина</div>
-                <div class="route-step line-1-accent" onclick="quickView('zemun')">Земун</div>
-                <div class="route-step line-1-accent" onclick="quickView('tosin_bunar')">Тошин бунар</div>
-                <div class="route-step line-1-accent" onclick="quickView('novi_beograd')">Нови Београд</div>
-                <div class="route-step line-1-accent" onclick="quickView('beograd_centar')">Београд Центар</div>
-                <div class="route-step line-1-accent" onclick="quickView('karadjordjev_park')">Карађорђев парк</div>
-                <div class="route-step line-1-accent" onclick="quickView('vukov_spomenik')">Вуков споменик</div>
-                <div class="route-step line-1-accent" onclick="quickView('pancevacki_most')">Панчевачки мост</div>
-                <div class="route-step line-1-accent" onclick="quickView('krnjaca_most')">Крњача мост</div>
-                <div class="route-step line-1-accent" onclick="quickView('krnjaca')">Крњача</div>
-                <div class="route-step line-1-accent" onclick="quickView('sebes')">Себеш</div>
-                <div class="route-step line-1-accent" onclick="quickView('ovca')">Овча</div>
-            </div>
-        </div>
-
-        <div class="line-section">
-            <div class="line-title">
-                <span class="line-dot" style="background: var(--accent-orange); width: 15px; height: 15px;"></span>
-                ЛИНИЈА 2 (РЕСНИК - ЗЕМУН)
-            </div>
-            <div class="route-map">
-                <div class="route-step line-2-accent" onclick="quickView('resnik')">Ресник</div>
-                <div class="route-step line-2-accent" onclick="quickView('kijevo')">Кијево</div>
-                <div class="route-step line-2-accent" onclick="quickView('knezevac')">Кнежевац</div>
-                <div class="route-step line-2-accent" onclick="quickView('rakovica')">Раковица</div>
-                <div class="route-step line-2-accent" onclick="quickView('karadjordjev_park')">Карађорђев парк</div>
-                <div class="route-step line-2-accent" onclick="quickView('beograd_centar')">Београд Центар</div>
-                <div class="route-step line-2-accent" onclick="quickView('novi_beograd')">Нови Београд</div>
-                <div class="route-step line-2-accent" onclick="quickView('tosin_bunar')">Тошин бунар</div>
-                <div class="route-step line-2-accent" onclick="quickView('zemun')">Земун</div>
-            </div>
-        </div>
-    </div>
+<div id="home-page" class="page active">
+  <header class="top-section">
+    <svg class="modern-train-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <rect x="5" y="2" width="14" height="16" rx="3"/><line x1="5" y1="12" x2="19" y2="12"/>
+      <circle cx="9" cy="15" r="1" fill="white"/><circle cx="15" cy="15" r="1" fill="white"/>
+    </svg>
+    <h1>БГ:ВОЗ</h1>
+  </header>
+  <main class="center-section">
+    <div class="btn-large" onclick="goTo('monitor')">СТАНИЧНИ МОНИТОР</div>
+    <div class="btn-large" onclick="goTo('plan')">ПЛАНИРАЈ ПУТОВАЊЕ</div>
+    <div class="btn-large" onclick="goTo('lines')">ЛИНИЈЕ</div>
+  </main>
 </div>
 
-    <nav class="nav-bar">
-        <div class="nav-item active" id="nav-home" onclick="goTo('home')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>
-        </div>
-        <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        </div>
-        <div class="nav-item" id="nav-plan" onclick="goTo('plan')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg>
-        </div>
-        <div class="nav-item" id="nav-lines" onclick="goTo('lines')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5,18.5L9.5,12.5L13.5,16.5L22,6.91L20.59,5.5L13.5,13.5L9.5,9.5L2,17L3.5,18.5Z"/></svg>
-        </div>
-    </nav>
+<div id="monitor-page" class="page">
+  <div class="plan-controls">
+    <div class="input-group">
+      <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
+        <option value="" disabled selected>Изаберите станицу...</option>
+        <optgroup label="Линија 1">
+          <option value="batajnica">Батајница</option>
+          <option value="kamendin">Камендин</option>
+          <option value="zemun_polje">Земунско поље</option>
+          <option value="altina">Алтина</option>
+          <option value="zemun">Земун</option>
+          <option value="tosin_bunar">Тошин бунар</option>
+          <option value="novi_beograd">Нови Београд</option>
+          <option value="beograd_centar">Београд Центар</option>
+          <option value="karadjordjev_park">Карађорђев парк</option>
+          <option value="vukov_spomenik">Вуков споменик</option>
+          <option value="pancevacki_most">Панчевачки мост</option>
+          <option value="krnjaca_most">Крњача мост</option>
+          <option value="krnjaca">Крњача</option>
+          <option value="sebes">Себеш</option>
+          <option value="ovca">Овча</option>
+        </optgroup>
+        <optgroup label="Линија 2">
+          <option value="resnik">Ресник</option>
+          <option value="kijevo">Кијево</option>
+          <option value="knezevac">Кнежевац</option>
+          <option value="rakovica">Раковица</option>
+          <option value="karadjordjev_park">Карађорђев парк</option>
+          <option value="vukov_spomenik">Вуков споменик</option>
+          <option value="pancevacki_most">Панчевачки мост</option>
+          <option value="krnjaca_most">Крњача мост</option>
+          <option value="krnjaca">Крњача</option>
+          <option value="sebes">Себеш</option>
+          <option value="ovca">Овча</option>
+        </optgroup>
+      </select>
+    </div>
+  </div>
+  <div id="pidsDisplay" style="display:none; width: 100%; padding: 0 20px; margin-top:15px;">
+    <div class="pids-board">
+      <div class="pids-header">
+        <div class="col-vnum">ВОЗ</div>
+        <div class="col-dir">СМЕР</div>
+        <div class="col-time">ВРЕМЕ</div>
+      </div>
+      <div id="pidsBody"></div>
+    </div>
+  </div>
+</div>
 
-    <script>
-        let trainData = [];
-        const stationMap = {
-            'batajnica': 'Батајница', 'kamendin': 'Камендин', 'zemun_polje': 'Земунско поље',
-            'altina': 'Алтина', 'zemun': 'Земун', 'tosin_bunar': 'Тошин бунар',
-            'novi_beograd': 'Нови Београд', 'beograd_centar': 'Београд Центар',
-            'karadjordjev_park': 'Карађорђев парк', 'vukov_spomenik': 'Вуков споменик',
-            'pancevacki_most': 'Панчевачки мост', 'krnjaca_most': 'Крњача мост',
-            'krnjaca': 'Крњача', 'sebes': 'Себеш', 'ovca': 'Овча',
-            'resnik': 'Ресник', 'kijevo': 'Кијево', 'knezevac': 'Кнежевац', 'rakovica': 'Раковица'
-        };
+<div id="plan-page" class="page">
+  <div class="line-selector">
+    <div class="line-btn" id="lineBtn1" onclick="selectLine('BG:voz 1')">БГ:ВОЗ 1</div>
+    <div class="line-btn" id="lineBtn2" onclick="selectLine('BG:voz 2')">БГ:ВОЗ 2</div>
+  </div>
 
-        async function loadTrainData() {
-            try {
-                const response = await fetch('trains.json');
-                trainData = await response.json();
-            } catch (e) { console.error("Greška pri učitavanju podataka", e); }
-        }
+  <div id="stationPickers" style="width:100%; display:none;">
+    <div class="plan-controls">
+      <div class="input-group" style="position:relative;">
+        <select id="fromPicker" class="plan-select" onchange="runPlanner()">
+          <option value="" disabled selected hidden>Полазна станица...</option>
+        </select>
+        <div class="divider"></div>
+        <select id="toPicker" class="plan-select" onchange="runPlanner()">
+          <option value="" disabled selected hidden>Одредишна станица...</option>
+        </select>
+        <button class="swap-btn" style="top:50%; transform:translateY(-50%);" onclick="swapStations()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
 
-        const getTimeNow = () => {
-            const now = new Date();
-            return now.getHours() * 60 + now.getMinutes();
-        };
+  <div id="plannerResults" style="width: 100%; margin-top: 5px;"></div>
+</div>
 
-        const timeToMin = (t) => {
-            if (!t) return 0;
-            const [h, m] = t.split(':').map(Number);
-            return h * 60 + m;
-        };
+<div id="lines-page" class="page">
+  <div class="lines-container">
+    <div class="line-section">
+      <div class="line-title">
+        <span class="line-dot" style="background: var(--accent-blue); width: 15px; height: 15px;"></span>
+        ЛИНИЈА 1
+      </div>
+      <div class="route-map">
+        <div class="route-step line-1-accent" onclick="quickView('batajnica')">Батајница</div>
+        <div class="route-step line-1-accent" onclick="quickView('kamendin')">Камендин</div>
+        <div class="route-step line-1-accent" onclick="quickView('zemun_polje')">Земунско поље</div>
+        <div class="route-step line-1-accent" onclick="quickView('altina')">Алтина</div>
+        <div class="route-step line-1-accent" onclick="quickView('zemun')">Земун</div>
+        <div class="route-step line-1-accent" onclick="quickView('tosin_bunar')">Тошин бунар</div>
+        <div class="route-step line-1-accent" onclick="quickView('novi_beograd')">Нови Београд</div>
+        <div class="route-step line-1-accent" onclick="quickView('beograd_centar')">Београд Центар</div>
+        <div class="route-step line-1-accent" onclick="quickView('karadjordjev_park')">Карађорђев парк</div>
+        <div class="route-step line-1-accent" onclick="quickView('vukov_spomenik')">Вуков споменик</div>
+        <div class="route-step line-1-accent" onclick="quickView('pancevacki_most')">Панчевачки мост</div>
+        <div class="route-step line-1-accent" onclick="quickView('krnjaca_most')">Крњача мост</div>
+        <div class="route-step line-1-accent" onclick="quickView('krnjaca')">Крњача</div>
+        <div class="route-step line-1-accent" onclick="quickView('sebes')">Себеш</div>
+        <div class="route-step line-1-accent" onclick="quickView('ovca')">Овча</div>
+      </div>
+    </div>
 
-        const getLineColor = (lineName) => {
-            if (lineName.includes('1')) return 'var(--accent-blue)';
-            if (lineName.includes('2')) return 'var(--accent-orange)';
-            return 'white';
-        };
+    <div class="line-section">
+      <div class="line-title">
+        <span class="line-dot" style="background: var(--accent-orange); width: 15px; height: 15px;"></span>
+        ЛИНИЈА 2
+      </div>
+      <div class="route-map">
+        <div class="route-step line-2-accent" onclick="quickView('resnik')">Ресник</div>
+        <div class="route-step line-2-accent" onclick="quickView('kijevo')">Кијево</div>
+        <div class="route-step line-2-accent" onclick="quickView('knezevac')">Кнежевац</div>
+        <div class="route-step line-2-accent" onclick="quickView('rakovica')">Раковица</div>
+        <div class="route-step line-2-accent" onclick="quickView('karadjordjev_park')">Карађорђев парк</div>
+        <div class="route-step line-2-accent" onclick="quickView('beograd_centar')">Београд Центар</div>
+        <div class="route-step line-2-accent" onclick="quickView('vukov_spomenik')">Вуков споменик</div>
+        <div class="route-step line-2-accent" onclick="quickView('pancevacki_most')">Панчевачки мост</div>
+        <div class="route-step line-2-accent" onclick="quickView('krnjaca_most')">Крњача мост</div>
+        <div class="route-step line-2-accent" onclick="quickView('krnjaca')">Крњача</div>
+        <div class="route-step line-2-accent" onclick="quickView('sebes')">Себеш</div>
+        <div class="route-step line-2-accent" onclick="quickView('ovca')">Овча</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        function updatePIDS(stationId) {
-            const body = document.getElementById('pidsBody');
-            const selectedStationName = stationMap[stationId];
-            const nowMin = getTimeNow();
-            document.getElementById('pidsDisplay').style.display = 'block';
-            
-            let directions = {};
-            trainData.forEach(train => {
-                const stop = train.stops.find(s => s.station === selectedStationName);
-                if (stop) {
-                    const depMin = timeToMin(stop.departure);
-                    const isNextDay = depMin < nowMin;
-                    const sortScore = isNextDay ? depMin + 1440 : depMin;
-                    if (!directions[train.direction] || sortScore < directions[train.direction].score) {
-                        directions[train.direction] = { v: train.train_id, d: train.direction, t: stop.departure, score: sortScore, nextDay: isNextDay };
-                    }
-                }
-            });
-            const results = Object.values(directions).sort((a, b) => a.score - b.score);
-            body.innerHTML = results.map(dep => `
-                <div class="pids-row">
-                    <div class="col-vnum">${dep.v}</div>
-                    <div class="col-dir">${dep.d.toUpperCase()} ${dep.nextDay ? '<span style="font-size:0.6rem; opacity:0.5;">(СУТРА)</span>' : ''}</div>
-                    <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
-                </div>
-            `).join('');
-        }
+<nav class="nav-bar">
+  <div class="nav-item active" id="nav-home" onclick="goTo('home')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>
+  </div>
+  <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+  </div>
+  <div class="nav-item" id="nav-plan" onclick="goTo('plan')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg>
+  </div>
+  <div class="nav-item" id="nav-lines" onclick="goTo('lines')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5,18.5L9.5,12.5L13.5,16.5L22,6.91L20.59,5.5L13.5,13.5L9.5,9.5L2,17L3.5,18.5Z"/></svg>
+  </div>
+</nav>
 
-        function getTrainStatusHtml(train, startStation, endStation) {
-            const nowMin = getTimeNow();
-            const sIdx = train.stops.findIndex(s => s.station === startStation);
-            const eIdx = train.stops.findIndex(s => s.station === endStation);
-            if (sIdx === -1 || eIdx === -1) return '';
-            
-            const relevantStops = train.stops.slice(sIdx, eIdx + 1);
-            const lastTripTime = timeToMin(train.stops[eIdx].departure);
+<script>
+let trainData = [];
+let selectedLine = null;
 
-            if (nowMin > lastTripTime) {
-                return `<div style="color:var(--accent-red); font-size:0.7rem; font-weight:bold; margin: 10px 0;">● ВОЗ ЈЕ СТИГАО У ОДРЕДИШТЕ</div>`;
-            }
+const stationMap = {
+  'batajnica': 'Батајница', 'kamendin': 'Камендин', 'zemun_polje': 'Земунско поље',
+  'altina': 'Алтина', 'zemun': 'Земун', 'tosin_bunar': 'Тошин бунар',
+  'novi_beograd': 'Нови Београд', 'beograd_centar': 'Београд Центар',
+  'karadjordjev_park': 'Карађорђев парк', 'vukov_spomenik': 'Вуков споменик',
+  'pancevacki_most': 'Панчевачки мост', 'krnjaca_most': 'Крњача мост',
+  'krnjaca': 'Крњача', 'sebes': 'Себеш', 'ovca': 'Овча',
+  'resnik': 'Ресник', 'kijevo': 'Кијево', 'knezevac': 'Кнежевац', 'rakovica': 'Раковица'
+};
 
-            return `<div class="itinerary-list" style="margin-top:12px; border-left: 1px solid rgba(255,255,255,0.1); padding-left:15px; display:flex; flex-direction:column; gap:8px;">
-                ${relevantStops.map((s, idx) => {
-                    const sMin = timeToMin(s.departure);
-                    const isPassed = nowMin > sMin;
-                    const isCurrent = isPassed && (idx === relevantStops.length - 1 || nowMin < timeToMin(relevantStops[idx+1].departure));
-                    let dot = isCurrent ? '<span class="blink" style="color:#4cd964;">●</span>' : (isPassed ? '●' : '○');
-                    return `
-                        <div style="display:flex; align-items:center; gap:12px; font-size:0.8rem; font-family:monospace; ${isPassed && !isCurrent ? 'opacity:0.3' : 'opacity:1'}">
-                            <span style="width:12px; text-align:center;">${dot}</span>
-                            <span style="color:var(--accent-yellow); font-weight:bold; min-width:45px;">${s.departure}</span>
-                            <span style="color:white; font-size:0.7rem; text-transform:uppercase;">${s.station}</span>
-                        </div>`;
-                }).join('')}
-            </div>`;
-        }
+const stationSlug = {};
+Object.entries(stationMap).forEach(([k,v]) => { stationSlug[v] = k; });
 
-        function runPlanner() {
-            const fromId = document.getElementById('fromPicker').value;
-            const toId = document.getElementById('toPicker').value;
-            if (!fromId || !toId || fromId === toId) return;
+const lineStations = {
+  'BG:voz 1': [
+    'Батајница', 'Камендин', 'Земунско поље', 'Алтина', 'Земун', 'Тошин бунар',
+    'Нови Београд', 'Београд Центар', 'Карађорђев парк', 'Вуков споменик',
+    'Панчевачки мост', 'Крњача мост', 'Крњача', 'Себеш', 'Овча'
+  ],
+  'BG:voz 2': [
+    'Ресник', 'Кијево', 'Кнежевац', 'Раковица', 'Карађорђев парк', 
+    'Београд Центар', 'Вуков споменик', 'Панчевачки мост', 'Крњача мост', 
+    'Крњача', 'Себеш', 'Овча'
+  ]
+};
 
-            const fromName = stationMap[fromId];
-            const toName = stationMap[toId];
-            const nowMin = getTimeNow();
-            let results = [];
-
-            const zapad = ['Батајница', 'Камендин', 'Земунско поље', 'Алтина', 'Земун', 'Тошин бунар', 'Нови Београд'];
-            const jug = ['Раковица', 'Кнежевац', 'Кијево', 'Ресник'];
-
-            trainData.forEach(t1 => {
-                const s1Idx = t1.stops.findIndex(s => s.station === fromName);
-                if (s1Idx === -1) return;
-
-                // 1. DIREKTNA LINIJA
-                const e1Idx = t1.stops.findIndex(s => s.station === toName);
-                if (e1Idx !== -1 && s1Idx < e1Idx) {
-                    results.push({
-                        type: 'direct',
-                        depTime: t1.stops[s1Idx].departure,
-                        arrTime: t1.stops[e1Idx].departure,
-                        train1: t1,
-                        isPast: timeToMin(t1.stops[s1Idx].departure) < nowMin,
-                        fromName, toName
-                    });
-                }
-
-                // 2. LOGIKA PRESEDANJA (BATAJNICA -> RESNIK)
-                if (zapad.includes(fromName) && jug.includes(toName)) {
-                    findSpecificTransfer(t1, s1Idx, 'Београд Центар', toName, results, nowMin, fromName);
-                    findSpecificTransfer(t1, s1Idx, 'Карађорђев парк', toName, results, nowMin, fromName);
-                }
-
-                // 3. LOGIKA PRESEDANJA (RESNIK -> BATAJNICA)
-                if (jug.includes(fromName) && zapad.includes(toName)) {
-                    findSpecificTransfer(t1, s1Idx, 'Београд Центар', toName, results, nowMin, fromName);
-                    findSpecificTransfer(t1, s1Idx, 'Карађорђев парк', toName, results, nowMin, fromName);
-                }
-            });
-
-            function findSpecificTransfer(t1, s1Idx, hubName, finalDest, resArray, now, startName) {
-                const h1Idx = t1.stops.findIndex(s => s.station === hubName);
-                if (h1Idx === -1 || h1Idx < s1Idx) return;
-                const arrivalAtHub = timeToMin(t1.stops[h1Idx].departure);
-
-                trainData.forEach(t2 => {
-                    if (t1.train_id === t2.train_id) return;
-                    const h2Idx = t2.stops.findIndex(s => s.station === hubName);
-                    const e2Idx = t2.stops.findIndex(s => s.station === finalDest);
-
-                    if (h2Idx !== -1 && e2Idx !== -1 && h2Idx < e2Idx) {
-                        const departureFromHub = timeToMin(t2.stops[h2Idx].departure);
-                        const wait = departureFromHub - arrivalAtHub;
-                        if (wait >= 4 && wait <= 45) {
-                            resArray.push({
-                                type: 'transfer',
-                                hub: hubName,
-                                depTime: t1.stops[s1Idx].departure,
-                                arrTime: t2.stops[e2Idx].departure,
-                                train1: t1,
-                                train2: t2,
-                                waitTime: wait,
-                                isPast: timeToMin(t1.stops[s1Idx].departure) < now,
-                                fromName: startName, toName: finalDest
-                            });
-                        }
-                    }
-                });
-            }
-
-            results.sort((a, b) => timeToMin(a.arrTime) - timeToMin(b.arrTime));
-            const finalResults = results.filter((v, i, a) => a.findIndex(t => t.depTime === v.depTime && t.arrTime === v.arrTime) === i);
-            renderPlanner(finalResults.slice(0, 10));
-        }
-
-        function renderPlanner(trips) {
-            const container = document.getElementById('plannerResults');
-            if (trips.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:20px; opacity:0.5;">Нема пронађених путовања.</div>`;
-                return;
-            }
-
-            container.innerHTML = trips.map(trip => {
-                const color1 = getLineColor(trip.train1.line);
-                
-                if (trip.type === 'direct') {
-                    return `
-                        <div class="trip-card" style="opacity: ${trip.isPast ? '0.4' : '1'};" onclick="this.classList.toggle('expanded')">
-                            <div class="trip-summary">
-                                <div class="trip-time">${trip.depTime}</div>
-                                <div class="trip-dest">
-                                    <span class="line-dot" style="background:${color1}"></span>
-                                    <span style="font-weight:bold; font-size:0.7rem; opacity:0.7; margin-right:4px;">${trip.train1.line}</span>
-                                    ${trip.train1.direction}
-                                </div>
-                                <div class="trip-vnum">${trip.arrTime}</div>
-                            </div>
-                            <div class="trip-details">
-                                <div style="font-size:0.8rem; font-weight:bold; color:${color1}; margin-bottom:5px;">
-                                    ${trip.train1.line} • ВОЗ ${trip.train1.train_id}
-                                </div>
-                                ${getTrainStatusHtml(trip.train1, trip.fromName, trip.toName)}
-                            </div>
-                        </div>`;
-                } else {
-                    const color2 = getLineColor(trip.train2.line);
-                    return `
-                        <div class="trip-card" style="opacity: ${trip.isPast ? '0.4' : '1'}; border-left: 4px solid var(--accent-orange);" onclick="this.classList.toggle('expanded')">
-                            <div class="trip-summary">
-                                <div class="trip-time">${trip.depTime}</div>
-                                <div class="trip-dest">
-                                    <span class="transfer-badge">ПРЕСЕДАЊЕ: ${trip.hub}</span><br>
-                                    Stiže u ${trip.arrTime}
-                                </div>
-                                <div class="trip-vnum" style="color:var(--accent-yellow)">${trip.arrTime}</div>
-                            </div>
-                            <div class="trip-details">
-                                <div style="margin-bottom: 10px;">
-                                    <div style="font-size:0.7rem; color:${color1}; font-weight:bold;">1. ${trip.train1.line} (до станице ${trip.hub})</div>
-                                    ${getTrainStatusHtml(trip.train1, trip.fromName, trip.hub)}
-                                </div>
-                                <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; margin: 10px 0; font-size: 0.7rem; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
-                                    ⏱️ Чекање на presedanje: ${trip.waitTime} мин
-                                </div>
-                                <div>
-                                    <div style="font-size:0.7rem; color:${color2}; font-weight:bold;">2. ${trip.train2.line} (од стаnice ${trip.hub})</div>
-                                    ${getTrainStatusHtml(trip.train2, trip.hub, trip.toName)}
-                                </div>
-                            </div>
-                        </div>`;
-                }
-            }).join('');
-        }
-
-        function goTo(screen) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(screen + '-page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('nav-' + screen).classList.add('active');
-        }
-
-        function swapStations() {
-            const f = document.getElementById('fromPicker');
-            const t = document.getElementById('toPicker');
-            const temp = f.value; f.value = t.value; t.value = temp;
-            runPlanner();
-        }
-        function quickView(stationId) {
-    const picker = document.getElementById('stationPicker');
-    
-    // 1. Postavi vrednost u select-u na monitoru
-    picker.value = stationId;
-    
-    // 2. Pozovi tvoju postojeću funkciju za ažuriranje PIDS-a
-    updatePIDS(stationId);
-    
-    // 3. Prebaci na monitor stranicu
-    goTo('monitor');
-    
-    // Opciono: Skroluj na vrh ekrana monitora
-    document.getElementById('monitor-page').scrollTop = 0;
+async function loadTrainData() {
+  try {
+    const response = await fetch('trains.json');
+    trainData = await response.json();
+  } catch (e) { console.error("Грешка при учитавању података", e); }
 }
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadTrainData();
-            const list = document.getElementById('stationPicker').innerHTML;
-            document.getElementById('fromPicker').innerHTML += list;
-            document.getElementById('toPicker').innerHTML += list;
-            setInterval(() => { 
-                if(document.getElementById('plan-page').classList.contains('active')) runPlanner(); 
-            }, 30000);
-            
-            
-        });
-    </script>
+const getTimeNow = () => {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+};
+
+const timeToMin = (t) => {
+  if (!t) return 0;
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
+};
+
+const getLineColor = (lineName) => {
+  if (lineName && lineName.includes('1')) return 'var(--accent-blue)';
+  if (lineName && lineName.includes('2')) return 'var(--accent-orange)';
+  return 'white';
+};
+
+function normaliseStation(name) {
+  return name.replace(/ \(Arr\)| \(Dep\)/g, '').trim();
+}
+
+function updatePIDS(stationId) {
+  const body = document.getElementById('pidsBody');
+  const selectedStationName = stationMap[stationId];
+  const nowMin = getTimeNow();
+
+  document.getElementById('pidsDisplay').style.display = 'block';
+
+  let directions = {};
+  trainData.forEach(train => {
+    const stop = train.stops.find(s => normaliseStation(s.station) === selectedStationName);
+    if (stop) {
+      const depMin = timeToMin(stop.departure);
+      const isNextDay = depMin < nowMin;
+      const sortScore = isNextDay ? depMin + 1440 : depMin;
+      if (!directions[train.direction] || sortScore < directions[train.direction].score) {
+        directions[train.direction] = {
+          v: train.train_id, d: train.direction, t: stop.departure,
+          score: sortScore, nextDay: isNextDay
+        };
+      }
+    }
+  });
+
+  const results = Object.values(directions).sort((a, b) => a.score - b.score);
+  body.innerHTML = results.length > 0 ? results.map(dep => `
+    <div class="pids-row">
+      <div class="col-vnum">${dep.v}</div>
+      <div class="col-dir">${dep.d.toUpperCase()} ${dep.nextDay ? '<span style="font-size:0.6rem; opacity:0.5;">(СУТРА)</span>' : ''}</div>
+      <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
+    </div>
+  `).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Нема података</div>';
+}
+
+function selectLine(line) {
+  selectedLine = line;
+  document.getElementById('lineBtn1').className = 'line-btn' + (line === 'BG:voz 1' ? ' active-line1' : '');
+  document.getElementById('lineBtn2').className = 'line-btn' + (line === 'BG:voz 2' ? ' active-line2' : '');
+
+  const stations = lineStations[line] || [];
+  const makeOptions = () => `<option value="" disabled selected hidden>—</option>` +
+    stations.map(s => `<option value="${stationSlug[s] || s}">${s}</option>`).join('');
+
+  document.getElementById('fromPicker').innerHTML = makeOptions();
+  document.getElementById('toPicker').innerHTML = makeOptions();
+  document.getElementById('stationPickers').style.display = 'block';
+  document.getElementById('plannerResults').innerHTML = '';
+}
+
+function runPlanner() {
+  const fromId = document.getElementById('fromPicker').value;
+  const toId   = document.getElementById('toPicker').value;
+  if (!fromId || !toId || fromId === toId || !selectedLine) return;
+
+  const fromName = stationMap[fromId] || fromId;
+  const toName   = stationMap[toId]   || toId;
+  const nowMin   = getTimeNow();
+
+  const lineTrains = trainData.filter(t => t.line === selectedLine);
+  const today = new Date();
+  const isWeekend = today.getDay() === 0 || today.getDay() === 6;
+
+  let results = [];
+  lineTrains.forEach(train => {
+    if (train.runs_on_weekends === false && isWeekend) return;
+    const sIdx = train.stops.findIndex(s => normaliseStation(s.station) === fromName);
+    const eIdx = train.stops.findIndex(s => normaliseStation(s.station) === toName);
+
+    if (sIdx === -1 || eIdx === -1 || sIdx >= eIdx) return;
+
+    const depMin = timeToMin(train.stops[sIdx].departure);
+    const stops = train.stops.slice(sIdx, eIdx + 1);
+
+    results.push({ train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure, stops, isPast: depMin < nowMin, depMin });
+  });
+
+  results.sort((a, b) => a.depMin - b.depMin);
+  renderPlanner(results, nowMin);
+}
+
+function renderPlanner(trips, nowMin) {
+  const container = document.getElementById('plannerResults');
+  const lineColor = getLineColor(selectedLine);
+
+  if (trips.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding:30px; opacity:0.5; font-size:0.9rem;">Нема полазака.</div>`;
+    return;
+  }
+
+  container.innerHTML = trips.map((trip, idx) => {
+    const durMin = timeToMin(trip.arrTime) - timeToMin(trip.depTime);
+    const stopsHtml = trip.stops.map((s, si) => {
+      const cls = `stop-row ${si === 0 ? 'stop-from' : (si === trip.stops.length - 1 ? 'stop-to' : '')} ${timeToMin(s.departure) < nowMin && si !== 0 ? 'stop-past' : ''}`;
+      return `<div class="${cls}"><span class="stop-time">${s.departure}</span><span class="stop-name">${normaliseStation(s.station)}</span></div>`;
+    }).join('');
+
+    return `
+      <div class="trip-card ${trip.isPast ? 'past-trip' : ''}" id="trip-${idx}" onclick="expandTrip(${idx})">
+        <div class="trip-summary">
+          <div class="trip-time">${trip.depTime}</div>
+          <div><div class="trip-dest"><span class="line-dot" style="background:${lineColor}"></span>Воз ${trip.train.train_id}</div><div style="font-size:0.7rem; opacity:0.5;">⏱ ${durMin} мин</div></div>
+          <div class="trip-arr">${trip.arrTime}</div>
+        </div>
+        <div class="trip-details"><div class="stop-list">${stopsHtml}</div></div>
+      </div>`;
+  }).join('');
+}
+
+function expandTrip(idx) {
+  const clicked = document.getElementById('trip-' + idx);
+  const isExp = clicked.classList.contains('expanded');
+  document.querySelectorAll('.trip-card.expanded').forEach(c => c.classList.remove('expanded'));
+  if (!isExp) clicked.classList.add('expanded');
+}
+
+function goTo(screen) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(screen + '-page').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('nav-' + screen).classList.add('active');
+}
+
+function swapStations() {
+  const f = document.getElementById('fromPicker');
+  const t = document.getElementById('toPicker');
+  const temp = f.value; f.value = t.value; t.value = temp;
+  runPlanner();
+}
+
+function quickView(stationId) {
+  document.getElementById('stationPicker').value = stationId;
+  updatePIDS(stationId);
+  goTo('monitor');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadTrainData();
+  setInterval(() => {
+    if (document.getElementById('plan-page').classList.contains('active')) runPlanner();
+  }, 30000);
+});
+</script>
 </body>
 </html>
