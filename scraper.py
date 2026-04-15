@@ -26,9 +26,10 @@ def scrape():
             rows = soup.find_all('tr')
             
             for row in rows:
-                cols = row.find_all('td')
-                if len(cols) < 5 or "BG:VOZ" not in cols[0].text.upper() and "БГ:ВОЗ" not in cols[0].text.upper():
-    continue
+    cols = row.find_all('td')
+    if len(cols) > 0:
+        print(f"Found row: {cols[0].text.strip()}") # This will show up in GitHub Action logs
+    
                 
                 train_id = cols[1].text.strip()
                 dep_time = cols[2].text.strip()
