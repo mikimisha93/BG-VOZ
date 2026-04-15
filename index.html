@@ -139,13 +139,15 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 }
 
 .pids-info {
+  display: block; /* Ensures it takes its own line */
   grid-column: 1 / -1;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   color: #FF9500;
-  padding: 0 15px 10px 15px;
-  margin-top: -10px;
-  opacity: 0.9;
-  font-weight: bold;
+  padding: 0 15px 12px 15px; /* Added a bit more bottom padding */
+  margin-top: -8px;
+  opacity: 1;
+  font-weight: 800;
+  letter-spacing: 0.02em;
 }
 </style>
 </head>
@@ -275,12 +277,13 @@ function updatePIDS(stationId) {
     if (stop) {
       const depMin = timeToMin(stop.departure);
       const score = depMin < nowMin ? depMin + 1440 : depMin;
+      
       if (!directions[train.direction] || score < directions[train.direction].score) {
         directions[train.direction] = { 
             v: train.train_id, 
             d: train.direction, 
             t: stop.departure, 
-            info: train.info || "", 
+            info: train.info || "", // Correctly pulling from JSON
             score 
         };
       }
@@ -288,15 +291,19 @@ function updatePIDS(stationId) {
   });
 
   const results = Object.values(directions).sort((a, b) => a.score - b.score);
+  
+  // DEBUG: Uncomment the line below to see if 'info' exists in your console
+  // console.log("PIDS Data:", results);
+
   document.getElementById('pidsDisplay').style.display = 'block';
   document.getElementById('pidsBody').innerHTML = (results.length > 0 ? results.map(dep => `
-    <div class="pids-row-container" style="border-bottom: 1px solid #111;">
+    <div class="pids-row-container" style="border-bottom: 1px solid #111; display: block; width: 100%;">
         <div class="pids-row" style="border-bottom: none;">
           <div class="col-vnum">${dep.v}</div>
           <div class="col-dir">${dep.d.toUpperCase()}</div>
           <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
         </div>
-        ${dep.info ? `<div class="pids-info">⚠ ${dep.info.toUpperCase()}</div>` : ''}
+        ${dep.info ? `<div class="pids-info" style="display: block; width: 100%;">⚠ ${dep.info.toUpperCase()}</div>` : ''}
     </div>`).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Nema polazaka</div>');
 }
 
