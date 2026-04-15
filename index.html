@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>БГ:ВОЗ Live</title>
+<title>BG:VOZ Live</title>
 <style>
 :root {
   --glass-bg: rgba(255, 255, 255, 0.1);
@@ -66,10 +66,10 @@ body {
   color: #FFFFFF;
   letter-spacing: 0.05em;
 }
-  .pids-announcement {
+.pids-announcement {
   background: #111;
   border-bottom: 1px solid #222;
-  color: var(--accent-red); /* Usually red or orange for alerts */
+  color: var(--accent-red);
   font-size: 0.8rem;
   font-weight: bold;
   padding: 8px 0;
@@ -77,13 +77,11 @@ body {
   white-space: nowrap;
   position: relative;
 }
-
 .marquee-text {
   display: inline-block;
   padding-left: 100%;
   animation: marquee 15s linear infinite;
 }
-
 @keyframes marquee {
   0% { transform: translate(0, 0); }
   100% { transform: translate(-100%, 0); }
@@ -130,14 +128,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .line-btn.active-line2 { border-color: var(--accent-orange); background: rgba(255,149,0,0.15); color: var(--accent-orange); }
 
 /* Trip cards */
-.trip-card {
-  background: var(--glass-bg);
-  margin: 6px 20px;
-  border-radius: 20px;
-  border: 1px solid var(--glass-border);
-  overflow: hidden;
-  transition: opacity 0.2s;
-}
+.trip-card { background: var(--glass-bg); margin: 6px 20px; border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; transition: opacity 0.2s; }
 .trip-card.past-trip { opacity: 0.38; }
 .trip-summary { padding: 18px 20px; display: grid; grid-template-columns: 70px 1fr 60px; align-items: center; cursor: pointer; gap: 4px; }
 .trip-time { font-family: monospace; font-weight: 800; font-size: 1.2rem; color: var(--accent-yellow); }
@@ -148,32 +139,11 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 
 .line-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
 
-/* Stop list inside expanded trip */
+/* Stop list */
 .stop-list { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
-.stop-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 7px 0;
-  font-size: 0.82rem;
-  font-family: monospace;
-  border-left: 2px solid rgba(255,255,255,0.12);
-  padding-left: 14px;
-  position: relative;
-}
-.stop-row::before {
-  content: '';
-  position: absolute;
-  left: -5px; top: 50%; transform: translateY(-50%);
-  width: 8px; height: 8px;
-  background: #1a0a28;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-radius: 50%;
-}
-.stop-row.stop-from::before, .stop-row.stop-to::before {
-  width: 11px; height: 11px;
-  left: -6px;
-  border-color: var(--accent-yellow);
-  background: #1a0a28;
-}
+.stop-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; font-size: 0.82rem; font-family: monospace; border-left: 2px solid rgba(255,255,255,0.12); padding-left: 14px; position: relative; }
+.stop-row::before { content: ''; position: absolute; left: -5px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; background: #1a0a28; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; z-index: 2; }
+.stop-row.stop-from::before, .stop-row.stop-to::before { width: 11px; height: 11px; left: -6px; border-color: var(--accent-yellow); background: #1a0a28; }
 .stop-row.stop-past { opacity: 0.3; }
 .stop-time { color: var(--accent-yellow); font-weight: bold; min-width: 44px; }
 .stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
@@ -186,15 +156,8 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .route-map::before { content: ''; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 2px; background: rgba(255,255,255,0.2); }
 .route-step { position: relative; padding: 8px 0 8px 20px; font-size: 0.9rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; transition: opacity 0.2s; }
 .route-step::before { content: ''; position: absolute; left: -1px; top: 14px; width: 12px; height: 12px; background: #1a0505; border: 2px solid white; border-radius: 50%; z-index: 2; }
-.route-step:active { opacity: 0.5; background: rgba(255,255,255,0.05); }
 .line-1-accent::before { border-color: var(--accent-blue); }
 .line-2-accent::before { border-color: var(--accent-orange); }
-
-/* Planner section header */
-.planner-section-label {
-  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.1em; opacity: 0.5; padding: 2px 20px 0;
-}
 </style>
 </head>
 <body>
@@ -205,12 +168,12 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
       <rect x="5" y="2" width="14" height="16" rx="3"/><line x1="5" y1="12" x2="19" y2="12"/>
       <circle cx="9" cy="15" r="1" fill="white"/><circle cx="15" cy="15" r="1" fill="white"/>
     </svg>
-    <h1>БГ:ВОЗ</h1>
+    <h1>BG:VOZ</h1>
   </header>
   <main class="center-section">
-    <div class="btn-large" onclick="goTo('monitor')">СТАНИЧНИ МОНИТОР</div>
-    <div class="btn-large" onclick="goTo('plan')">ПЛАНИРАЈ ПУТОВАЊЕ</div>
-    <div class="btn-large" onclick="goTo('lines')">ЛИНИЈЕ</div>
+    <div class="btn-large" onclick="goTo('monitor')">STANIČNI MONITOR</div>
+    <div class="btn-large" onclick="goTo('plan')">PLANIRAJ PUTOVANJE</div>
+    <div class="btn-large" onclick="goTo('lines')">LINIJE</div>
   </main>
 </div>
 
@@ -218,36 +181,37 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   <div class="plan-controls">
     <div class="input-group">
       <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
-        <option value="" disabled selected>Изаберите станицу...</option>
-        <optgroup label="Линија 1">
-          <option value="batajnica">Батајница</option>
-          <option value="kamendin">Камендин</option>
-          <option value="zemun_polje">Земунско поље</option>
-          <option value="altina">Алтина</option>
-          <option value="zemun">Земун</option>
-          <option value="tosin_bunar">Тошин бунар</option>
-          <option value="novi_beograd">Нови Београд</option>
-          <option value="beograd_centar">Београд Центар</option>
-          <option value="karadjordjev_park">Карађорђев парк</option>
-          <option value="vukov_spomenik">Вуков споменик</option>
-          <option value="pancevacki_most">Панчевачки мост</option>
-          <option value="krnjaca_most">Крњача мост</option>
-          <option value="krnjaca">Крњача</option>
-          <option value="sebes">Себеш</option>
-          <option value="ovca">Овча</option>
+        <option value="" disabled selected>Izaberite stanicu...</option>
+        <optgroup label="Linija 1">
+          <option value="batajnica">Batajnica</option>
+          <option value="kamendin">Kamendin</option>
+          <option value="zemun_polje">Zemun Polje</option>
+          <option value="altina">Altina</option>
+          <option value="zemun">Zemun</option>
+          <option value="tosin_bunar">Tosin Bunar</option>
+          <option value="novi_beograd">Novi Beograd</option>
+          <option value="beograd_centar">Beograd Centar</option>
+          <option value="karadjordjev_park">Karadjordjev Park</option>
+          <option value="vukov_spomenik">Vukov Spomenik</option>
+          <option value="pancevacki_most">Pancevacki Most</option>
+          <option value="krnjaca_most">Krnjaca Most</option>
+          <option value="krnjaca">Krnjaca</option>
+          <option value="sebes">Sebes</option>
+          <option value="ovca">Ovca</option>
         </optgroup>
-        <optgroup label="Линија 2">
-          <option value="resnik">Ресник</option>
-          <option value="kijevo">Кијево</option>
-          <option value="knezevac">Кнежевац</option>
-          <option value="rakovica">Раковица</option>
-          <option value="karadjordjev_park">Карађорђев парк</option>
-          <option value="vukov_spomenik">Вуков споменик</option>
-          <option value="pancevacki_most">Панчевачки мост</option>
-          <option value="krnjaca_most">Крњача мост</option>
-          <option value="krnjaca">Крњача</option>
-          <option value="sebes">Себеш</option>
-          <option value="ovca">Овча</option>
+        <optgroup label="Linija 2">
+          <option value="resnik">Resnik</option>
+          <option value="kijevo">Kijevo</option>
+          <option value="knezevac">Knezevac</option>
+          <option value="rakovica">Rakovica</option>
+          <option value="karadjordjev_park">Karadjordjev Park</option>
+          <option value="beograd_centar">Beograd Centar</option>
+          <option value="vukov_spomenik">Vukov Spomenik</option>
+          <option value="pancevacki_most">Pancevacki Most</option>
+          <option value="krnjaca_most">Krnjaca Most</option>
+          <option value="krnjaca">Krnjaca</option>
+          <option value="sebes">Sebes</option>
+          <option value="ovca">Ovca</option>
         </optgroup>
       </select>
     </div>
@@ -255,9 +219,9 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   <div id="pidsDisplay" style="display:none; width: 100%; padding: 0 20px; margin-top:15px;">
     <div class="pids-board">
       <div class="pids-header">
-        <div class="col-vnum">ВОЗ</div>
-        <div class="col-dir">СМЕР</div>
-        <div class="col-time">ВРЕМЕ</div>
+        <div class="col-vnum">VOZ</div>
+        <div class="col-dir">SMER</div>
+        <div class="col-time">VREME</div>
       </div>
       <div id="pidsBody"></div>
     </div>
@@ -266,27 +230,25 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 
 <div id="plan-page" class="page">
   <div class="line-selector">
-    <div class="line-btn" id="lineBtn1" onclick="selectLine('BG:voz 1')">БГ:ВОЗ 1</div>
-    <div class="line-btn" id="lineBtn2" onclick="selectLine('BG:voz 2')">БГ:ВОЗ 2</div>
+    <div class="line-btn" id="lineBtn1" onclick="selectLine('BG:voz 1')">BG:VOZ 1</div>
+    <div class="line-btn" id="lineBtn2" onclick="selectLine('BG:voz 2')">BG:VOZ 2</div>
   </div>
-
   <div id="stationPickers" style="width:100%; display:none;">
     <div class="plan-controls">
       <div class="input-group" style="position:relative;">
         <select id="fromPicker" class="plan-select" onchange="runPlanner()">
-          <option value="" disabled selected hidden>Полазна станица...</option>
+          <option value="" disabled selected hidden>Polazna stanica...</option>
         </select>
         <div class="divider"></div>
         <select id="toPicker" class="plan-select" onchange="runPlanner()">
-          <option value="" disabled selected hidden>Одредишна станица...</option>
+          <option value="" disabled selected hidden>Odredišna stanica...</option>
         </select>
-        <button class="swap-btn" style="top:50%; transform:translateY(-50%);" onclick="swapStations()">
+        <button class="swap-btn" onclick="swapStations()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
         </button>
       </div>
     </div>
   </div>
-
   <div id="plannerResults" style="width: 100%; margin-top: 5px;"></div>
 </div>
 
@@ -294,46 +256,45 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   <div class="lines-container">
     <div class="line-section">
       <div class="line-title">
-        <span class="line-dot" style="background: var(--accent-blue); width: 15px; height: 15px;"></span>
-        ЛИНИЈА 1
+        <span class="line-dot" style="background: var(--accent-blue);"></span>
+        LINIJA 1
       </div>
       <div class="route-map">
-        <div class="route-step line-1-accent" onclick="quickView('batajnica')">Батајница</div>
-        <div class="route-step line-1-accent" onclick="quickView('kamendin')">Камендин</div>
-        <div class="route-step line-1-accent" onclick="quickView('zemun_polje')">Земунско поље</div>
-        <div class="route-step line-1-accent" onclick="quickView('altina')">Алтина</div>
-        <div class="route-step line-1-accent" onclick="quickView('zemun')">Земун</div>
-        <div class="route-step line-1-accent" onclick="quickView('tosin_bunar')">Тошин бунар</div>
-        <div class="route-step line-1-accent" onclick="quickView('novi_beograd')">Нови Београд</div>
-        <div class="route-step line-1-accent" onclick="quickView('beograd_centar')">Београд Центар</div>
-        <div class="route-step line-1-accent" onclick="quickView('karadjordjev_park')">Карађорђев парк</div>
-        <div class="route-step line-1-accent" onclick="quickView('vukov_spomenik')">Вуков споменик</div>
-        <div class="route-step line-1-accent" onclick="quickView('pancevacki_most')">Панчевачки мост</div>
-        <div class="route-step line-1-accent" onclick="quickView('krnjaca_most')">Крњача мост</div>
-        <div class="route-step line-1-accent" onclick="quickView('krnjaca')">Крњача</div>
-        <div class="route-step line-1-accent" onclick="quickView('sebes')">Себеш</div>
-        <div class="route-step line-1-accent" onclick="quickView('ovca')">Овча</div>
+        <div class="route-step line-1-accent" onclick="quickView('batajnica')">Batajnica</div>
+        <div class="route-step line-1-accent" onclick="quickView('kamendin')">Kamendin</div>
+        <div class="route-step line-1-accent" onclick="quickView('zemun_polje')">Zemun Polje</div>
+        <div class="route-step line-1-accent" onclick="quickView('altina')">Altina</div>
+        <div class="route-step line-1-accent" onclick="quickView('zemun')">Zemun</div>
+        <div class="route-step line-1-accent" onclick="quickView('tosin_bunar')">Tosin Bunar</div>
+        <div class="route-step line-1-accent" onclick="quickView('novi_beograd')">Novi Beograd</div>
+        <div class="route-step line-1-accent" onclick="quickView('beograd_centar')">Beograd Centar</div>
+        <div class="route-step line-1-accent" onclick="quickView('karadjordjev_park')">Karadjordjev Park</div>
+        <div class="route-step line-1-accent" onclick="quickView('vukov_spomenik')">Vukov Spomenik</div>
+        <div class="route-step line-1-accent" onclick="quickView('pancevacki_most')">Pancevacki Most</div>
+        <div class="route-step line-1-accent" onclick="quickView('krnjaca_most')">Krnjaca Most</div>
+        <div class="route-step line-1-accent" onclick="quickView('krnjaca')">Krnjaca</div>
+        <div class="route-step line-1-accent" onclick="quickView('sebes')">Sebes</div>
+        <div class="route-step line-1-accent" onclick="quickView('ovca')">Ovca</div>
       </div>
     </div>
-
     <div class="line-section">
       <div class="line-title">
-        <span class="line-dot" style="background: var(--accent-orange); width: 15px; height: 15px;"></span>
-        ЛИНИЈА 2
+        <span class="line-dot" style="background: var(--accent-orange);"></span>
+        LINIJA 2
       </div>
       <div class="route-map">
-        <div class="route-step line-2-accent" onclick="quickView('resnik')">Ресник</div>
-        <div class="route-step line-2-accent" onclick="quickView('kijevo')">Кијево</div>
-        <div class="route-step line-2-accent" onclick="quickView('knezevac')">Кнежевац</div>
-        <div class="route-step line-2-accent" onclick="quickView('rakovica')">Раковица</div>
-        <div class="route-step line-2-accent" onclick="quickView('karadjordjev_park')">Карађорђев парк</div>
-        <div class="route-step line-2-accent" onclick="quickView('beograd_centar')">Београд Центар</div>
-        <div class="route-step line-2-accent" onclick="quickView('vukov_spomenik')">Вуков споменик</div>
-        <div class="route-step line-2-accent" onclick="quickView('pancevacki_most')">Панчевачки мост</div>
-        <div class="route-step line-2-accent" onclick="quickView('krnjaca_most')">Крњача мост</div>
-        <div class="route-step line-2-accent" onclick="quickView('krnjaca')">Крњача</div>
-        <div class="route-step line-2-accent" onclick="quickView('sebes')">Себеш</div>
-        <div class="route-step line-2-accent" onclick="quickView('ovca')">Овча</div>
+        <div class="route-step line-2-accent" onclick="quickView('resnik')">Resnik</div>
+        <div class="route-step line-2-accent" onclick="quickView('kijevo')">Kijevo</div>
+        <div class="route-step line-2-accent" onclick="quickView('knezevac')">Knezevac</div>
+        <div class="route-step line-2-accent" onclick="quickView('rakovica')">Rakovica</div>
+        <div class="route-step line-2-accent" onclick="quickView('karadjordjev_park')">Karadjordjev Park</div>
+        <div class="route-step line-2-accent" onclick="quickView('beograd_centar')">Beograd Centar</div>
+        <div class="route-step line-2-accent" onclick="quickView('vukov_spomenik')">Vukov Spomenik</div>
+        <div class="route-step line-2-accent" onclick="quickView('pancevacki_most')">Pancevacki Most</div>
+        <div class="route-step line-2-accent" onclick="quickView('krnjaca_most')">Krnjaca Most</div>
+        <div class="route-step line-2-accent" onclick="quickView('krnjaca')">Krnjaca</div>
+        <div class="route-step line-2-accent" onclick="quickView('sebes')">Sebes</div>
+        <div class="route-step line-2-accent" onclick="quickView('ovca')">Ovca</div>
       </div>
     </div>
   </div>
@@ -344,7 +305,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>
   </div>
   <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
   </div>
   <div class="nav-item" id="nav-plan" onclick="goTo('plan')">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg>
@@ -359,36 +320,37 @@ let trainData = [];
 let selectedLine = null;
 
 const stationMap = {
-  'batajnica': 'Батајница', 'kamendin': 'Камендин', 'zemun_polje': 'Земунско поље',
-  'altina': 'Алтина', 'zemun': 'Земун', 'tosin_bunar': 'Тошин бунар',
-  'novi_beograd': 'Нови Београд', 'beograd_centar': 'Београд Центар',
-  'karadjordjev_park': 'Карађорђев парк', 'vukov_spomenik': 'Вуков споменик',
-  'pancevacki_most': 'Панчевачки мост', 'krnjaca_most': 'Крњача мост',
-  'krnjaca': 'Крњача', 'sebes': 'Себеш', 'ovca': 'Овча',
-  'resnik': 'Ресник', 'kijevo': 'Кијево', 'knezevac': 'Кнежевац', 'rakovica': 'Раковица'
+  'batajnica': 'Batajnica', 'kamendin': 'Kamendin', 'zemun_polje': 'Zemun Polje',
+  'altina': 'Altina', 'zemun': 'Zemun', 'tosin_bunar': 'Tosin Bunar',
+  'novi_beograd': 'Novi Beograd', 'beograd_centar': 'Beograd Centar',
+  'karadjordjev_park': 'Karadjordjev Park', 'vukov_spomenik': 'Vukov Spomenik',
+  'pancevacki_most': 'Pancevacki Most', 'krnjaca_most': 'Krnjaca Most',
+  'krnjaca': 'Krnjaca', 'sebes': 'Sebes', 'ovca': 'Ovca',
+  'resnik': 'Resnik', 'kijevo': 'Kijevo', 'knezevac': 'Knezevac', 'rakovica': 'Rakovica'
 };
 
 const stationSlug = {};
 Object.entries(stationMap).forEach(([k,v]) => { stationSlug[v] = k; });
 
 const lineStations = {
-  'BG:voz 1': [
-    'Батајница', 'Камендин', 'Земунско поље', 'Алтина', 'Земун', 'Тошин бунар',
-    'Нови Београд', 'Београд Центар', 'Карађорђев парк', 'Вуков споменик',
-    'Панчевачки мост', 'Крњача мост', 'Крњача', 'Себеш', 'Овча'
-  ],
-  'BG:voz 2': [
-    'Ресник', 'Кијево', 'Кнежевац', 'Раковица', 'Карађорђев парк', 
-    'Београд Центар', 'Вуков споменик', 'Панчевачки мост', 'Крњача мост', 
-    'Крњача', 'Себеш', 'Овча'
-  ]
+  'BG:voz 1': ['Batajnica', 'Kamendin', 'Zemun Polje', 'Altina', 'Zemun', 'Tosin Bunar', 'Novi Beograd', 'Beograd Centar', 'Karadjordjev Park', 'Vukov Spomenik', 'Pancevacki Most', 'Krnjaca Most', 'Krnjaca', 'Sebes', 'Ovca'],
+  'BG:voz 2': ['Resnik', 'Kijevo', 'Knezevac', 'Rakovica', 'Karadjordjev Park', 'Beograd Centar', 'Vukov Spomenik', 'Pancevacki Most', 'Krnjaca Most', 'Krnjaca', 'Sebes', 'Ovca']
 };
+
+function normalize(name) {
+  if (!name) return "";
+  return name.replace(/ \(Arr\)| \(Dep\)/g, '')
+             .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+             .replace(/đ/g, "dj")
+             .trim()
+             .toLowerCase();
+}
 
 async function loadTrainData() {
   try {
     const response = await fetch('trains.json');
     trainData = await response.json();
-  } catch (e) { console.error("Грешка при учитавању података", e); }
+  } catch (e) { console.error("Error loading JSON", e); }
 }
 
 const getTimeNow = () => {
@@ -408,22 +370,19 @@ const getLineColor = (lineName) => {
   return 'white';
 };
 
-function normaliseStation(name) {
-  return name.replace(/ \(Arr\)| \(Dep\)/g, '').trim();
-}
-
 function updatePIDS(stationId) {
   const body = document.getElementById('pidsBody');
   const selectedStationName = stationMap[stationId];
   const nowMin = getTimeNow();
+  const target = normalize(selectedStationName);
 
   document.getElementById('pidsDisplay').style.display = 'block';
 
   let directions = {};
-  let currentNote = ""; // Variable to hold the note
+  let currentNote = "";
 
   trainData.forEach(train => {
-    const stop = train.stops.find(s => normaliseStation(s.station) === selectedStationName);
+    const stop = train.stops.find(s => normalize(s.station) === target);
     if (stop) {
       const depMin = timeToMin(stop.departure);
       const isNextDay = depMin < nowMin;
@@ -432,44 +391,32 @@ function updatePIDS(stationId) {
       if (!directions[train.direction] || sortScore < directions[train.direction].score) {
         directions[train.direction] = {
           v: train.train_id, d: train.direction, t: stop.departure,
-          note: train.note || "", // Grab note from JSON
-          score: sortScore, nextDay: isNextDay
+          note: train.note || "",
+          score: sortScore
         };
       }
     }
   });
 
   const results = Object.values(directions).sort((a, b) => a.score - b.score);
-  
-  // Get the note from the first (soonest) train if it exists
-  if (results.length > 0 && results[0].note) {
-      currentNote = `НАПОМЕНА: ${results[0].note}`;
-  }
+  if (results.length > 0 && results[0].note) currentNote = `NAPOMENA: ${results[0].note}`;
 
-  // Add the scrolling note at the top of the PIDS
-  let noteHtml = currentNote ? `
-    <div class="pids-announcement">
-        <div class="marquee-text">${currentNote}</div>
-    </div>` : '';
+  let noteHtml = currentNote ? `<div class="pids-announcement"><div class="marquee-text">${currentNote}</div></div>` : '';
 
   body.innerHTML = noteHtml + (results.length > 0 ? results.map(dep => `
     <div class="pids-row">
       <div class="col-vnum">${dep.v}</div>
       <div class="col-dir">${dep.d.toUpperCase()}</div>
       <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
-    </div>
-  `).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Нема података</div>');
+    </div>`).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Nema podataka</div>');
 }
 
 function selectLine(line) {
   selectedLine = line;
   document.getElementById('lineBtn1').className = 'line-btn' + (line === 'BG:voz 1' ? ' active-line1' : '');
   document.getElementById('lineBtn2').className = 'line-btn' + (line === 'BG:voz 2' ? ' active-line2' : '');
-
   const stations = lineStations[line] || [];
-  const makeOptions = () => `<option value="" disabled selected hidden>—</option>` +
-    stations.map(s => `<option value="${stationSlug[s] || s}">${s}</option>`).join('');
-
+  const makeOptions = () => `<option value="" disabled selected hidden>—</option>` + stations.map(s => `<option value="${stationSlug[s] || s}">${s}</option>`).join('');
   document.getElementById('fromPicker').innerHTML = makeOptions();
   document.getElementById('toPicker').innerHTML = makeOptions();
   document.getElementById('stationPickers').style.display = 'block';
@@ -478,29 +425,26 @@ function selectLine(line) {
 
 function runPlanner() {
   const fromId = document.getElementById('fromPicker').value;
-  const toId   = document.getElementById('toPicker').value;
+  const toId = document.getElementById('toPicker').value;
   if (!fromId || !toId || fromId === toId || !selectedLine) return;
 
-  const fromName = stationMap[fromId] || fromId;
-  const toName   = stationMap[toId]   || toId;
-  const nowMin   = getTimeNow();
-
-  const lineTrains = trainData.filter(t => t.line === selectedLine);
-  const today = new Date();
-  const isWeekend = today.getDay() === 0 || today.getDay() === 6;
+  const targetFrom = normalize(stationMap[fromId] || fromId);
+  const targetTo = normalize(stationMap[toId] || toId);
+  const nowMin = getTimeNow();
 
   let results = [];
-  lineTrains.forEach(train => {
-    if (train.runs_on_weekends === false && isWeekend) return;
-    const sIdx = train.stops.findIndex(s => normaliseStation(s.station) === fromName);
-    const eIdx = train.stops.findIndex(s => normaliseStation(s.station) === toName);
+  trainData.filter(t => t.line === selectedLine).forEach(train => {
+    const sIdx = train.stops.findIndex(s => normalize(s.station) === targetFrom);
+    const eIdx = train.stops.findIndex(s => normalize(s.station) === targetTo);
 
-    if (sIdx === -1 || eIdx === -1 || sIdx >= eIdx) return;
-
-    const depMin = timeToMin(train.stops[sIdx].departure);
-    const stops = train.stops.slice(sIdx, eIdx + 1);
-
-    results.push({ train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure, stops, isPast: depMin < nowMin, depMin });
+    if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
+      results.push({
+        train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure,
+        stops: train.stops.slice(sIdx, eIdx + 1),
+        depMin: timeToMin(train.stops[sIdx].departure),
+        isPast: timeToMin(train.stops[sIdx].departure) < nowMin
+      });
+    }
   });
 
   results.sort((a, b) => a.depMin - b.depMin);
@@ -510,24 +454,18 @@ function runPlanner() {
 function renderPlanner(trips, nowMin) {
   const container = document.getElementById('plannerResults');
   const lineColor = getLineColor(selectedLine);
-
   if (trips.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding:30px; opacity:0.5; font-size:0.9rem;">Нема полазака.</div>`;
+    container.innerHTML = `<div style="text-align:center; padding:30px; opacity:0.5; font-size:0.9rem;">Nema polazaka.</div>`;
     return;
   }
-
   container.innerHTML = trips.map((trip, idx) => {
-    const durMin = timeToMin(trip.arrTime) - timeToMin(trip.depTime);
-    const stopsHtml = trip.stops.map((s, si) => {
-      const cls = `stop-row ${si === 0 ? 'stop-from' : (si === trip.stops.length - 1 ? 'stop-to' : '')} ${timeToMin(s.departure) < nowMin && si !== 0 ? 'stop-past' : ''}`;
-      return `<div class="${cls}"><span class="stop-time">${s.departure}</span><span class="stop-name">${normaliseStation(s.station)}</span></div>`;
-    }).join('');
-
+    const dur = timeToMin(trip.arrTime) - trip.depMin;
+    const stopsHtml = trip.stops.map((s, si) => `<div class="stop-row ${si === 0 ? 'stop-from' : (si === trip.stops.length-1 ? 'stop-to' : '')}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
     return `
-      <div class="trip-card ${trip.isPast ? 'past-trip' : ''}" id="trip-${idx}" onclick="expandTrip(${idx})">
-        <div class="trip-summary">
+      <div class="trip-card ${trip.isPast ? 'past-trip' : ''}" onclick="expandTrip(${idx})">
+        <div class="trip-summary" id="trip-${idx}">
           <div class="trip-time">${trip.depTime}</div>
-          <div><div class="trip-dest"><span class="line-dot" style="background:${lineColor}"></span>Воз ${trip.train.train_id}</div><div style="font-size:0.7rem; opacity:0.5;">⏱ ${durMin} мин</div></div>
+          <div><div class="trip-dest"><span class="line-dot" style="background:${lineColor}"></span>Voz ${trip.train.train_id}</div><div style="font-size:0.7rem; opacity:0.5;">⏱ ${dur} min</div></div>
           <div class="trip-arr">${trip.arrTime}</div>
         </div>
         <div class="trip-details"><div class="stop-list">${stopsHtml}</div></div>
@@ -536,10 +474,10 @@ function renderPlanner(trips, nowMin) {
 }
 
 function expandTrip(idx) {
-  const clicked = document.getElementById('trip-' + idx);
-  const isExp = clicked.classList.contains('expanded');
-  document.querySelectorAll('.trip-card.expanded').forEach(c => c.classList.remove('expanded'));
-  if (!isExp) clicked.classList.add('expanded');
+  const el = document.getElementById('trip-' + idx).parentElement;
+  const isExp = el.classList.contains('expanded');
+  document.querySelectorAll('.trip-card').forEach(c => c.classList.remove('expanded'));
+  if (!isExp) el.classList.add('expanded');
 }
 
 function goTo(screen) {
@@ -550,23 +488,19 @@ function goTo(screen) {
 }
 
 function swapStations() {
-  const f = document.getElementById('fromPicker');
-  const t = document.getElementById('toPicker');
-  const temp = f.value; f.value = t.value; t.value = temp;
-  runPlanner();
+  const f = document.getElementById('fromPicker'), t = document.getElementById('toPicker');
+  const v = f.value; f.value = t.value; t.value = v; runPlanner();
 }
 
-function quickView(stationId) {
-  document.getElementById('stationPicker').value = stationId;
-  updatePIDS(stationId);
+function quickView(id) {
+  document.getElementById('stationPicker').value = id;
+  updatePIDS(id);
   goTo('monitor');
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadTrainData();
-  setInterval(() => {
-    if (document.getElementById('plan-page').classList.contains('active')) runPlanner();
-  }, 30000);
+  setInterval(() => { if (document.getElementById('plan-page').classList.contains('active')) runPlanner(); }, 30000);
 });
 </script>
 </body>
