@@ -124,6 +124,29 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .stop-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; font-size: 0.82rem; font-family: monospace; }
 .stop-time { color: var(--accent-yellow); font-weight: bold; min-width: 44px; }
 .stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; }
+  /* Exception Styling */
+.exception-badge {
+  background: rgba(255, 149, 0, 0.15);
+  color: #FF9500;
+  border: 1px solid rgba(255, 149, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.pids-info {
+  grid-column: 1 / -1;
+  font-size: 0.6rem;
+  color: #FF9500;
+  padding: 0 15px 10px 15px;
+  margin-top: -10px;
+  opacity: 0.9;
+  font-weight: bold;
+}
 </style>
 </head>
 <body>
@@ -246,23 +269,34 @@ function updatePIDS(stationId) {
   const target = normalize(stationMap[stationId]);
   const nowMin = getTimeNow();
   let directions = {};
+  
   trainData.forEach(train => {
     const stop = train.stops.find(s => normalize(s.station) === target);
     if (stop) {
       const depMin = timeToMin(stop.departure);
       const score = depMin < nowMin ? depMin + 1440 : depMin;
       if (!directions[train.direction] || score < directions[train.direction].score) {
-        directions[train.direction] = { v: train.train_id, d: train.direction, t: stop.departure, score };
+        directions[train.direction] = { 
+            v: train.train_id, 
+            d: train.direction, 
+            t: stop.departure, 
+            info: train.info || "", 
+            score 
+        };
       }
     }
   });
+
   const results = Object.values(directions).sort((a, b) => a.score - b.score);
   document.getElementById('pidsDisplay').style.display = 'block';
   document.getElementById('pidsBody').innerHTML = (results.length > 0 ? results.map(dep => `
-    <div class="pids-row">
-      <div class="col-vnum">${dep.v}</div>
-      <div class="col-dir">${dep.d.toUpperCase()}</div>
-      <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
+    <div class="pids-row-container" style="border-bottom: 1px solid #111;">
+        <div class="pids-row" style="border-bottom: none;">
+          <div class="col-vnum">${dep.v}</div>
+          <div class="col-dir">${dep.d.toUpperCase()}</div>
+          <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
+        </div>
+        ${dep.info ? `<div class="pids-info">⚠ ${dep.info.toUpperCase()}</div>` : ''}
     </div>`).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Nema polazaka</div>');
 }
 
@@ -367,26 +401,17 @@ function runPlanner() {
 
 function renderPlanner(trips, nowMin) {
   const container = document.getElementById('plannerResults');
-  if (trips.length === 0) {
-    container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>';
-    return;
-  }
+  if (trips.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>'; return; }
   
   container.innerHTML = trips.map((trip, idx) => {
     const isDirect = trip.type === 'direct';
-    
-    // Header Info - What shows on the card before expanding
     const trainID = isDirect ? trip.train.train_id : `${trip.leg1.train_id} ➜ ${trip.leg2.train_id}`;
-    const topDirection = isDirect ? trip.train.direction : `presedanje: ${trip.hub}`;
+    const topDirection = isDirect ? trip.train.direction : `IZMENA: ${trip.hub}`;
 
     const generateStopsHtml = (stops) => stops.map((s, i) => {
       const sMin = timeToMin(s.departure);
       const isLive = nowMin >= sMin && (i === stops.length - 1 || nowMin < timeToMin(stops[i+1].departure));
-      return `
-        <div class="stop-row">
-          <span class="stop-time">${s.departure}</span>
-          <span class="stop-name">${s.station} ${isLive ? '<span class="live-dot-mini"></span>' : ''}</span>
-        </div>`;
+      return `<div class="stop-row"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station} ${isLive ? '<span class="live-dot-mini"></span>' : ''}</span></div>`;
     }).join('');
 
     return `
@@ -401,22 +426,19 @@ function renderPlanner(trips, nowMin) {
         </div>
         <div class="trip-details">
           ${isDirect ? `
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold; letter-spacing:0.05em;">SMER: ${trip.train.direction.toUpperCase()}</div>
+            ${trip.train.info ? `<div class="exception-badge">⚠ ${trip.train.info}</div>` : ''}
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold;">SMER: ${trip.train.direction.toUpperCase()}</div>
             ${generateStopsHtml(trip.stops)}
           ` : `
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold; letter-spacing:0.05em;">
-                 (${trip.leg1.train_id}) SMER: ${trip.leg1.direction.toUpperCase()}
-            </div>
+            ${trip.leg1.info ? `<div class="exception-badge">⚠ ${trip.leg1.info}</div>` : ''}
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold;">PRVI VOZ (${trip.leg1.train_id}) SMER: ${trip.leg1.direction.toUpperCase()}</div>
             ${generateStopsHtml(trip.stops1)}
-            
             <div style="padding: 12px; color: var(--accent-yellow); font-size: 0.7rem; text-align: center; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); margin: 8px 0; background: rgba(255,215,0,0.05); border-radius: 10px;">
-              <span style="display:block; font-weight:800; letter-spacing:0.05em;">Presedanje: ${trip.hub.toUpperCase()}</span>
-              <span style="font-size: 0.6rem; opacity: 0.8;">Čekanje: ${trip.layover} min</span>
+              <span style="display:block; font-weight:800;">PRESEDA SE NA: ${trip.hub.toUpperCase()}</span>
+              <span style="font-size: 0.6rem; opacity: 0.8;">PAUZA: ${trip.layover} min</span>
             </div>
-
-            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold; letter-spacing:0.05em;">
-                  (${trip.leg2.train_id}) SMER: ${trip.leg2.direction.toUpperCase()}
-            </div>
+            ${trip.leg2.info ? `<div class="exception-badge">⚠ ${trip.leg2.info}</div>` : ''}
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold;">DRUGI VOZ (${trip.leg2.train_id}) SMER: ${trip.leg2.direction.toUpperCase()}</div>
             ${generateStopsHtml(trip.stops2)}
           `}
         </div>
