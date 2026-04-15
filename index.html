@@ -35,7 +35,7 @@ body {
 }
 .page.active { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-/* PIDS BOARD */
+/* BOARD STYLING */
 .pids-board { width: 100%; background: #000; border: 1px solid #222; border-radius: 15px; overflow: hidden; margin-top: 10px; }
 .pids-row { display: grid; grid-template-columns: 70px 1fr 100px; padding: 18px 15px; border-bottom: 1px solid #111; align-items: center; }
 .col-vnum { text-align: left; color: #666; font-family: monospace; font-size: 0.85rem; }
@@ -55,17 +55,24 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .center-section { width: 100%; padding: 0 32px; display: flex; flex-direction: column; gap: 12px; }
 .btn-large { width: 100%; padding: 20px; font-size: 0.8rem; font-weight: 700; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-transform: uppercase; text-align: center; cursor: pointer; }
 
-/* QR Code Styling */
+/* QR Code */
 .qr-container { margin-top: 20px; display: flex; justify-content: center; width: 100%; }
 .qr-card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 16px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 150px; }
-.qr-image { width: 110px; height: 110px; border-radius: 10px; filter: brightness(1.1); }
-.qr-text { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; }
+.qr-image { width: 110px; height: 110px; border-radius: 10px; }
+.qr-text { font-size: 0.6rem; font-weight: 800; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; }
 
-/* Planner UI */
-.plan-controls { width: 100%; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; position: relative; }
+/* Planner */
+.plan-controls { width: 100%; padding: 0 20px; margin-top: 10px; position: relative; }
 .input-group { background: var(--glass-bg); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; backdrop-filter: var(--glass-blur); }
-.plan-select { width: 100%; padding: 18px; background: transparent; border: none; color: white !important; font-size: 1rem; outline: none; appearance: none; }
+.plan-select { width: 100%; padding: 18px; background: transparent; border: none; color: white !important; font-size: 1rem; outline: none; appearance: none; display: block; }
 .plan-select option { background: #1a1a2e; color: white; }
+
+/* RESTORED SWAP BUTTON */
+.swap-btn { position: absolute; right: 35px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border); z-index: 10; cursor: pointer; }
+
+.trip-card { background: var(--glass-bg); margin: 8px 20px; border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
+.trip-summary { padding: 18px 20px; }
+.transfer-label { font-size: 0.65rem; color: #4CD964; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; display: block; }
 </style>
 </head>
 <body>
@@ -81,11 +88,9 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   <main class="center-section">
     <div class="btn-large" onclick="goTo('monitor')">STANIČNI RED VOŽNJE</div>
     <div class="btn-large" onclick="goTo('plan')">PLANIRAJ PUTOVANJE</div>
-    
     <div class="qr-container">
       <div class="qr-card">
-        <img id="pwa-qr" src="" alt="PWA" class="qr-image">
-        <div class="qr-text">SKENIRAJ</div>
+        <img id="pwa-qr" src="" alt="QR" class="qr-image">
       </div>
     </div>
   </main>
@@ -99,53 +104,45 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
       </select>
     </div>
   </div>
-  <div id="pidsDisplay" style="display:none; width: 100%; padding: 0 20px; margin-top:15px;">
-    <div class="pids-board"><div id="pidsBody"></div></div>
-  </div>
+  <div id="pidsDisplay" style="display:none; width: 100%; padding: 0 20px; margin-top:15px;"><div class="pids-board"><div id="pidsBody"></div></div></div>
 </div>
 
 <div id="plan-page" class="page">
   <div class="plan-controls">
     <div class="input-group">
-      <select id="fromPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected hidden>Polazak</option></select>
-      <div style="height:1px; background:var(--glass-border); margin:0 16px;"></div>
-      <select id="toPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected hidden>Dolazak</option></select>
+      <select id="fromPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected>Polazak</option></select>
+      <div style="height:1px; background:var(--glass-border); margin:0 15px;"></div>
+      <select id="toPicker" class="plan-select" onchange="runPlanner()"><option value="" disabled selected>Dolazak</option></select>
     </div>
+    <button class="swap-btn" onclick="swapStations()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+    </button>
   </div>
-  <div id="plannerResults" style="width: 100%; margin-top: 5px;"></div>
+  <div id="plannerResults" style="width: 100%; margin-top: 10px;"></div>
 </div>
 
 <nav class="nav-bar">
-  <div class="nav-item active" id="nav-home" onclick="goTo('home')">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>
-  </div>
-  <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-  </div>
-  <div class="nav-item" id="nav-plan" onclick="goTo('plan')">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg>
-  </div>
+  <div class="nav-item active" id="nav-home" onclick="goTo('home')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
+  <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+  <div class="nav-item" id="nav-plan" onclick="goTo('plan')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg></div>
 </nav>
 
 <script>
 const stationMap = {
-  'batajnica': 'Batajnica', 'kamendin': 'Kamendin', 'zemun_polje': 'Zemun Polje',
-  'altina': 'Altina', 'zemun': 'Zemun', 'tosin_bunar': 'Tosin Bunar',
-  'novi_beograd': 'Novi Beograd', 'beograd_centar': 'Beograd Centar',
-  'karadjordjev_park': 'Karadjordjev Park', 'vukov_spomenik': 'Vukov Spomenik',
-  'pancevacki_most': 'Pancevacki Most', 'krnjaca_most': 'Krnjaca Most',
-  'krnjaca': 'Krnjaca', 'sebes': 'Sebes', 'ovca': 'Ovca',
-  'resnik': 'Resnik', 'kijevo': 'Kijevo', 'knezevac': 'Knezevac', 'rakovica': 'Rakovica'
+  'batajnica': 'Batajnica', 'kamendin': 'Kamendin', 'zemun_polje': 'Zemun Polje', 'altina': 'Altina', 'zemun': 'Zemun', 'tosin_bunar': 'Tosin Bunar', 'novi_beograd': 'Novi Beograd', 'beograd_centar': 'Beograd Centar', 'karadjordjev_park': 'Karadjordjev Park', 'vukov_spomenik': 'Vukov Spomenik', 'pancevacki_most': 'Pancevacki Most', 'krnjaca_most': 'Krnjaca Most', 'krnjaca': 'Krnjaca', 'sebes': 'Sebes', 'ovca': 'Ovca', 'resnik': 'Resnik', 'kijevo': 'Kijevo', 'knezevac': 'Knezevac', 'rakovica': 'Rakovica'
 };
 
+const hubs = ['Beograd Centar', 'Karadjordjev Park', 'Vukov Spomenik', 'Pancevacki Most'];
 let trainData = [];
+
+// Helper to clean names for matching (e.g. "Tosin Bunar" vs "Tošin Bunar")
+const clean = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/đ/g, 'dj').trim();
+const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
 
 function populatePickers() {
   const sorted = Object.entries(stationMap).sort((a, b) => a[1].localeCompare(b[1]));
-  let html = `<option value="" disabled selected hidden>Izaberi stanicu...</option>`;
-  sorted.forEach(([id, name]) => {
-    html += `<option value="${id}">${name}</option>`;
-  });
+  let html = `<option value="" disabled selected>Izaberi stanicu...</option>`;
+  sorted.forEach(([id, name]) => html += `<option value="${id}">${name}</option>`);
   document.getElementById('stationPicker').innerHTML = html;
   document.getElementById('fromPicker').innerHTML = html;
   document.getElementById('toPicker').innerHTML = html;
@@ -155,25 +152,21 @@ async function loadTrainData() {
   try {
     const res = await fetch('trains.json');
     trainData = await res.json();
-  } catch (e) { console.error("JSON Error"); }
-}
-
-function generateQRCode() {
-  const pwaUrl = window.location.href;
-  const qrElement = document.getElementById('pwa-qr');
-  qrElement.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pwaUrl)}&color=ffffff&bgcolor=333333`;
+    console.log("Loaded", trainData.length, "trains");
+  } catch (e) { console.error("JSON Error:", e); }
 }
 
 function updatePIDS(sid) {
-  const target = stationMap[sid];
+  const target = clean(stationMap[sid]);
   const now = new Date();
   const nowMin = now.getHours() * 60 + now.getMinutes();
   let html = '';
+  
   trainData.forEach(train => {
-    const stop = train.stops.find(s => s.station === target);
+    const stop = train.stops.find(s => clean(s.station) === target);
     if(stop) {
-      const [h, m] = stop.departure.split(':').map(Number);
-      if((h * 60 + m) >= nowMin) {
+      const depMin = timeToMin(stop.departure);
+      if(depMin >= nowMin) {
         html += `<div class="pids-row">
           <div class="col-vnum">${train.train_id}</div>
           <div class="col-dir">${train.direction.toUpperCase()}</div>
@@ -187,21 +180,62 @@ function updatePIDS(sid) {
 }
 
 function runPlanner() {
-  const f = document.getElementById('fromPicker').value;
-  const t = document.getElementById('toPicker').value;
+  const f = document.getElementById('fromPicker').value, t = document.getElementById('toPicker').value;
   if(!f || !t || f === t) return;
-  let html = '';
+  const startStation = clean(stationMap[f]), endStation = clean(stationMap[t]);
+  let routes = [];
+
+  // 1. Direct Search
   trainData.forEach(train => {
-    const sIdx = train.stops.findIndex(s => s.station === stationMap[f]);
-    const eIdx = train.stops.findIndex(s => s.station === stationMap[t]);
+    const sIdx = train.stops.findIndex(s => clean(s.station) === startStation);
+    const eIdx = train.stops.findIndex(s => clean(s.station) === endStation);
     if(sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-      html += `<div style="background:var(--glass-bg); margin:10px 20px; padding:15px; border-radius:15px; display:flex; justify-content:space-between; border:1px solid var(--glass-border);">
-        <div style="font-weight:bold; color:var(--accent-yellow);">${train.stops[sIdx].departure} → ${train.stops[eIdx].departure}</div>
-        <div style="opacity:0.6;">Voz ${train.train_id}</div>
-      </div>`;
+      routes.push({ type: 'DIRECT', t1: train, dep: train.stops[sIdx].departure, arr: train.stops[eIdx].departure, depMin: timeToMin(train.stops[sIdx].departure) });
     }
   });
-  document.getElementById('plannerResults').innerHTML = html || '<p style="text-align:center; padding:20px;">Nema rezultata.</p>';
+
+  // 2. Transfer Search
+  trainData.forEach(tr1 => {
+    const sIdx = tr1.stops.findIndex(s => clean(s.station) === startStation);
+    if(sIdx === -1) return;
+    hubs.forEach(hubName => {
+      const cleanHub = clean(hubName);
+      const hIdx = tr1.stops.findIndex(s => clean(s.station) === cleanHub);
+      if(hIdx !== -1 && hIdx > sIdx) {
+        const hubArrTime = timeToMin(tr1.stops[hIdx].departure);
+        trainData.forEach(tr2 => {
+          if(tr1.train_id === tr2.train_id) return;
+          const h2Idx = tr2.stops.findIndex(s => clean(s.station) === cleanHub);
+          const eIdx = tr2.stops.findIndex(s => clean(s.station) === endStation);
+          if(h2Idx !== -1 && eIdx !== -1 && eIdx > h2Idx) {
+            const hubDepTime = timeToMin(tr2.stops[h2Idx].departure);
+            const wait = hubDepTime - hubArrTime;
+            if(wait >= 3 && wait <= 60) {
+              routes.push({ type: 'TRANSFER', t1: tr1, t2: tr2, hub: hubName, dep: tr1.stops[sIdx].departure, arr: tr2.stops[eIdx].departure, depMin: timeToMin(tr1.stops[sIdx].departure) });
+            }
+          }
+        });
+      }
+    });
+  });
+
+  document.getElementById('plannerResults').innerHTML = routes.sort((a,b) => a.depMin - b.depMin).slice(0, 10).map(r => `
+    <div class="trip-card">
+      <div class="trip-summary">
+        ${r.type === 'TRANSFER' ? `<span class="transfer-label">Presedanje: ${r.hub}</span>` : ''}
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:1.2rem; font-weight:bold; color:var(--accent-yellow);">${r.dep} → ${r.arr}</div>
+          <div style="font-size:0.75rem; opacity:0.6; text-align:right;">
+            ${r.type === 'DIRECT' ? `Voz ${r.t1.train_id}` : `Voz ${r.t1.train_id} + ${r.t2.train_id}`}
+          </div>
+        </div>
+      </div>
+    </div>`).join('') || '<p style="text-align:center; padding:40px; opacity:0.5;">Nema dostupnih linija.</p>';
+}
+
+function swapStations() {
+  const f = document.getElementById('fromPicker'), t = document.getElementById('toPicker');
+  const temp = f.value; f.value = t.value; t.value = temp; runPlanner();
 }
 
 function goTo(screen) {
@@ -209,6 +243,10 @@ function goTo(screen) {
   document.getElementById(screen + '-page').classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('nav-' + screen).classList.add('active');
+}
+
+function generateQRCode() {
+  document.getElementById('pwa-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}&color=ffffff&bgcolor=333333`;
 }
 
 populatePickers();
