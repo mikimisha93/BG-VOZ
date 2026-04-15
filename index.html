@@ -85,7 +85,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   width: 110px; 
   height: 110px; 
   border-radius: 10px; 
-  /* We remove mix-blend-mode because the API generates proper colors */
   filter: brightness(1.1); 
 }
 .qr-text { 
@@ -109,10 +108,22 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .trip-card.past-trip { opacity: 0.38; }
 .trip-summary { padding: 18px 20px; display: grid; grid-template-columns: 70px 1fr 60px; align-items: center; cursor: pointer; gap: 4px; }
 .trip-time { font-family: monospace; font-weight: 800; font-size: 1.2rem; color: var(--accent-yellow); }
-.trip-dest { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; }
+.trip-dest { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; display: flex; flex-direction: column; justify-content: center; }
 .trip-arr { font-family: monospace; font-size: 0.85rem; color: rgba(255,255,255,0.5); text-align: right; }
 .trip-details { max-height: 0; padding: 0 20px; opacity: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; background: rgba(0,0,0,0.15); }
 .trip-card.expanded .trip-details { max-height: 800px; padding: 16px 20px; opacity: 1; border-top: 1px solid var(--glass-border); }
+
+/* LIVE Progress Dot */
+.live-dot-mini {
+  display: inline-block; width: 8px; height: 8px; background: #4CD964; 
+  border-radius: 50%; margin-left: 10px; box-shadow: 0 0 10px #4CD964;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+.stop-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; font-size: 0.82rem; font-family: monospace; }
+.stop-time { color: var(--accent-yellow); font-weight: bold; min-width: 44px; }
+.stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -132,7 +143,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     <div class="qr-container">
       <div class="qr-card">
         <img id="pwa-qr" src="" alt="PWA" class="qr-image">
-       
       </div>
     </div>
   </main>
@@ -201,11 +211,9 @@ Object.entries(stationMap).forEach(([k,v]) => { stationSlug[v] = k; });
 
 const hubs = ['Beograd Centar', 'Karadjordjev Park', 'Vukov Spomenik', 'Pancevacki Most'];
 
-// QR Generation Function
 function generateQRCode() {
-  const pwaUrl = window.location.href; // Uses current URL or set manually
+  const pwaUrl = window.location.href;
   const qrElement = document.getElementById('pwa-qr');
-  // API settings: White foreground (#ffffff), Transparent background (qzone=1)
   qrElement.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pwaUrl)}&color=ffffff&bgcolor=333333`;
 }
 
@@ -233,7 +241,6 @@ function populatePickers() {
 
 const getTimeNow = () => { const now = new Date(); return now.getHours() * 60 + now.getMinutes(); };
 const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-const getLineColor = (l) => l?.includes('1') ? 'var(--accent-blue)' : (l?.includes('2') ? 'var(--accent-orange)' : 'var(--accent-red)');
 
 function updatePIDS(stationId) {
   const target = normalize(stationMap[stationId]);
@@ -266,7 +273,11 @@ function runPlanner() {
   const targetFrom = normalize(stationMap[fromId]);
   const targetTo = normalize(stationMap[toId]);
   const nowMin = getTimeNow();
+  
   let directResults = [];
+  let transferResults = [];
+
+  // Direct trips
   trainData.forEach(train => {
     const sIdx = train.stops.findIndex(s => normalize(s.station) === targetFrom);
     const eIdx = train.stops.findIndex(s => normalize(s.station) === targetTo);
@@ -277,28 +288,95 @@ function runPlanner() {
       });
     }
   });
-  renderPlanner(directResults.sort((a,b) => a.depMin - b.depMin), nowMin);
+
+  // Transfer trips logic
+  hubs.forEach(hubName => {
+    const targetHub = normalize(hubName);
+    if (targetHub === targetFrom || targetHub === targetTo) return;
+
+    const leg1s = trainData.filter(t => {
+      const s = t.stops.findIndex(st => normalize(st.station) === targetFrom);
+      const h = t.stops.findIndex(st => normalize(st.station) === targetHub);
+      return s !== -1 && h !== -1 && s < h;
+    });
+
+    const leg2s = trainData.filter(t => {
+      const h = t.stops.findIndex(st => normalize(st.station) === targetHub);
+      const e = t.stops.findIndex(st => normalize(st.station) === targetTo);
+      return h !== -1 && e !== -1 && h < e;
+    });
+
+    leg1s.forEach(t1 => {
+      const t1ArrMin = timeToMin(t1.stops.find(st => normalize(st.station) === targetHub).departure);
+      leg2s.forEach(t2 => {
+        const t2DepMin = timeToMin(t2.stops.find(st => normalize(st.station) === targetHub).departure);
+        const layover = t2DepMin - t1ArrMin;
+        if (layover >= 4 && layover <= 40) {
+          transferResults.push({
+            type: 'transfer', hub: hubName, leg1: t1, leg2: t2, 
+            depTime: t1.stops.find(s => normalize(s.station) === targetFrom).departure,
+            arrTime: t2.stops.find(s => normalize(s.station) === targetTo).departure,
+            depMin: timeToMin(t1.stops.find(s => normalize(s.station) === targetFrom).departure),
+            layover,
+            stops1: t1.stops.slice(t1.stops.findIndex(s => normalize(s.station) === targetFrom), t1.stops.findIndex(s => normalize(s.station) === targetHub) + 1),
+            stops2: t2.stops.slice(t2.stops.findIndex(s => normalize(s.station) === targetHub), t2.stops.findIndex(s => normalize(s.station) === targetTo) + 1)
+          });
+        }
+      });
+    });
+  });
+
+  const allTrips = [...directResults, ...transferResults].sort((a, b) => a.depMin - b.depMin);
+  renderPlanner(allTrips, nowMin);
 }
 
 function renderPlanner(trips, nowMin) {
   const container = document.getElementById('plannerResults');
   if (trips.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>'; return; }
+  
   container.innerHTML = trips.map((trip, idx) => {
-    const stopsHtml = trip.stops.map((s, si) => `<div class="stop-row ${si===0?'stop-from':(si===trip.stops.length-1?'stop-to':'')}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
-    return `<div class="trip-card" onclick="expandTrip(${idx})">
-      <div class="trip-summary" id="trip-${idx}">
-        <div class="trip-time">${trip.depTime}</div>
-        <div class="trip-dest">${trip.train.train_id}</div>
-        <div class="trip-arr">${trip.arrTime}</div>
-      </div>
-      <div class="trip-details"><div class="stop-list">${stopsHtml}</div></div>
-    </div>`;
+    const isDirect = trip.type === 'direct';
+    const trainID = isDirect ? trip.train.train_id : `${trip.leg1.train_id} ➜ ${trip.leg2.train_id}`;
+    const direction = isDirect ? trip.train.direction : `Preko: ${trip.hub}`;
+
+    const generateStopsHtml = (stops) => stops.map((s, i) => {
+      const sMin = timeToMin(s.departure);
+      const isLive = nowMin >= sMin && (i === stops.length - 1 || nowMin < timeToMin(stops[i+1].departure));
+      return `
+        <div class="stop-row">
+          <span class="stop-time">${s.departure}</span>
+          <span class="stop-name">${s.station} ${isLive ? '<span class="live-dot-mini"></span>' : ''}</span>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="trip-card" onclick="expandTrip(${idx})">
+        <div class="trip-summary" id="trip-${idx}">
+          <div class="trip-time">${trip.depTime}</div>
+          <div class="trip-dest">
+            <span style="font-size: 0.85rem; font-weight:800;">${trainID}</span>
+            <span style="font-size: 0.6rem; opacity: 0.6; margin-top:2px;">SMER: ${direction.toUpperCase()}</span>
+          </div>
+          <div class="trip-arr">${trip.arrTime}</div>
+        </div>
+        <div class="trip-details">
+          ${isDirect ? generateStopsHtml(trip.stops) : `
+            ${generateStopsHtml(trip.stops1)}
+            <div style="padding: 10px; color: var(--accent-yellow); font-size: 0.65rem; text-align: center; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); margin: 5px 0;">
+              IZMENA: ${trip.hub} (${trip.layover} min)
+            </div>
+            ${generateStopsHtml(trip.stops2)}
+          `}
+        </div>
+      </div>`;
   }).join('');
 }
 
 function expandTrip(idx) {
   const el = document.getElementById('trip-' + idx).parentElement;
-  el.classList.toggle('expanded');
+  const alreadyExpanded = el.classList.contains('expanded');
+  document.querySelectorAll('.trip-card').forEach(c => c.classList.remove('expanded'));
+  if (!alreadyExpanded) el.classList.add('expanded');
 }
 
 function goTo(screen) {
