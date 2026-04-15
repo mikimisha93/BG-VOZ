@@ -2,28 +2,27 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import unicodedata
+import urllib.parse  # Added for proper URL encoding
 from datetime import datetime
 
-# Stations mapping - Names must match the IDs in your stationMap
+# Updated with the specific IDs from your links
 STATIONS = {
     "Batajnica": "16204", "Kamendin": "16203", "Zemun Polje": "16053", 
     "Altina": "16059", "Zemun": "16052", "Tosin Bunar": "16202", 
     "Novi Beograd": "16051", "Beograd Centar": "16050", 
     "Karadjordjev Park": "16208", "Vukov Spomenik": "16210", 
-    "Pancevacki Most": "16211", "Krnjaca Most": "16214", 
-    "Krnjaca": "16213", "Sebes": "16215", "Ovca": "16212",
-    "Resnik": "16101", "Kijevo": "16207", "Knezevac": "16206", "Rakovica": "16001"
+    "Pancevacki Most": "16013",  # Updated to match your link
+    "Krnjaca Most": "16214", "Krnjaca": "16213", 
+    "Sebes": "16215", "Ovca": "16212",
+    "Resnik": "16101", "Kijevo": "16207", "Kneževac": "16206", "Rakovica": "16001"
 }
 
 today = datetime.now().strftime("%d.%m.%Y")
 master_trains = {}
 
 def normalize_text(text):
-    """ Converts text like 'Pančevački' to 'Pancevacki' to match HTML precisely """
     if not text: return ""
-    # Standardize 'đ' to 'dj' as it's not a standard accent
     text = text.replace('đ', 'dj').replace('Đ', 'Dj')
-    # Remove other accents (č, ć, š, ž)
     return "".join(c for c in unicodedata.normalize('NFD', text)
                   if unicodedata.category(c) != 'Mn')
 
@@ -33,60 +32,76 @@ def scrape():
     }
 
     for name, s_id in STATIONS.items():
-        # The URL works best with the official names (with accents)
-        # So we use a temporary variable for the URL but keep 'name' clean for the JSON
-        url_name = name.replace("Tosin", "Tošin").replace("Karadjordjev", "Karađorđev").replace("Pancevacki", "Pančevački").replace("Krnjaca", "Krnjača").replace("Sebes", "Sebeš").replace("Ovca", "Ovča")
+        # Map the Latin names back to the required Cyrillic/Accented names for the URL
+        url_name_map = {
+            "Tosin Bunar": "TOŠIN BUNAR",
+            "Novi Beograd": "NOVI BEOGRAD",
+            "Beograd Centar": "BEOGRAD CENTAR",
+            "Karadjordjev Park": "KARAĐORĐEV PARK",
+            "Vukov Spomenik": "VUKOV SPOMENIK",
+            "Pancevacki Most": "PANČEVAČKI MOST",
+            "Krnjaca Most": "KRNJAČA MOST",
+            "Krnjaca": "KRNJAČA",
+            "Sebes": "SEBEŠ",
+            "Ovca": "OVČA",
+            "Knezevac": "KNEŽEVAC",
+            "Zemun Polje": "ZEMUN POLJE"
+        }
         
-        url = f"https://w3.srbvoz.rs/redvoznje//stanicni/{url_name.upper()}/{s_id}/{today}/0000/polazak/999/sr"
+        display_name = url_name_map.get(name, name.upper())
+        # Properly encode spaces as %20 and special chars for the URL
+        encoded_name = urllib.parse.quote(display_name)
+        
+        # We use 'polazak' (Departures) as per your second link
+        url = f"https://w3.srbvoz.rs/redvoznje//stanicni/{encoded_name}/{s_id}/{today}/0000/polazak/999/sr"
         
         try:
-            print(f"Scraping {name}...")
+            print(f"Scraping {name} via {url}...")
             response = requests.get(url, headers=headers, timeout=15)
             soup = BeautifulSoup(response.text, 'html.parser')
-            rows = soup.find_all('tr')
             
+            # The Srbija Voz table usually sits inside a specific div or table
+            rows = soup.find_all('tr')
+            found_count = 0
+
             for row in rows:
                 cols = row.find_all('td')
                 if len(cols) < 4: continue
                 
-                train_type = cols[0].text.strip().upper()
-                # Check for Latin and Cyrillic BG:VOZ labels
-                if any(x in train_type for x in ["BG:VOZ", "БГ:ВОЗ", "БГ"]):
-                    
-                    train_id = cols[1].text.strip()
-                    dep_time = cols[2].text.strip()
-                    # We normalize the direction to Latin as well
-                    direction = normalize_text(cols[3].text.strip().upper())
-                    note = cols[4].text.strip() if len(cols) > 4 else ""
+                raw_type = cols[0].get_text(strip=True).upper()
+                raw_id = cols[1].get_text(strip=True)
+                
+                # Check for BG:VOZ or train numbers starting with 80
+                if any(x in raw_type for x in ["BG", "БГ"]) or raw_id.startswith('80'):
+                    dep_time = cols[2].get_text(strip=True)
+                    direction = normalize_text(cols[3].get_text(strip=True).upper())
+                    note = cols[4].get_text(strip=True) if len(cols) > 4 else ""
 
-                    # Line detection logic
-                    if any(key in direction for key in ["RESNIK", "REZNIK", "MLADENOVAC", "LAZAREVAC", "РЕЗНИК", "РЕСНИК"]):
-                        line = "BG:voz 2"
-                    else:
-                        line = "BG:voz 1"
+                    line = "BG:voz 2" if any(k in direction for k in ["RESNIK", "MLADENOVAC", "LAZAREVAC"]) else "BG:voz 1"
 
-                    if train_id not in master_trains:
-                        master_trains[train_id] = {
-                            "train_id": train_id,
+                    if raw_id not in master_trains:
+                        master_trains[raw_id] = {
+                            "train_id": raw_id,
                             "line": line,
                             "direction": direction,
                             "note": note,
                             "stops": []
                         }
                     
-                    # Save 'name' (the clean Latin version) to the JSON
-                    master_trains[train_id]["stops"].append({
-                        "station": name,
-                        "departure": dep_time
-                    })
-                    
+                    # Ensure we don't add duplicate stops for the same station/train
+                    if not any(s['station'] == name for s in master_trains[raw_id]["stops"]):
+                        master_trains[raw_id]["stops"].append({"station": name, "departure": dep_time})
+                        found_count += 1
+            
+            print(f"Found {found_count} BG:VOZ departures for {name}")
+
         except Exception as e:
             print(f"Error scraping {name}: {e}")
 
-    output = []
-    for t_id in master_trains:
-        master_trains[t_id]["stops"].sort(key=lambda x: x["departure"])
-        output.append(master_trains[t_id])
+    # Convert to list and sort
+    output = list(master_trains.values())
+    for train in output:
+        train["stops"].sort(key=lambda x: x["departure"])
 
     with open('trains.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=4, ensure_ascii=False)
