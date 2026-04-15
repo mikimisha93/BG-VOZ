@@ -44,48 +44,20 @@ body {
 
 /* PIDS BOARD */
 .pids-board {
-  width: 100%;
-  background: #000;
-  border: 1px solid #222;
-  border-radius: 15px;
-  overflow: hidden;
-  margin-top: 10px;
+  width: 100%; background: #000; border: 1px solid #222; border-radius: 15px; overflow: hidden; margin-top: 10px;
 }
 .pids-header, .pids-row {
-  display: grid;
-  grid-template-columns: 70px 1fr 100px;
-  padding: 12px 15px;
-  align-items: center;
+  display: grid; grid-template-columns: 70px 1fr 100px; padding: 12px 15px; align-items: center;
 }
 .pids-header {
-  background: #111;
-  border-bottom: 1px solid #222;
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #FFFFFF;
-  letter-spacing: 0.05em;
+  background: #111; border-bottom: 1px solid #222; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; color: #FFFFFF; letter-spacing: 0.05em;
 }
 .pids-announcement {
-  background: #111;
-  border-bottom: 1px solid #222;
-  color: var(--accent-red);
-  font-size: 0.8rem;
-  font-weight: bold;
-  padding: 8px 0;
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
+  background: #111; border-bottom: 1px solid #222; color: var(--accent-red); font-size: 0.8rem; font-weight: bold; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative;
 }
-.marquee-text {
-  display: inline-block;
-  padding-left: 100%;
-  animation: marquee 15s linear infinite;
-}
-@keyframes marquee {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-100%, 0); }
-}
+.marquee-text { display: inline-block; padding-left: 100%; animation: marquee 15s linear infinite; }
+@keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
 .pids-row { padding: 18px 15px; border-bottom: 1px solid #111; }
 .col-vnum { text-align: left; color: #666; font-family: monospace; font-size: 0.85rem; }
 .col-dir { text-align: left; padding-left: 5px; color: var(--accent-yellow); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; }
@@ -114,39 +86,32 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .divider { height: 1px; background: var(--glass-border); margin: 0 16px; }
 .swap-btn { position: absolute; right: 35px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border); z-index: 10; cursor: pointer; }
 
-/* Line Selector Buttons */
-.line-selector { width: 100%; padding: 0 20px; display: flex; gap: 12px; margin-bottom: 4px; }
-.line-btn {
-  flex: 1; padding: 16px; font-size: 0.9rem; font-weight: 800;
-  border-radius: 16px; border: 2px solid transparent;
-  background: var(--glass-bg); color: white; cursor: pointer;
-  text-transform: uppercase; letter-spacing: 0.05em;
-  transition: all 0.25s;
-  text-align: center;
-}
-.line-btn.active-line1 { border-color: var(--accent-blue); background: rgba(0,122,255,0.15); color: var(--accent-blue); }
-.line-btn.active-line2 { border-color: var(--accent-orange); background: rgba(255,149,0,0.15); color: var(--accent-orange); }
-
 /* Trip cards */
-.trip-card { background: var(--glass-bg); margin: 6px 20px; border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; transition: opacity 0.2s; }
+.trip-card { background: var(--glass-bg); margin: 6px 20px; border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; transition: all 0.2s; }
 .trip-card.past-trip { opacity: 0.38; }
 .trip-summary { padding: 18px 20px; display: grid; grid-template-columns: 70px 1fr 60px; align-items: center; cursor: pointer; gap: 4px; }
 .trip-time { font-family: monospace; font-weight: 800; font-size: 1.2rem; color: var(--accent-yellow); }
 .trip-dest { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; }
 .trip-arr { font-family: monospace; font-size: 0.85rem; color: rgba(255,255,255,0.5); text-align: right; }
-.trip-details { max-height: 0; padding: 0 20px; opacity: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease; background: rgba(0,0,0,0.15); }
-.trip-card.expanded .trip-details { max-height: 600px; padding: 16px 20px; opacity: 1; border-top: 1px solid var(--glass-border); }
+.trip-details { max-height: 0; padding: 0 20px; opacity: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; background: rgba(0,0,0,0.15); }
+.trip-card.expanded .trip-details { max-height: 800px; padding: 16px 20px; opacity: 1; border-top: 1px solid var(--glass-border); }
+
+/* Transfer Badge */
+.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 900; margin-left: 5px; vertical-align: middle; }
+.badge-direct { background: rgba(255,255,255,0.15); color: white; }
+.badge-transfer { background: var(--accent-yellow); color: black; }
 
 .line-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
 
 /* Stop list */
-.stop-list { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
+.stop-list { display: flex; flex-direction: column; gap: 0; }
 .stop-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; font-size: 0.82rem; font-family: monospace; border-left: 2px solid rgba(255,255,255,0.12); padding-left: 14px; position: relative; }
 .stop-row::before { content: ''; position: absolute; left: -5px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; background: #1a0a28; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; z-index: 2; }
 .stop-row.stop-from::before, .stop-row.stop-to::before { width: 11px; height: 11px; left: -6px; border-color: var(--accent-yellow); background: #1a0a28; }
-.stop-row.stop-past { opacity: 0.3; }
 .stop-time { color: var(--accent-yellow); font-weight: bold; min-width: 44px; }
-.stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; }
+
+.transfer-info { padding: 10px; margin: 10px 0; background: rgba(255,215,0,0.1); border-radius: 10px; border: 1px dashed var(--accent-yellow); font-size: 0.75rem; text-align: center; }
 
 /* Lines UI */
 .lines-container { width: 100%; padding: 0 20px; }
@@ -154,7 +119,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .line-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
 .route-map { position: relative; padding-left: 20px; }
 .route-map::before { content: ''; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 2px; background: rgba(255,255,255,0.2); }
-.route-step { position: relative; padding: 8px 0 8px 20px; font-size: 0.9rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; transition: opacity 0.2s; }
+.route-step { position: relative; padding: 8px 0 8px 20px; font-size: 0.9rem; text-transform: uppercase; font-weight: 600; cursor: pointer; }
 .route-step::before { content: ''; position: absolute; left: -1px; top: 14px; width: 12px; height: 12px; background: #1a0505; border: 2px solid white; border-radius: 50%; z-index: 2; }
 .line-1-accent::before { border-color: var(--accent-blue); }
 .line-2-accent::before { border-color: var(--accent-orange); }
@@ -182,29 +147,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     <div class="input-group">
       <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
         <option value="" disabled selected>Izaberite stanicu...</option>
-        <optgroup label="Zajedničke / Linija 1">
-          <option value="batajnica">Batajnica</option>
-          <option value="kamendin">Kamendin</option>
-          <option value="zemun_polje">Zemun Polje</option>
-          <option value="altina">Altina</option>
-          <option value="zemun">Zemun</option>
-          <option value="tosin_bunar">Tosin Bunar</option>
-          <option value="novi_beograd">Novi Beograd</option>
-          <option value="beograd_centar">Beograd Centar</option>
-          <option value="karadjordjev_park">Karadjordjev Park</option>
-          <option value="vukov_spomenik">Vukov Spomenik</option>
-          <option value="pancevacki_most">Pancevacki Most</option>
-          <option value="krnjaca_most">Krnjaca Most</option>
-          <option value="krnjaca">Krnjaca</option>
-          <option value="sebes">Sebes</option>
-          <option value="ovca">Ovca</option>
-        </optgroup>
-        <optgroup label="Zajedničke / Linija 2">
-          <option value="resnik">Resnik</option>
-          <option value="kijevo">Kijevo</option>
-          <option value="knezevac">Knezevac</option>
-          <option value="rakovica">Rakovica</option>
-        </optgroup>
       </select>
     </div>
   </div>
@@ -221,11 +163,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 </div>
 
 <div id="plan-page" class="page">
-  <div class="line-selector">
-    <div class="line-btn" id="lineBtn1" onclick="selectLine('BG:voz 1')">BG:VOZ 1</div>
-    <div class="line-btn" id="lineBtn2" onclick="selectLine('BG:voz 2')">BG:VOZ 2</div>
-  </div>
-  <div id="stationPickers" style="width:100%; display:none;">
+  <div id="stationPickers" style="width:100%;">
     <div class="plan-controls">
       <div class="input-group" style="position:relative;">
         <select id="fromPicker" class="plan-select" onchange="runPlanner()">
@@ -236,7 +174,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
           <option value="" disabled selected hidden>Odredišna stanica...</option>
         </select>
         <button class="swap-btn" onclick="swapStations()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
         </button>
       </div>
     </div>
@@ -245,51 +183,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 </div>
 
 <div id="lines-page" class="page">
-  <div class="lines-container">
-    <div class="line-section">
-      <div class="line-title">
-        <span class="line-dot" style="background: var(--accent-blue);"></span>
-        LINIJA 1
-      </div>
-      <div class="route-map">
-        <div class="route-step line-1-accent" onclick="quickView('batajnica')">Batajnica</div>
-        <div class="route-step line-1-accent" onclick="quickView('kamendin')">Kamendin</div>
-        <div class="route-step line-1-accent" onclick="quickView('zemun_polje')">Zemun Polje</div>
-        <div class="route-step line-1-accent" onclick="quickView('altina')">Altina</div>
-        <div class="route-step line-1-accent" onclick="quickView('zemun')">Zemun</div>
-        <div class="route-step line-1-accent" onclick="quickView('tosin_bunar')">Tosin Bunar</div>
-        <div class="route-step line-1-accent" onclick="quickView('novi_beograd')">Novi Beograd</div>
-        <div class="route-step line-1-accent" onclick="quickView('beograd_centar')">Beograd Centar</div>
-        <div class="route-step line-1-accent" onclick="quickView('karadjordjev_park')">Karadjordjev Park</div>
-        <div class="route-step line-1-accent" onclick="quickView('vukov_spomenik')">Vukov Spomenik</div>
-        <div class="route-step line-1-accent" onclick="quickView('pancevacki_most')">Pancevacki Most</div>
-        <div class="route-step line-1-accent" onclick="quickView('krnjaca_most')">Krnjaca Most</div>
-        <div class="route-step line-1-accent" onclick="quickView('krnjaca')">Krnjaca</div>
-        <div class="route-step line-1-accent" onclick="quickView('sebes')">Sebes</div>
-        <div class="route-step line-1-accent" onclick="quickView('ovca')">Ovca</div>
-      </div>
-    </div>
-    <div class="line-section">
-      <div class="line-title">
-        <span class="line-dot" style="background: var(--accent-orange);"></span>
-        LINIJA 2
-      </div>
-      <div class="route-map">
-        <div class="route-step line-2-accent" onclick="quickView('resnik')">Resnik</div>
-        <div class="route-step line-2-accent" onclick="quickView('kijevo')">Kijevo</div>
-        <div class="route-step line-2-accent" onclick="quickView('knezevac')">Knezevac</div>
-        <div class="route-step line-2-accent" onclick="quickView('rakovica')">Rakovica</div>
-        <div class="route-step line-2-accent" onclick="quickView('karadjordjev_park')">Karadjordjev Park</div>
-        <div class="route-step line-2-accent" onclick="quickView('beograd_centar')">Beograd Centar</div>
-        <div class="route-step line-2-accent" onclick="quickView('vukov_spomenik')">Vukov Spomenik</div>
-        <div class="route-step line-2-accent" onclick="quickView('pancevacki_most')">Pancevacki Most</div>
-        <div class="route-step line-2-accent" onclick="quickView('krnjaca_most')">Krnjaca Most</div>
-        <div class="route-step line-2-accent" onclick="quickView('krnjaca')">Krnjaca</div>
-        <div class="route-step line-2-accent" onclick="quickView('sebes')">Sebes</div>
-        <div class="route-step line-2-accent" onclick="quickView('ovca')">Ovca</div>
-      </div>
-    </div>
-  </div>
+  <div class="lines-container" id="linesList"></div>
 </div>
 
 <nav class="nav-bar">
@@ -309,8 +203,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 
 <script>
 let trainData = [];
-let selectedLine = null;
-
 const stationMap = {
   'batajnica': 'Batajnica', 'kamendin': 'Kamendin', 'zemun_polje': 'Zemun Polje',
   'altina': 'Altina', 'zemun': 'Zemun', 'tosin_bunar': 'Tosin Bunar',
@@ -320,104 +212,59 @@ const stationMap = {
   'krnjaca': 'Krnjaca', 'sebes': 'Sebes', 'ovca': 'Ovca',
   'resnik': 'Resnik', 'kijevo': 'Kijevo', 'knezevac': 'Knezevac', 'rakovica': 'Rakovica'
 };
-
-// List of all stations to show when planning, regardless of line button clicked
-const allStations = [
-  "Batajnica", "Kamendin", "Zemun Polje", "Altina", "Zemun", "Tosin Bunar", 
-  "Novi Beograd", "Beograd Centar", "Karadjordjev Park", "Vukov Spomenik", 
-  "Pancevacki Most", "Krnjaca Most", "Krnjaca", "Sebes", "Ovca",
-  "Resnik", "Kijevo", "Knezevac", "Rakovica"
-];
-
 const stationSlug = {};
 Object.entries(stationMap).forEach(([k,v]) => { stationSlug[v] = k; });
 
+const hubs = ['Beograd Centar', 'Karadjordjev Park', 'Vukov Spomenik', 'Pancevacki Most'];
+
 function normalize(name) {
   if (!name) return "";
-  return name.replace(/ \(Arr\)| \(Dep\)/g, '')
-             .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-             .replace(/đ/g, "dj")
-             .trim()
-             .toLowerCase();
+  return name.replace(/ \(Arr\)| \(Dep\)/g, '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "dj").trim().toLowerCase();
 }
 
 async function loadTrainData() {
   try {
     const response = await fetch('trains.json');
     trainData = await response.json();
+    populatePickers();
   } catch (e) { console.error("Error loading JSON", e); }
 }
 
-const getTimeNow = () => {
-  const now = new Date();
-  return now.getHours() * 60 + now.getMinutes();
-};
+function populatePickers() {
+  const sorted = Object.values(stationMap).sort();
+  const html = `<option value="" disabled selected hidden>Izaberi stanicu...</option>` + 
+               sorted.map(s => `<option value="${stationSlug[s]}">${s}</option>`).join('');
+  document.getElementById('stationPicker').innerHTML = html;
+  document.getElementById('fromPicker').innerHTML = html;
+  document.getElementById('toPicker').innerHTML = html;
+}
 
-const timeToMin = (t) => {
-  if (!t) return 0;
-  const [h, m] = t.split(':').map(Number);
-  return h * 60 + m;
-};
-
-const getLineColor = (lineName) => {
-  if (lineName && lineName.includes('1')) return 'var(--accent-blue)';
-  if (lineName && lineName.includes('2')) return 'var(--accent-orange)';
-  if (lineName && (lineName.includes('4') || lineName.toLowerCase().includes('lazarevac'))) return 'var(--accent-red)';
-  return 'white';
-};
+const getTimeNow = () => { const now = new Date(); return now.getHours() * 60 + now.getMinutes(); };
+const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const getLineColor = (l) => l?.includes('1') ? 'var(--accent-blue)' : (l?.includes('2') ? 'var(--accent-orange)' : 'var(--accent-red)');
 
 function updatePIDS(stationId) {
-  const body = document.getElementById('pidsBody');
-  const selectedStationName = stationMap[stationId];
+  const target = normalize(stationMap[stationId]);
   const nowMin = getTimeNow();
-  const target = normalize(selectedStationName);
-
-  document.getElementById('pidsDisplay').style.display = 'block';
-
   let directions = {};
   trainData.forEach(train => {
     const stop = train.stops.find(s => normalize(s.station) === target);
     if (stop) {
       const depMin = timeToMin(stop.departure);
-      const isNextDay = depMin < nowMin;
-      const sortScore = isNextDay ? depMin + 1440 : depMin;
-      
-      if (!directions[train.direction] || sortScore < directions[train.direction].score) {
-        directions[train.direction] = {
-          v: train.train_id, d: train.direction, t: stop.departure,
-          note: train.note || "",
-          score: sortScore
-        };
+      const score = depMin < nowMin ? depMin + 1440 : depMin;
+      if (!directions[train.direction] || score < directions[train.direction].score) {
+        directions[train.direction] = { v: train.train_id, d: train.direction, t: stop.departure, note: train.note || "", score };
       }
     }
   });
-
   const results = Object.values(directions).sort((a, b) => a.score - b.score);
-  let noteHtml = (results.length > 0 && results[0].note) ? `<div class="pids-announcement"><div class="marquee-text">NAPOMENA: ${results[0].note}</div></div>` : '';
-
-  body.innerHTML = noteHtml + (results.length > 0 ? results.map(dep => `
+  document.getElementById('pidsDisplay').style.display = 'block';
+  document.getElementById('pidsBody').innerHTML = (results.length > 0 ? results.map(dep => `
     <div class="pids-row">
       <div class="col-vnum">${dep.v}</div>
       <div class="col-dir">${dep.d.toUpperCase()}</div>
       <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
-    </div>`).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Nema podataka</div>');
-}
-
-/** * FIXED: Now populates with ALL stations so Rakovica -> Zemun is possible.
- */
-function selectLine(line) {
-  selectedLine = line;
-  document.getElementById('lineBtn1').className = 'line-btn' + (line === 'BG:voz 1' ? ' active-line1' : '');
-  document.getElementById('lineBtn2').className = 'line-btn' + (line === 'BG:voz 2' ? ' active-line2' : '');
-  
-  // Show ALL stations alphabetically or logically grouped
-  const makeOptions = (ph) => `<option value="" disabled selected hidden>${ph}</option>` + 
-    allStations.sort().map(s => `<option value="${stationSlug[s] || s}">${s}</option>`).join('');
-  
-  document.getElementById('fromPicker').innerHTML = makeOptions("Polazna stanica...");
-  document.getElementById('toPicker').innerHTML = makeOptions("Odredišna stanica...");
-  document.getElementById('stationPickers').style.display = 'block';
-  document.getElementById('plannerResults').innerHTML = '';
+    </div>`).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Nema polazaka</div>');
 }
 
 function runPlanner() {
@@ -425,62 +272,91 @@ function runPlanner() {
   const toId = document.getElementById('toPicker').value;
   if (!fromId || !toId || fromId === toId) return;
 
-  const targetFrom = normalize(stationMap[fromId] || fromId);
-  const targetTo = normalize(stationMap[toId] || toId);
+  const targetFrom = normalize(stationMap[fromId]);
+  const targetTo = normalize(stationMap[toId]);
   const nowMin = getTimeNow();
-
   let results = [];
-  
+
+  // 1. Direct
   trainData.forEach(train => {
     const sIdx = train.stops.findIndex(s => normalize(s.station) === targetFrom);
     const eIdx = train.stops.findIndex(s => normalize(s.station) === targetTo);
-
     if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-      results.push({
-        train, 
-        depTime: train.stops[sIdx].departure, 
-        arrTime: train.stops[eIdx].departure,
-        stops: train.stops.slice(sIdx, eIdx + 1),
-        depMin: timeToMin(train.stops[sIdx].departure),
-        isPast: timeToMin(train.stops[sIdx].departure) < nowMin
-      });
+      results.push({ type: 'direct', train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure, stops: train.stops.slice(sIdx, eIdx + 1), depMin: timeToMin(train.stops[sIdx].departure) });
     }
   });
 
+  // 2. Transfers
+  hubs.forEach(hubName => {
+    const targetHub = normalize(hubName);
+    if (targetHub === targetFrom || targetHub === targetTo) return;
+    const leg1s = trainData.filter(t => {
+      const s = t.stops.findIndex(st => normalize(st.station) === targetFrom);
+      const h = t.stops.findIndex(st => normalize(st.station) === targetHub);
+      return s !== -1 && h !== -1 && s < h;
+    });
+    const leg2s = trainData.filter(t => {
+      const h = t.stops.findIndex(st => normalize(st.station) === targetHub);
+      const e = t.stops.findIndex(st => normalize(st.station) === targetTo);
+      return h !== -1 && e !== -1 && h < e;
+    });
+
+    leg1s.forEach(t1 => {
+      const t1ArrMin = timeToMin(t1.stops.find(st => normalize(st.station) === targetHub).departure);
+      leg2s.forEach(t2 => {
+        const t2DepMin = timeToMin(t2.stops.find(st => normalize(st.station) === targetHub).departure);
+        const layover = t2DepMin - t1ArrMin;
+        if (layover >= 5 && layover <= 45) {
+          results.push({
+            type: 'transfer', hub: hubName, leg1: t1, leg2: t2,
+            depTime: t1.stops.find(st => normalize(st.station) === targetFrom).departure,
+            arrTime: t2.stops.find(st => normalize(st.station) === targetTo).departure,
+            depMin: timeToMin(t1.stops.find(st => normalize(st.station) === targetFrom).departure),
+            layover,
+            stops1: t1.stops.slice(t1.stops.findIndex(s => normalize(s.station) === targetFrom), t1.stops.findIndex(s => normalize(s.station) === targetHub) + 1),
+            stops2: t2.stops.slice(t2.stops.findIndex(s => normalize(s.station) === targetHub), t2.stops.findIndex(s => normalize(s.station) === targetTo) + 1)
+          });
+        }
+      });
+    });
+  });
+
   results.sort((a, b) => a.depMin - b.depMin);
-  renderPlanner(results);
+  renderPlanner(results, nowMin);
 }
 
-function renderPlanner(trips) {
+function renderPlanner(trips, nowMin) {
   const container = document.getElementById('plannerResults');
-  if (trips.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding:30px; opacity:0.5; font-size:0.9rem;">Nema direktnih polazaka.</div>`;
-    return;
-  }
+  if (trips.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema pronađenih ruta.</div>'; return; }
+  
   container.innerHTML = trips.map((trip, idx) => {
-    const dur = timeToMin(trip.arrTime) - trip.depMin;
-    const dotColor = getLineColor(trip.train.line);
-    const stopsHtml = trip.stops.map((s, si) => `
-      <div class="stop-row ${si === 0 ? 'stop-from' : (si === trip.stops.length-1 ? 'stop-to' : '')}">
-        <span class="stop-time">${s.departure}</span>
-        <span class="stop-name">${s.station}</span>
-      </div>`).join('');
-    
-    return `
-      <div class="trip-card ${trip.isPast ? 'past-trip' : ''}" onclick="expandTrip(${idx})">
+    const isPast = trip.depMin < nowMin;
+    if (trip.type === 'direct') {
+      const stopsHtml = trip.stops.map((s, si) => `<div class="stop-row ${si===0?'stop-from':(si===trip.stops.length-1?'stop-to':'')}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
+      return `<div class="trip-card ${isPast?'past-trip':''}" onclick="expandTrip(${idx})">
         <div class="trip-summary" id="trip-${idx}">
           <div class="trip-time">${trip.depTime}</div>
-          <div>
-            <div class="trip-dest">
-              <span class="line-dot" style="background:${dotColor}"></span>
-              ${trip.train.line.replace('BG:voz ', 'L')} / ${trip.train.train_id}
-            </div>
-            <div style="font-size:0.7rem; opacity:0.5;">Smer: ${trip.train.direction} • ⏱ ${dur} min</div>
-          </div>
+          <div class="trip-dest"><span class="line-dot" style="background:${getLineColor(trip.train.line)}"></span>${trip.train.train_id}<span class="badge badge-direct">DIREKTAN</span></div>
           <div class="trip-arr">${trip.arrTime}</div>
         </div>
         <div class="trip-details"><div class="stop-list">${stopsHtml}</div></div>
       </div>`;
+    } else {
+      const s1 = trip.stops1.map((s, si) => `<div class="stop-row ${si===0?'stop-from':''}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
+      const s2 = trip.stops2.map((s, si) => `<div class="stop-row ${si===trip.stops2.length-1?'stop-to':''}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
+      return `<div class="trip-card ${isPast?'past-trip':''}" onclick="expandTrip(${idx})">
+        <div class="trip-summary" id="trip-${idx}">
+          <div class="trip-time">${trip.depTime}</div>
+          <div class="trip-dest"><span class="line-dot" style="background:white"></span>Mixed<span class="badge badge-transfer">PRESEDANJE</span></div>
+          <div class="trip-arr">${trip.arrTime}</div>
+        </div>
+        <div class="trip-details">
+          <div class="stop-list">${s1}</div>
+          <div class="transfer-info">Izmena vozova: <b>${trip.hub}</b> (Pauza ${trip.layover} min)</div>
+          <div class="stop-list">${s2}</div>
+        </div>
+      </div>`;
+    }
   }).join('');
 }
 
@@ -503,15 +379,7 @@ function swapStations() {
   const v = f.value; f.value = t.value; t.value = v; runPlanner();
 }
 
-function quickView(id) {
-  document.getElementById('stationPicker').value = id;
-  updatePIDS(id);
-  goTo('monitor');
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadTrainData();
-});
+document.addEventListener('DOMContentLoaded', loadTrainData);
 </script>
 </body>
 </html>
