@@ -34,14 +34,16 @@ def scrape():
                 dep_time = cols[2].text.strip()
                 direction = cols[3].text.strip()
                 
-                # Logic to assign Line 1 or Line 2
-                line = "BG:voz 2" if any(x in direction for x in ["RESNIK", "MLADENOVAC", "LAZAREVAC"]) else "BG:voz 1"
-                
+                # Check if there is a note (usually in the last column or hidden)
+                # We'll grab the title attribute if it exists, or the text
+                note = cols[4].text.strip() if len(cols) > 4 else ""
+
                 if train_id not in master_trains:
                     master_trains[train_id] = {
                         "train_id": train_id,
                         "line": line,
                         "direction": direction,
+                        "note": note, # Store the note here
                         "stops": []
                     }
                 
