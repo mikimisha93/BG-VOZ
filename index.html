@@ -420,15 +420,19 @@ function updatePIDS(stationId) {
   document.getElementById('pidsDisplay').style.display = 'block';
 
   let directions = {};
+  let currentNote = ""; // Variable to hold the note
+
   trainData.forEach(train => {
     const stop = train.stops.find(s => normaliseStation(s.station) === selectedStationName);
     if (stop) {
       const depMin = timeToMin(stop.departure);
       const isNextDay = depMin < nowMin;
       const sortScore = isNextDay ? depMin + 1440 : depMin;
+      
       if (!directions[train.direction] || sortScore < directions[train.direction].score) {
         directions[train.direction] = {
           v: train.train_id, d: train.direction, t: stop.departure,
+          note: train.note || "", // Grab note from JSON
           score: sortScore, nextDay: isNextDay
         };
       }
@@ -436,13 +440,25 @@ function updatePIDS(stationId) {
   });
 
   const results = Object.values(directions).sort((a, b) => a.score - b.score);
-  body.innerHTML = results.length > 0 ? results.map(dep => `
+  
+  // Get the note from the first (soonest) train if it exists
+  if (results.length > 0 && results[0].note) {
+      currentNote = `НАПОМЕНА: ${results[0].note}`;
+  }
+
+  // Add the scrolling note at the top of the PIDS
+  let noteHtml = currentNote ? `
+    <div class="pids-announcement">
+        <div class="marquee-text">${currentNote}</div>
+    </div>` : '';
+
+  body.innerHTML = noteHtml + (results.length > 0 ? results.map(dep => `
     <div class="pids-row">
       <div class="col-vnum">${dep.v}</div>
-      <div class="col-dir">${dep.d.toUpperCase()} ${dep.nextDay ? '<span style="font-size:0.6rem; opacity:0.5;">(СУТРА)</span>' : ''}</div>
+      <div class="col-dir">${dep.d.toUpperCase()}</div>
       <div class="col-time">${dep.t.replace(':', '<span class="blink">:</span>')}</div>
     </div>
-  `).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Нема података</div>';
+  `).join('') : '<div style="padding:20px; text-align:center; opacity:0.5;">Нема података</div>');
 }
 
 function selectLine(line) {
