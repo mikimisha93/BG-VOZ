@@ -222,6 +222,9 @@ function normalize(name) {
   return name.replace(/ \(Arr\)| \(Dep\)/g, '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "dj").trim().toLowerCase();
 }
 
+const getTimeNow = () => { const now = new Date(); return now.getHours() * 60 + now.getMinutes(); };
+const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+
 async function loadTrainData() {
   try {
     const response = await fetch('trains.json');
@@ -238,9 +241,6 @@ function populatePickers() {
   document.getElementById('fromPicker').innerHTML = html;
   document.getElementById('toPicker').innerHTML = html;
 }
-
-const getTimeNow = () => { const now = new Date(); return now.getHours() * 60 + now.getMinutes(); };
-const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
 
 function updatePIDS(stationId) {
   const target = normalize(stationMap[stationId]);
@@ -270,74 +270,114 @@ function runPlanner() {
   const fromId = document.getElementById('fromPicker').value;
   const toId = document.getElementById('toPicker').value;
   if (!fromId || !toId || fromId === toId) return;
+
   const targetFrom = normalize(stationMap[fromId]);
   const targetTo = normalize(stationMap[toId]);
   const nowMin = getTimeNow();
   
-  let directResults = [];
-  let transferResults = [];
+  let directRoutes = [];
+  let transferRoutes = [];
 
-  // Direct trips
+  // 1. FIND DIRECT TRIPS
   trainData.forEach(train => {
     const sIdx = train.stops.findIndex(s => normalize(s.station) === targetFrom);
     const eIdx = train.stops.findIndex(s => normalize(s.station) === targetTo);
+    
     if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-      directResults.push({
-        type: 'direct', train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure,
-        stops: train.stops.slice(sIdx, eIdx + 1), depMin: timeToMin(train.stops[sIdx].departure)
+      directRoutes.push({
+        type: 'direct',
+        train: train,
+        depTime: train.stops[sIdx].departure,
+        arrTime: train.stops[eIdx].departure,
+        depMin: timeToMin(train.stops[sIdx].departure),
+        arrMin: timeToMin(train.stops[eIdx].departure),
+        stops: train.stops.slice(sIdx, eIdx + 1)
       });
     }
   });
 
-  // Transfer trips logic
-  hubs.forEach(hubName => {
-    const targetHub = normalize(hubName);
-    if (targetHub === targetFrom || targetHub === targetTo) return;
+  // 2. FIND TRANSFERS (Only if no better direct train exists at that time)
+  const possibleLeg1 = trainData.filter(t => t.stops.some(s => normalize(s.station) === targetFrom));
+  const possibleLeg2 = trainData.filter(t => t.stops.some(s => normalize(s.station) === targetTo));
 
-    const leg1s = trainData.filter(t => {
-      const s = t.stops.findIndex(st => normalize(st.station) === targetFrom);
-      const h = t.stops.findIndex(st => normalize(st.station) === targetHub);
-      return s !== -1 && h !== -1 && s < h;
-    });
+  possibleLeg1.forEach(t1 => {
+    const sIdx = t1.stops.findIndex(s => normalize(s.station) === targetFrom);
+    const depTime = t1.stops[sIdx].departure;
+    const depMin = timeToMin(depTime);
 
-    const leg2s = trainData.filter(t => {
-      const h = t.stops.findIndex(st => normalize(st.station) === targetHub);
-      const e = t.stops.findIndex(st => normalize(st.station) === targetTo);
-      return h !== -1 && e !== -1 && h < e;
-    });
+    // If a direct train leaves at this exact same time, skip transfer search
+    if (directRoutes.some(d => d.depMin === depMin)) return;
 
-    leg1s.forEach(t1 => {
-      const t1ArrMin = timeToMin(t1.stops.find(st => normalize(st.station) === targetHub).departure);
-      leg2s.forEach(t2 => {
-        const t2DepMin = timeToMin(t2.stops.find(st => normalize(st.station) === targetHub).departure);
-        const layover = t2DepMin - t1ArrMin;
-        if (layover >= 4 && layover <= 40) {
-          transferResults.push({
-            type: 'transfer', hub: hubName, leg1: t1, leg2: t2, 
-            depTime: t1.stops.find(s => normalize(s.station) === targetFrom).departure,
-            arrTime: t2.stops.find(s => normalize(s.station) === targetTo).departure,
-            depMin: timeToMin(t1.stops.find(s => normalize(s.station) === targetFrom).departure),
-            layover,
-            stops1: t1.stops.slice(t1.stops.findIndex(s => normalize(s.station) === targetFrom), t1.stops.findIndex(s => normalize(s.station) === targetHub) + 1),
-            stops2: t2.stops.slice(t2.stops.findIndex(s => normalize(s.station) === targetHub), t2.stops.findIndex(s => normalize(s.station) === targetTo) + 1)
-          });
+    let bestTransferForThisTrain = null;
+
+    possibleLeg2.forEach(t2 => {
+      if (t1.train_id === t2.train_id) return;
+      const eIdx = t2.stops.findIndex(s => normalize(s.station) === targetTo);
+
+      for (let hubName of hubs) {
+        const targetHub = normalize(hubName);
+        const hIdx1 = t1.stops.findIndex(s => normalize(s.station) === targetHub);
+        const hIdx2 = t2.stops.findIndex(s => normalize(s.station) === targetHub);
+
+        if (hIdx1 !== -1 && hIdx2 !== -1 && sIdx < hIdx1 && hIdx2 < eIdx) {
+          const arrHubMin = timeToMin(t1.stops[hIdx1].departure);
+          const depHubMin = timeToMin(t2.stops[hIdx2].departure);
+          const layover = depHubMin - arrHubMin;
+
+          // Transfer window: 3 to 45 mins
+          if (layover >= 3 && layover <= 45) {
+            const totalArrMin = timeToMin(t2.stops[eIdx].departure);
+            
+            if (!bestTransferForThisTrain || totalArrMin < bestTransferForThisTrain.arrMin) {
+              bestTransferForThisTrain = {
+                type: 'transfer',
+                hub: hubName,
+                leg1: t1,
+                leg2: t2,
+                depTime: depTime,
+                arrTime: t2.stops[eIdx].departure,
+                depMin: depMin,
+                arrMin: totalArrMin,
+                layover: layover,
+                stops1: t1.stops.slice(sIdx, hIdx1 + 1),
+                stops2: t2.stops.slice(hIdx2, eIdx + 1)
+              };
+            }
+          }
         }
-      });
+      }
     });
+    if (bestTransferForThisTrain) transferRoutes.push(bestTransferForThisTrain);
   });
 
-  const allTrips = [...directResults, ...transferResults].sort((a, b) => a.depMin - b.depMin);
-  renderPlanner(allTrips, nowMin);
+  const allRoutes = [...directRoutes, ...transferRoutes].sort((a, b) => a.depMin - b.depMin);
+  
+  // Final filter: If a direct route gets you there earlier/same time as a transfer, kill the transfer
+  const cleanedRoutes = allRoutes.filter((route, index) => {
+    for (let i = 0; i < index; i++) {
+        if (allRoutes[i].arrMin <= route.arrMin && allRoutes[i].depMin >= route.depMin && allRoutes[i].type === 'direct') {
+            if (route.type === 'transfer') return false; 
+        }
+    }
+    return true;
+  });
+
+  renderPlanner(cleanedRoutes, nowMin);
 }
 
 function renderPlanner(trips, nowMin) {
   const container = document.getElementById('plannerResults');
-  if (trips.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>'; return; }
+  if (trips.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>';
+    return;
+  }
   
   container.innerHTML = trips.map((trip, idx) => {
     const isDirect = trip.type === 'direct';
+    
+    // Header Info - What shows on the card before expanding
     const trainID = isDirect ? trip.train.train_id : `${trip.leg1.train_id} ➜ ${trip.leg2.train_id}`;
-    const direction = isDirect ? trip.train.direction : `Preko: ${trip.hub}`;
+    const topDirection = isDirect ? trip.train.direction : `presedanje: ${trip.hub}`;
 
     const generateStopsHtml = (stops) => stops.map((s, i) => {
       const sMin = timeToMin(s.departure);
@@ -355,15 +395,27 @@ function renderPlanner(trips, nowMin) {
           <div class="trip-time">${trip.depTime}</div>
           <div class="trip-dest">
             <span style="font-size: 0.85rem; font-weight:800;">${trainID}</span>
-            <span style="font-size: 0.6rem; opacity: 0.6; margin-top:2px;">SMER: ${direction.toUpperCase()}</span>
+            <span style="font-size: 0.6rem; opacity: 0.6; margin-top:2px;">${topDirection.toUpperCase()}</span>
           </div>
           <div class="trip-arr">${trip.arrTime}</div>
         </div>
         <div class="trip-details">
-          ${isDirect ? generateStopsHtml(trip.stops) : `
+          ${isDirect ? `
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold; letter-spacing:0.05em;">SMER: ${trip.train.direction.toUpperCase()}</div>
+            ${generateStopsHtml(trip.stops)}
+          ` : `
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold; letter-spacing:0.05em;">
+                 (${trip.leg1.train_id}) SMER: ${trip.leg1.direction.toUpperCase()}
+            </div>
             ${generateStopsHtml(trip.stops1)}
-            <div style="padding: 10px; color: var(--accent-yellow); font-size: 0.65rem; text-align: center; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); margin: 5px 0;">
-              IZMENA: ${trip.hub} (${trip.layover} min)
+            
+            <div style="padding: 12px; color: var(--accent-yellow); font-size: 0.7rem; text-align: center; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); margin: 8px 0; background: rgba(255,215,0,0.05); border-radius: 10px;">
+              <span style="display:block; font-weight:800; letter-spacing:0.05em;">Presedanje: ${trip.hub.toUpperCase()}</span>
+              <span style="font-size: 0.6rem; opacity: 0.8;">Čekanje: ${trip.layover} min</span>
+            </div>
+
+            <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold; letter-spacing:0.05em;">
+                  (${trip.leg2.train_id}) SMER: ${trip.leg2.direction.toUpperCase()}
             </div>
             ${generateStopsHtml(trip.stops2)}
           `}
