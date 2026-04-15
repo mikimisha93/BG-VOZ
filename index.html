@@ -85,6 +85,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   width: 110px; 
   height: 110px; 
   border-radius: 10px; 
+  /* We remove mix-blend-mode because the API generates proper colors */
   filter: brightness(1.1); 
 }
 .qr-text { 
@@ -108,22 +109,10 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .trip-card.past-trip { opacity: 0.38; }
 .trip-summary { padding: 18px 20px; display: grid; grid-template-columns: 70px 1fr 60px; align-items: center; cursor: pointer; gap: 4px; }
 .trip-time { font-family: monospace; font-weight: 800; font-size: 1.2rem; color: var(--accent-yellow); }
-.trip-dest { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; display: flex; flex-direction: column; justify-content: center; }
+.trip-dest { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; }
 .trip-arr { font-family: monospace; font-size: 0.85rem; color: rgba(255,255,255,0.5); text-align: right; }
 .trip-details { max-height: 0; padding: 0 20px; opacity: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; background: rgba(0,0,0,0.15); }
 .trip-card.expanded .trip-details { max-height: 800px; padding: 16px 20px; opacity: 1; border-top: 1px solid var(--glass-border); }
-
-/* LIVE Progress Dot */
-.live-dot-mini {
-  display: inline-block; width: 8px; height: 8px; background: #4CD964; 
-  border-radius: 50%; margin-left: 10px; box-shadow: 0 0 10px #4CD964;
-  animation: pulse 1.5s infinite;
-}
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-.stop-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; font-size: 0.82rem; font-family: monospace; }
-.stop-time { color: var(--accent-yellow); font-weight: bold; min-width: 44px; }
-.stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -143,6 +132,7 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     <div class="qr-container">
       <div class="qr-card">
         <img id="pwa-qr" src="" alt="PWA" class="qr-image">
+        <p class="qr-text">SKENIRAJ ZA PWA</p>
       </div>
     </div>
   </main>
@@ -211,9 +201,11 @@ Object.entries(stationMap).forEach(([k,v]) => { stationSlug[v] = k; });
 
 const hubs = ['Beograd Centar', 'Karadjordjev Park', 'Vukov Spomenik', 'Pancevacki Most'];
 
+// QR Generation Function
 function generateQRCode() {
-  const pwaUrl = window.location.href;
+  const pwaUrl = window.location.href; // Uses current URL or set manually
   const qrElement = document.getElementById('pwa-qr');
+  // API settings: White foreground (#ffffff), Transparent background (qzone=1)
   qrElement.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pwaUrl)}&color=ffffff&bgcolor=333333`;
 }
 
@@ -221,9 +213,6 @@ function normalize(name) {
   if (!name) return "";
   return name.replace(/ \(Arr\)| \(Dep\)/g, '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "dj").trim().toLowerCase();
 }
-
-const getTimeNow = () => { const now = new Date(); return now.getHours() * 60 + now.getMinutes(); };
-const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
 
 async function loadTrainData() {
   try {
@@ -241,6 +230,10 @@ function populatePickers() {
   document.getElementById('fromPicker').innerHTML = html;
   document.getElementById('toPicker').innerHTML = html;
 }
+
+const getTimeNow = () => { const now = new Date(); return now.getHours() * 60 + now.getMinutes(); };
+const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const getLineColor = (l) => l?.includes('1') ? 'var(--accent-blue)' : (l?.includes('2') ? 'var(--accent-orange)' : 'var(--accent-red)');
 
 function updatePIDS(stationId) {
   const target = normalize(stationMap[stationId]);
@@ -270,148 +263,42 @@ function runPlanner() {
   const fromId = document.getElementById('fromPicker').value;
   const toId = document.getElementById('toPicker').value;
   if (!fromId || !toId || fromId === toId) return;
-
   const targetFrom = normalize(stationMap[fromId]);
   const targetTo = normalize(stationMap[toId]);
   const nowMin = getTimeNow();
-  
-  let directRoutes = [];
-  let transferRoutes = [];
-
-  // 1. FIND DIRECT TRIPS
+  let directResults = [];
   trainData.forEach(train => {
     const sIdx = train.stops.findIndex(s => normalize(s.station) === targetFrom);
     const eIdx = train.stops.findIndex(s => normalize(s.station) === targetTo);
-    
     if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-      directRoutes.push({
-        type: 'direct',
-        train: train,
-        depTime: train.stops[sIdx].departure,
-        arrTime: train.stops[eIdx].departure,
-        depMin: timeToMin(train.stops[sIdx].departure),
-        arrMin: timeToMin(train.stops[eIdx].departure),
-        stops: train.stops.slice(sIdx, eIdx + 1)
+      directResults.push({
+        type: 'direct', train, depTime: train.stops[sIdx].departure, arrTime: train.stops[eIdx].departure,
+        stops: train.stops.slice(sIdx, eIdx + 1), depMin: timeToMin(train.stops[sIdx].departure)
       });
     }
   });
-
-  // 2. FIND TRANSFERS (Only if no better direct train exists at that time)
-  const possibleLeg1 = trainData.filter(t => t.stops.some(s => normalize(s.station) === targetFrom));
-  const possibleLeg2 = trainData.filter(t => t.stops.some(s => normalize(s.station) === targetTo));
-
-  possibleLeg1.forEach(t1 => {
-    const sIdx = t1.stops.findIndex(s => normalize(s.station) === targetFrom);
-    const depTime = t1.stops[sIdx].departure;
-    const depMin = timeToMin(depTime);
-
-    // If a direct train leaves at this exact same time, skip transfer search
-    if (directRoutes.some(d => d.depMin === depMin)) return;
-
-    let bestTransferForThisTrain = null;
-
-    possibleLeg2.forEach(t2 => {
-      if (t1.train_id === t2.train_id) return;
-      const eIdx = t2.stops.findIndex(s => normalize(s.station) === targetTo);
-
-      for (let hubName of hubs) {
-        const targetHub = normalize(hubName);
-        const hIdx1 = t1.stops.findIndex(s => normalize(s.station) === targetHub);
-        const hIdx2 = t2.stops.findIndex(s => normalize(s.station) === targetHub);
-
-        if (hIdx1 !== -1 && hIdx2 !== -1 && sIdx < hIdx1 && hIdx2 < eIdx) {
-          const arrHubMin = timeToMin(t1.stops[hIdx1].departure);
-          const depHubMin = timeToMin(t2.stops[hIdx2].departure);
-          const layover = depHubMin - arrHubMin;
-
-          // Transfer window: 3 to 45 mins
-          if (layover >= 3 && layover <= 45) {
-            const totalArrMin = timeToMin(t2.stops[eIdx].departure);
-            
-            if (!bestTransferForThisTrain || totalArrMin < bestTransferForThisTrain.arrMin) {
-              bestTransferForThisTrain = {
-                type: 'transfer',
-                hub: hubName,
-                leg1: t1,
-                leg2: t2,
-                depTime: depTime,
-                arrTime: t2.stops[eIdx].departure,
-                depMin: depMin,
-                arrMin: totalArrMin,
-                layover: layover,
-                stops1: t1.stops.slice(sIdx, hIdx1 + 1),
-                stops2: t2.stops.slice(hIdx2, eIdx + 1)
-              };
-            }
-          }
-        }
-      }
-    });
-    if (bestTransferForThisTrain) transferRoutes.push(bestTransferForThisTrain);
-  });
-
-  const allRoutes = [...directRoutes, ...transferRoutes].sort((a, b) => a.depMin - b.depMin);
-  
-  // Final filter: If a direct route gets you there earlier/same time as a transfer, kill the transfer
-  const cleanedRoutes = allRoutes.filter((route, index) => {
-    for (let i = 0; i < index; i++) {
-        if (allRoutes[i].arrMin <= route.arrMin && allRoutes[i].depMin >= route.depMin && allRoutes[i].type === 'direct') {
-            if (route.type === 'transfer') return false; 
-        }
-    }
-    return true;
-  });
-
-  renderPlanner(cleanedRoutes, nowMin);
+  renderPlanner(directResults.sort((a,b) => a.depMin - b.depMin), nowMin);
 }
 
 function renderPlanner(trips, nowMin) {
   const container = document.getElementById('plannerResults');
   if (trips.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>'; return; }
-  
   container.innerHTML = trips.map((trip, idx) => {
-    const isDirect = trip.type === 'direct';
-    const trainID = isDirect ? trip.train.train_id : `${trip.leg1.train_id} ➜ ${trip.leg2.train_id}`;
-    const direction = isDirect ? trip.train.direction : `Preko: ${trip.hub}`;
-
-    const generateStopsHtml = (stops) => stops.map((s, i) => {
-      const sMin = timeToMin(s.departure);
-      const isLive = nowMin >= sMin && (i === stops.length - 1 || nowMin < timeToMin(stops[i+1].departure));
-      return `
-        <div class="stop-row">
-          <span class="stop-time">${s.departure}</span>
-          <span class="stop-name">${s.station} ${isLive ? '<span class="live-dot-mini"></span>' : ''}</span>
-        </div>`;
-    }).join('');
-
-    return `
-      <div class="trip-card" onclick="expandTrip(${idx})">
-        <div class="trip-summary" id="trip-${idx}">
-          <div class="trip-time">${trip.depTime}</div>
-          <div class="trip-dest">
-            <span style="font-size: 0.85rem; font-weight:800;">${trainID}</span>
-            <span style="font-size: 0.6rem; opacity: 0.6; margin-top:2px;">SMER: ${direction.toUpperCase()}</span>
-          </div>
-          <div class="trip-arr">${trip.arrTime}</div>
-        </div>
-        <div class="trip-details">
-          ${isDirect ? generateStopsHtml(trip.stops) : `
-            ${generateStopsHtml(trip.stops1)}
-            <div style="padding: 10px; color: var(--accent-yellow); font-size: 0.65rem; text-align: center; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); margin: 5px 0;">
-              IZMENA: ${trip.hub} (${trip.layover} min)
-            </div>
-            ${generateStopsHtml(trip.stops2)}
-          `}
-        </div>
-      </div>`;
+    const stopsHtml = trip.stops.map((s, si) => `<div class="stop-row ${si===0?'stop-from':(si===trip.stops.length-1?'stop-to':'')}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
+    return `<div class="trip-card" onclick="expandTrip(${idx})">
+      <div class="trip-summary" id="trip-${idx}">
+        <div class="trip-time">${trip.depTime}</div>
+        <div class="trip-dest">${trip.train.train_id}</div>
+        <div class="trip-arr">${trip.arrTime}</div>
+      </div>
+      <div class="trip-details"><div class="stop-list">${stopsHtml}</div></div>
+    </div>`;
   }).join('');
 }
 
 function expandTrip(idx) {
   const el = document.getElementById('trip-' + idx).parentElement;
-  const alreadyExpanded = el.classList.contains('expanded');
-  document.querySelectorAll('.trip-card').forEach(c => c.classList.remove('expanded'));
-  if (!alreadyExpanded) el.classList.add('expanded');
+  el.classList.toggle('expanded');
 }
 
 function goTo(screen) {
