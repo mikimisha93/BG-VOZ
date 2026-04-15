@@ -2,19 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import unicodedata
-import urllib.parse
 from datetime import datetime
 
-# UPDATED IDS AND NAMES
-STATIONS = {
-    "Batajnica": "16204", "Kamendin": "16203", "Zemun Polje": "16053", 
-    "Altina": "16059", "Zemun": "16052", "Tosin Bunar": "16202", 
-    "Novi Beograd": "16051", "Beograd Centar": "16050", 
-    "Karadjordjev Park": "16208", "Vukov Spomenik": "16210", 
-    "Pancevacki Most": "16013", "Krnjaca Most": "16214", 
-    "Krnjaca": "16213", "Sebes": "16215", "Ovca": "16212",
-    "Resnik": "16101", "Kijevo": "16207", "Knezevac": "16206", "Rakovica": "16001"
-}
+# We will scrape the main line routes to catch all trains passing through
+ROUTES = [
+    {"from": "16204", "to": "16212", "name": "Line 1: Batajnica-Ovca"},
+    {"from": "16212", "to": "16204", "name": "Line 1: Ovca-Batajnica"},
+    {"from": "16101", "to": "16212", "name": "Line 2: Resnik-Ovca"},
+    {"from": "16212", "to": "16101", "name": "Line 2: Ovca-Resnik"}
+]
 
 today = datetime.now().strftime("%d.%m.%Y")
 master_trains = {}
@@ -26,80 +22,61 @@ def normalize_text(text):
                   if unicodedata.category(c) != 'Mn')
 
 def scrape():
-    # Use a session to persist cookies like a real browser
     session = requests.Session()
+    # Using an even more generic header set
     session.headers.update({
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'sr,en-US;q=0.7,en;q=0.3',
-        'Referer': 'https://w3.srbvoz.rs/redvoznje/',
-        'Connection': 'keep-alive'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
     })
 
-    # Site-specific Cyrillic map for URLs
-    cyr_names = {
-        "Batajnica": "БАТАЈНИЦА", "Kamendin": "КАМЕНДИН", "Zemun Polje": "ЗЕМУН%20ПОЉЕ",
-        "Altina": "АЛТИНА", "Zemun": "ЗЕМУН", "Tosin Bunar": "ТОШИН%20БУНАР",
-        "Novi Beograd": "НОВИ%20БЕОГРАД", "Beograd Centar": "БЕОГРАД%20ЦЕНТАР",
-        "Karadjordjev Park": "КАРАЂОРЂЕВ%20ПАРК", "Vukov Spomenik": "ВУКОВ%20СПОМЕНИК",
-        "Pancevacki Most": "ПАНЧЕВАЧКИ%20МОСТ", "Krnjaca Most": "КРЊАЧА%20МОСТ",
-        "Krnjaca": "КРЊАЧА", "Sebes": "СЕБЕШ", "Ovca": "ОВЧА",
-        "Resnik": "РЕСНИК", "Kijevo": "КИЈЕВО", "Knezevac": "КНЕЖЕВАЦ", "Rakovica": "РАКОВИЦА"
-    }
-
-    for name, s_id in STATIONS.items():
-        url_part = cyr_names.get(name)
-        url = f"https://w3.srbvoz.rs/redvoznje//stanicni/{url_part}/{s_id}/{today}/0000/polazak/999/sr"
+    for route in ROUTES:
+        print(f"Checking Route: {route['name']}...")
+        # This is the SEARCH URL, which is usually less restricted than the MONITOR URL
+        url = f"https://w3.srbvoz.rs/redvoznje//direktni/{route['from']}/{route['to']}/{today}/0000/sr"
         
         try:
-            print(f"Syncing {name}...")
-            response = session.get(url, timeout=20)
+            response = session.get(url, timeout=30)
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # If site returns nothing, the rows will be empty
+            # Search results use a different table structure
+            # We look for the train ID and the details link
             rows = soup.find_all('tr')
-            found_count = 0
             
             for row in rows:
                 cols = row.find_all('td')
-                if len(cols) < 4: continue
+                if len(cols) < 5: continue
                 
-                # Check for train ID (usually 2nd column)
-                raw_id = cols[1].get_text(strip=True)
-                if not raw_id.isdigit(): continue
+                # In search: Col 0 is Train Type/ID, Col 1 is Dep, Col 2 is Arr
+                train_info = cols[0].get_text(strip=True)
                 
-                # Filter for BG:Voz numbers (80xx, 81xx, or check first column text)
-                raw_type = cols[0].get_text(strip=True).upper()
-                if any(x in raw_type for x in ["BG", "БГ"]) or raw_id.startswith(('80', '81')):
-                    dep_time = cols[2].get_text(strip=True)
-                    direction = normalize_text(cols[3].get_text(strip=True).upper())
-                    
-                    line = "BG:voz 2" if any(k in direction for k in ["RESNIK", "MLADENOVAC", "LAZAREVAC", "REZNIK"]) else "BG:voz 1"
+                if "BG:VOZ" in train_info.upper() or "БГ:ВОЗ" in train_info.upper():
+                    # Extract the 4-digit ID
+                    train_id = "".join(filter(str.isdigit, train_info))
+                    if not train_id: continue
 
-                    if raw_id not in master_trains:
-                        master_trains[raw_id] = {
-                            "train_id": raw_id,
-                            "line": line,
-                            "direction": direction,
+                    dep_time = cols[1].get_text(strip=True)
+                    arrival_time = cols[2].get_text(strip=True)
+                    
+                    if train_id not in master_trains:
+                        master_trains[train_id] = {
+                            "train_id": train_id,
+                            "line": "BG:voz 2" if "Line 2" in route['name'] else "BG:voz 1",
+                            "direction": "OVCA" if route['to'] == "16212" else ("BATAJNICA" if route['to'] == "16204" else "RESNIK"),
                             "stops": []
                         }
                     
-                    master_trains[raw_id]["stops"].append({"station": name, "departure": dep_time})
-                    found_count += 1
-            
-            print(f"  -> Found {found_count} trains.")
+                    # Note: Search results only give start and end. 
+                    # This is a fallback to at least show the train exists.
+                    print(f"  -> Found Train {train_id}")
 
         except Exception as e:
             print(f"  -> Error: {e}")
 
+    # Save data
     output = list(master_trains.values())
-    for train in output:
-        train["stops"].sort(key=lambda x: x["departure"])
-
     with open('trains.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=4, ensure_ascii=False)
     
-    print(f"\nCOMPLETED: {len(output)} trains found.")
+    print(f"\nFinal count: {len(output)} trains found via Search Method.")
 
 if __name__ == "__main__":
     scrape()
