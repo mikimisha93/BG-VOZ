@@ -405,17 +405,17 @@ function renderPlanner(trips, nowMin) {
             ${generateStopsHtml(trip.stops)}
           ` : `
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold; letter-spacing:0.05em;">
-                PRVI VOZ (${trip.leg1.train_id}) SMER: ${trip.leg1.direction.toUpperCase()}
+                 (${trip.leg1.train_id}) SMER: ${trip.leg1.direction.toUpperCase()}
             </div>
             ${generateStopsHtml(trip.stops1)}
             
             <div style="padding: 12px; color: var(--accent-yellow); font-size: 0.7rem; text-align: center; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); margin: 8px 0; background: rgba(255,215,0,0.05); border-radius: 10px;">
-              <span style="display:block; font-weight:800; letter-spacing:0.05em;">PRESEDA SE NA: ${trip.hub.toUpperCase()}</span>
-              <span style="font-size: 0.6rem; opacity: 0.8;">PAUZA: ${trip.layover} min</span>
+              <span style="display:block; font-weight:800; letter-spacing:0.05em;">Presedanje: ${trip.hub.toUpperCase()}</span>
+              <span style="font-size: 0.6rem; opacity: 0.8;">Čekanje: ${trip.layover} min</span>
             </div>
 
             <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: bold; letter-spacing:0.05em;">
-                DRUGI VOZ (${trip.leg2.train_id}) SMER: ${trip.leg2.direction.toUpperCase()}
+                  (${trip.leg2.train_id}) SMER: ${trip.leg2.direction.toUpperCase()}
             </div>
             ${generateStopsHtml(trip.stops2)}
           `}
