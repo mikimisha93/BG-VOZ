@@ -1074,5 +1074,51 @@
       {"station": "Resnik", "departure": "21:56"}, {"station": "Rakovica", "departure": "22:05"},
       {"station": "Beograd Centar", "departure": "22:15"}
     ]
+  },
+  {
+    "train_id": "7900",
+    "line": "BG:voz 3",
+    "direction": "MLADENOVAC",
+    "stops": [
+      {"station": "Beograd Centar", "departure": "04:22"}, {"station": "Rakovica", "departure": "04:32"},
+      {"station": "Resnik", "departure": "04:42"}, {"station": "Pinosava", "departure": "04:49"},
+      {"station": "Ripanj", "departure": "05:00"}, {"station": "Ralja", "departure": "05:18"},
+      {"station": "Sopot Kosmajski", "departure": "05:32"}, {"station": "Mladenovac", "departure": "05:45"}
+    ]
+  },
+  {
+    "train_id": "7901",
+    "line": "BG:voz 3",
+    "direction": "BEOGRAD CENTAR",
+    "stops": [
+      {"station": "Mladenovac", "departure": "06:10"}, {"station": "Sopot Kosmajski", "departure": "06:23"},
+      {"station": "Ralja", "departure": "06:37"}, {"station": "Ripanj", "departure": "06:55"},
+      {"station": "Resnik", "departure": "07:13"}, {"station": "Rakovica", "departure": "07:22"},
+      {"station": "Beograd Centar", "departure": "07:32"}
+    ]
+  },
+  {
+    "train_id": "8212",
+    "line": "BG:voz 4",
+    "direction": "OVCA",
+    "stops": [
+      {"station": "Lazarevac", "departure": "19:20"}, {"station": "Vreoci", "departure": "19:27"},
+      {"station": "Stepojevac", "departure": "19:35"}, {"station": "Barajevo", "departure": "19:48"},
+      {"station": "Resnik", "departure": "20:06"}, {"station": "Rakovica", "departure": "20:15"},
+      {"station": "Beograd Centar", "departure": "20:25"}, {"station": "Vukov Spomenik", "departure": "20:33"},
+      {"station": "Ovca", "departure": "20:50"}
+    ]
+  },
+  {
+    "train_id": "8214",
+    "line": "BG:voz 4",
+    "direction": "BEOGRAD CENTAR",
+    "stops": [
+      {"station": "Lazarevac", "departure": "21:15"}, {"station": "Vreoci", "departure": "21:22"},
+      {"station": "Stepojevac", "departure": "21:30"}, {"station": "Barajevo", "departure": "21:43"},
+      {"station": "Resnik", "departure": "22:01"}, {"station": "Rakovica", "departure": "22:10"},
+      {"station": "Beograd Centar", "departure": "22:20"}
+    ]
   }
 ]
+
