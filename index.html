@@ -85,8 +85,8 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   width: 110px; 
   height: 110px; 
   border-radius: 10px; 
-  mix-blend-mode: screen; 
-  filter: brightness(1.2); 
+  /* We remove mix-blend-mode because the API generates proper colors */
+  filter: brightness(1.1); 
 }
 .qr-text { 
   font-size: 0.6rem; 
@@ -113,23 +113,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
 .trip-arr { font-family: monospace; font-size: 0.85rem; color: rgba(255,255,255,0.5); text-align: right; }
 .trip-details { max-height: 0; padding: 0 20px; opacity: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; background: rgba(0,0,0,0.15); }
 .trip-card.expanded .trip-details { max-height: 800px; padding: 16px 20px; opacity: 1; border-top: 1px solid var(--glass-border); }
-
-/* Transfer Badge */
-.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 900; margin-left: 5px; vertical-align: middle; }
-.badge-direct { background: rgba(255,255,255,0.15); color: white; }
-.badge-transfer { background: var(--accent-yellow); color: black; }
-
-.line-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-
-/* Stop list */
-.stop-list { display: flex; flex-direction: column; gap: 0; }
-.stop-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; font-size: 0.82rem; font-family: monospace; border-left: 2px solid rgba(255,255,255,0.12); padding-left: 14px; position: relative; }
-.stop-row::before { content: ''; position: absolute; left: -5px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; background: #1a0a28; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; z-index: 2; }
-.stop-row.stop-from::before, .stop-row.stop-to::before { width: 11px; height: 11px; left: -6px; border-color: var(--accent-yellow); background: #1a0a28; }
-.stop-time { color: var(--accent-yellow); font-weight: bold; min-width: 44px; }
-.stop-name { color: white; font-size: 0.75rem; text-transform: uppercase; }
-
-.transfer-info { padding: 10px; margin: 10px 0; background: rgba(255,215,0,0.1); border-radius: 10px; border: 1px dashed var(--accent-yellow); font-size: 0.75rem; text-align: center; }
 </style>
 </head>
 <body>
@@ -148,8 +131,8 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
     
     <div class="qr-container">
       <div class="qr-card">
-        <img src="qr-code.png" alt="PWA" class="qr-image">
-        <p class="qr-text">mikimisha93</p>
+        <img id="pwa-qr" src="" alt="PWA" class="qr-image">
+       
       </div>
     </div>
   </main>
@@ -165,11 +148,6 @@ h1 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; }
   </div>
   <div id="pidsDisplay" style="display:none; width: 100%; padding: 0 20px; margin-top:15px;">
     <div class="pids-board">
-      <div class="pids-header">
-        <div class="col-vnum">VOZ</div>
-        <div class="col-dir">SMER</div>
-        <div class="col-time">VREME</div>
-      </div>
       <div id="pidsBody"></div>
     </div>
   </div>
@@ -222,6 +200,14 @@ const stationSlug = {};
 Object.entries(stationMap).forEach(([k,v]) => { stationSlug[v] = k; });
 
 const hubs = ['Beograd Centar', 'Karadjordjev Park', 'Vukov Spomenik', 'Pancevacki Most'];
+
+// QR Generation Function
+function generateQRCode() {
+  const pwaUrl = window.location.href; // Uses current URL or set manually
+  const qrElement = document.getElementById('pwa-qr');
+  // API settings: White foreground (#ffffff), Transparent background (qzone=1)
+  qrElement.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pwaUrl)}&color=ffffff&bgcolor=333333`;
+}
 
 function normalize(name) {
   if (!name) return "";
@@ -277,14 +263,10 @@ function runPlanner() {
   const fromId = document.getElementById('fromPicker').value;
   const toId = document.getElementById('toPicker').value;
   if (!fromId || !toId || fromId === toId) return;
-
   const targetFrom = normalize(stationMap[fromId]);
   const targetTo = normalize(stationMap[toId]);
   const nowMin = getTimeNow();
-  
   let directResults = [];
-  let transferResults = [];
-
   trainData.forEach(train => {
     const sIdx = train.stops.findIndex(s => normalize(s.station) === targetFrom);
     const eIdx = train.stops.findIndex(s => normalize(s.station) === targetTo);
@@ -295,88 +277,28 @@ function runPlanner() {
       });
     }
   });
-
-  hubs.forEach(hubName => {
-    const targetHub = normalize(hubName);
-    if (targetHub === targetFrom || targetHub === targetTo) return;
-    const leg1s = trainData.filter(t => {
-      const s = t.stops.findIndex(st => normalize(st.station) === targetFrom);
-      const h = t.stops.findIndex(st => normalize(st.station) === targetHub);
-      return s !== -1 && h !== -1 && s < h;
-    });
-    const leg2s = trainData.filter(t => {
-      const h = t.stops.findIndex(st => normalize(st.station) === targetHub);
-      const e = t.stops.findIndex(st => normalize(st.station) === targetTo);
-      return h !== -1 && e !== -1 && h < e;
-    });
-
-    leg1s.forEach(t1 => {
-      const depTime = t1.stops.find(st => normalize(st.station) === targetFrom).departure;
-      const depMin = timeToMin(depTime);
-      const t1ArrMin = timeToMin(t1.stops.find(st => normalize(st.station) === targetHub).departure);
-
-      leg2s.forEach(t2 => {
-        const t2DepMin = timeToMin(t2.stops.find(st => normalize(st.station) === targetHub).departure);
-        const t2ArrTime = t2.stops.find(st => normalize(st.station) === targetTo).departure;
-        const layover = t2DepMin - t1ArrMin;
-
-        if (layover >= 5 && layover <= 45) {
-          if (!directResults.some(d => d.depMin === depMin)) {
-            transferResults.push({
-              type: 'transfer', hub: hubName, leg1: t1, leg2: t2, depTime, arrTime: t2ArrTime, depMin, layover,
-              stops1: t1.stops.slice(t1.stops.findIndex(s => normalize(s.station) === targetFrom), t1.stops.findIndex(s => normalize(s.station) === targetHub) + 1),
-              stops2: t2.stops.slice(t2.stops.findIndex(s => normalize(s.station) === targetHub), t2.stops.findIndex(s => normalize(s.station) === targetTo) + 1)
-            });
-          }
-        }
-      });
-    });
-  });
-
-  let allResults = [...directResults, ...transferResults].sort((a, b) => a.depMin - b.depMin);
-  renderPlanner(allResults, nowMin);
+  renderPlanner(directResults.sort((a,b) => a.depMin - b.depMin), nowMin);
 }
 
 function renderPlanner(trips, nowMin) {
   const container = document.getElementById('plannerResults');
-  if (trips.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema pronađenih ruta.</div>'; return; }
-  
+  if (trips.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>'; return; }
   container.innerHTML = trips.map((trip, idx) => {
-    const isPast = trip.depMin < nowMin;
-    if (trip.type === 'direct') {
-      const stopsHtml = trip.stops.map((s, si) => `<div class="stop-row ${si===0?'stop-from':(si===trip.stops.length-1?'stop-to':'')}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
-      return `<div class="trip-card ${isPast?'past-trip':''}" onclick="expandTrip(${idx})">
-        <div class="trip-summary" id="trip-${idx}">
-          <div class="trip-time">${trip.depTime}</div>
-          <div class="trip-dest"><span class="line-dot" style="background:${getLineColor(trip.train.line)}"></span>${trip.train.train_id}<span class="badge badge-direct">DIREKTAN</span></div>
-          <div class="trip-arr">${trip.arrTime}</div>
-        </div>
-        <div class="trip-details"><div class="stop-list">${stopsHtml}</div></div>
-      </div>`;
-    } else {
-      const s1 = trip.stops1.map((s, si) => `<div class="stop-row ${si===0?'stop-from':''}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
-      const s2 = trip.stops2.map((s, si) => `<div class="stop-row ${si===trip.stops2.length-1?'stop-to':''}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
-      return `<div class="trip-card ${isPast?'past-trip':''}" onclick="expandTrip(${idx})">
-        <div class="trip-summary" id="trip-${idx}">
-          <div class="trip-time">${trip.depTime}</div>
-          <div class="trip-dest"><span class="line-dot" style="background:white"></span>Mixed<span class="badge badge-transfer">PRESEDANJE</span></div>
-          <div class="trip-arr">${trip.arrTime}</div>
-        </div>
-        <div class="trip-details">
-          <div class="stop-list">${s1}</div>
-          <div class="transfer-info">Izmena: <b>${trip.hub}</b> (Pauza ${trip.layover} min)</div>
-          <div class="stop-list">${s2}</div>
-        </div>
-      </div>`;
-    }
+    const stopsHtml = trip.stops.map((s, si) => `<div class="stop-row ${si===0?'stop-from':(si===trip.stops.length-1?'stop-to':'')}"><span class="stop-time">${s.departure}</span><span class="stop-name">${s.station}</span></div>`).join('');
+    return `<div class="trip-card" onclick="expandTrip(${idx})">
+      <div class="trip-summary" id="trip-${idx}">
+        <div class="trip-time">${trip.depTime}</div>
+        <div class="trip-dest">${trip.train.train_id}</div>
+        <div class="trip-arr">${trip.arrTime}</div>
+      </div>
+      <div class="trip-details"><div class="stop-list">${stopsHtml}</div></div>
+    </div>`;
   }).join('');
 }
 
 function expandTrip(idx) {
   const el = document.getElementById('trip-' + idx).parentElement;
-  const isExp = el.classList.contains('expanded');
-  document.querySelectorAll('.trip-card').forEach(c => c.classList.remove('expanded'));
-  if (!isExp) el.classList.add('expanded');
+  el.classList.toggle('expanded');
 }
 
 function goTo(screen) {
@@ -391,7 +313,10 @@ function swapStations() {
   const v = f.value; f.value = t.value; t.value = v; runPlanner();
 }
 
-document.addEventListener('DOMContentLoaded', loadTrainData);
+document.addEventListener('DOMContentLoaded', () => {
+  loadTrainData();
+  generateQRCode();
+});
 </script>
 </body>
 </html>
