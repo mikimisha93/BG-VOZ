@@ -8,94 +8,78 @@
 :root {
   --glass-bg: rgba(255, 255, 255, 0.1);
   --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-blur: blur(25px);
   --accent-yellow: #FFD700;
   --accent-red: #FF3B30;
   --text-main: #FFFFFF;
-  --font-ios: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  font-family: var(--font-ios);
+  font-family: -apple-system, sans-serif;
   color: var(--text-main);
+  background: #050a14;
   height: 100vh; width: 100vw; overflow: hidden;
-  background: linear-gradient(-45deg, #050a14, #1a0505, #0a1428, #140514);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
 }
-@keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
 .page {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   display: flex; flex-direction: column; align-items: center;
-  transition: all 0.4s ease;
-  padding: 80px 20px 120px 20px;
-  opacity: 0; pointer-events: none; transform: scale(1.05);
-  overflow-y: auto;
+  padding: 60px 20px; opacity: 0; pointer-events: none; overflow-y: auto;
 }
-.page.active { opacity: 1; pointer-events: auto; transform: scale(1); }
+.page.active { opacity: 1; pointer-events: auto; }
 
-/* Info Section */
+/* UI Elements */
 .info-card {
-  background: rgba(255, 59, 48, 0.15);
-  border: 1px solid var(--accent-red);
-  padding: 16px; border-radius: 20px; margin-top: 20px; width: 100%;
-  font-size: 0.75rem; color: #eee;
+  background: rgba(255, 59, 48, 0.15); border: 1px solid var(--accent-red);
+  padding: 15px; border-radius: 15px; margin-top: 20px; width: 100%; font-size: 0.8rem;
 }
-.info-title { color: var(--accent-red); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; }
+.btn-large { width: 100%; padding: 20px; margin-bottom: 10px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px; color: white; text-align: center; font-weight: bold; cursor: pointer; }
+.plan-select { width: 100%; padding: 15px; background: #1a1a2e; border: 1px solid var(--glass-border); border-radius: 15px; color: white; font-size: 1rem; margin-bottom: 10px; }
 
-/* Dropdowns & Buttons */
-.btn-large { width: 100%; padding: 20px; margin-bottom: 12px; font-size: 0.8rem; font-weight: 700; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-transform: uppercase; text-align: center; }
-.plan-select { width: 100%; padding: 18px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; color: white; font-size: 1rem; margin-bottom: 10px; outline: none; appearance: none; }
-.plan-select option { background: #1a1a2e; color: white; }
-
-/* Navigation */
-.nav-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 280px; height: 70px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
-.nav-item { opacity: 0.4; color: white; cursor: pointer; }
+/* Nav */
+.nav-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 300px; height: 60px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 30px; display: flex; justify-content: space-around; align-items: center; }
+.nav-item { color: white; opacity: 0.5; cursor: pointer; }
 .nav-item.active { opacity: 1; }
-.nav-item svg { width: 28px; height: 28px; }
 
-/* Board */
-.pids-board { width: 100%; background: #000; border-radius: 15px; overflow: hidden; }
-.pids-row { display: grid; grid-template-columns: 70px 1fr 80px; padding: 18px 15px; border-bottom: 1px solid #111; }
+.pids-row { display: grid; grid-template-columns: 60px 1fr 70px; padding: 15px; border-bottom: 1px solid #222; background: #000; width: 100%; }
 </style>
 </head>
 <body>
 
 <div id="home-page" class="page active">
-  <header style="text-align:center; margin-bottom:30px;"><h1>BG:VOZ</h1></header>
-  <div class="btn-large" onclick="goTo('monitor')">STANIČNI RED VOŽNJE</div>
-  <div class="btn-large" onclick="goTo('plan')">PLANIRAJ PUTOVANJE</div>
+  <h1 style="margin-bottom: 30px;">BG:VOZ</h1>
+  <div class="btn-large" onclick="goTo('monitor')">MONITOR (PIDS)</div>
+  <div class="btn-large" onclick="goTo('plan')">PLANER PUTA</div>
   
   <div class="info-card">
-    <div class="info-title">VAŽNE NAPOMENE / INFO</div>
-    <p>• <b>Voz 8021:</b> Ne saobraća vikendom i državnim praznikom.</p>
-    <p>• <b>Pančevački most:</b> Proverite tablu za produžetke ka Ovči.</p>
+    <strong style="color: var(--accent-red);">INFO / IZUZECI:</strong><br><br>
+    • <b>Voz 8021:</b> Ne saobraća vikendom i praznikom.<br>
+    • <b>Pančevački most:</b> Proverite tablu za smer Ovča.
   </div>
 </div>
 
 <div id="monitor-page" class="page">
-  <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)"></select>
-  <div id="pidsDisplay" style="display:none; width: 100%;">
-    <div class="pids-board" id="pidsBody"></div>
-  </div>
+  <select id="stationPicker" class="plan-select" onchange="updatePIDS(this.value)">
+    <option value="" disabled selected>Učitavanje stanica...</option>
+  </select>
+  <div id="pidsBody" style="width: 100%; margin-top: 10px; border-radius: 10px; overflow: hidden;"></div>
 </div>
 
 <div id="plan-page" class="page">
   <select id="fromPicker" class="plan-select" onchange="runPlanner()"></select>
   <select id="toPicker" class="plan-select" onchange="runPlanner()"></select>
-  <div id="plannerResults" style="width:100%;"></div>
+  <div id="plannerResults" style="width: 100%; margin-top: 10px;"></div>
 </div>
 
 <nav class="nav-bar">
-  <div class="nav-item active" id="nav-home" onclick="goTo('home')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
-  <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-  <div class="nav-item" id="nav-plan" onclick="goTo('plan')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.31,2 18,4.66 18,7.95C18,12.41 12,19 12,19C12,19 6,12.41 6,7.95C6,4.66 8.69,2 12,2M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6Z"/></svg></div>
+  <div class="nav-item active" id="nav-home" onclick="goTo('home')">HOME</div>
+  <div class="nav-item" id="nav-monitor" onclick="goTo('monitor')">PIDS</div>
+  <div class="nav-item" id="nav-plan" onclick="goTo('plan')">PLAN</div>
 </nav>
 
 <script>
 let trainData = [];
+// This list is the source of truth for your dropdowns
 const stationMap = {
   'batajnica': 'Batajnica', 'kamendin': 'Kamendin', 'zemun_polje': 'Zemun Polje',
   'altina': 'Altina', 'zemun': 'Zemun', 'tosin_bunar': 'Tosin Bunar',
@@ -106,82 +90,90 @@ const stationMap = {
   'resnik': 'Resnik', 'kijevo': 'Kijevo', 'knezevac': 'Knezevac', 'rakovica': 'Rakovica'
 };
 
-const timeToMin = (t) => { if(!t) return 0; const [h,m] = t.split(':').map(Number); return h*60+m; };
+function populateDropdowns() {
+  const sorted = Object.entries(stationMap).sort((a, b) => a[1].localeCompare(b[1]));
+  let html = '<option value="" disabled selected>Izaberi stanicu...</option>';
+  sorted.forEach(([id, name]) => {
+    html += `<option value="${id}">${name}</option>`;
+  });
 
-async function loadTrainData() {
-  try {
-    const response = await fetch('trains.json');
-    trainData = await response.json();
-    populatePickers();
-  } catch (e) { console.error("Data error", e); }
-}
-
-function populatePickers() {
-  const sorted = Object.entries(stationMap).sort((a,b) => a[1].localeCompare(b[1]));
-  const html = `<option value="" disabled selected>Izaberi stanicu...</option>` + 
-               sorted.map(([id, name]) => `<option value="${id}">${name}</option>`).join('');
-  
   document.getElementById('stationPicker').innerHTML = html;
   document.getElementById('fromPicker').innerHTML = html;
   document.getElementById('toPicker').innerHTML = html;
+  console.log("Dropdowns populated");
+}
+
+async function loadData() {
+  try {
+    const res = await fetch('trains.json');
+    if (!res.ok) throw new Error("File not found");
+    trainData = await res.json();
+    console.log("Data loaded:", trainData.length, "trains");
+    populateDropdowns();
+  } catch (e) {
+    console.error("Load error:", e);
+    // Fallback if JSON fails so dropdowns still show up
+    populateDropdowns();
+  }
 }
 
 function updatePIDS(sid) {
-  const stationName = stationMap[sid];
+  const sName = stationMap[sid];
   const now = new Date();
   const nowMin = now.getHours() * 60 + now.getMinutes();
   
-  let results = [];
-  trainData.forEach(train => {
-    const stop = train.stops.find(s => s.station === stationName);
-    if(stop) {
-      const tMin = timeToMin(stop.departure);
-      if(tMin >= nowMin) {
-        results.push({ id: train.train_id, dir: train.direction, time: stop.departure, min: tMin });
-      }
-    }
-  });
+  const results = trainData.flatMap(train => {
+    const stop = train.stops.find(s => s.station === sName);
+    if (!stop) return [];
+    const [h, m] = stop.departure.split(':').map(Number);
+    const tMin = h * 60 + m;
+    if (tMin < nowMin) return [];
+    return [{ id: train.train_id, dir: train.direction, time: stop.departure, min: tMin }];
+  }).sort((a, b) => a.min - b.min);
 
-  results.sort((a,b) => a.min - b.min);
-  document.getElementById('pidsDisplay').style.display = 'block';
-  document.getElementById('pidsBody').innerHTML = results.slice(0, 8).map(r => `
+  document.getElementById('pidsBody').innerHTML = results.slice(0, 10).map(r => `
     <div class="pids-row">
-      <div style="color:#666; font-size:0.8rem;">${r.id}</div>
-      <div style="color:var(--accent-yellow); font-weight:700;">${r.dir.toUpperCase()}</div>
-      <div style="text-align:right; font-weight:bold;">${r.time}</div>
-    </div>`).join('');
+      <div style="color: #888; font-size: 0.8rem;">${r.id}</div>
+      <div style="color: var(--accent-yellow); font-weight: bold;">${r.dir.toUpperCase()}</div>
+      <div style="text-align: right; font-weight: bold;">${r.time}</div>
+    </div>`).join('') || '<div style="text-align:center; padding:20px;">Nema više polazaka danas</div>';
 }
 
 function runPlanner() {
   const f = document.getElementById('fromPicker').value;
   const t = document.getElementById('toPicker').value;
-  if(!f || !t || f === t) return;
+  if (!f || !t || f === t) return;
 
   const results = [];
   trainData.forEach(train => {
     const sIdx = train.stops.findIndex(s => s.station === stationMap[f]);
     const eIdx = train.stops.findIndex(s => s.station === stationMap[t]);
-    if(sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-      results.push({ id: train.train_id, dep: train.stops[sIdx].departure, arr: train.stops[eIdx].departure, min: timeToMin(train.stops[sIdx].departure) });
+    if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
+      results.push({
+        id: train.train_id,
+        dep: train.stops[sIdx].departure,
+        arr: train.stops[eIdx].departure,
+        min: train.stops[sIdx].departure.split(':').reduce((h, m) => h * 60 + +m)
+      });
     }
   });
 
-  results.sort((a,b) => a.min - b.min);
-  document.getElementById('plannerResults').innerHTML = results.map(r => `
-    <div style="background:var(--glass-bg); padding:15px; border-radius:15px; margin-bottom:10px; border:1px solid var(--glass-border); display:flex; justify-content:space-between;">
-      <div><b style="color:var(--accent-yellow);">${r.dep}</b> → ${r.arr}</div>
+  document.getElementById('plannerResults').innerHTML = results.sort((a, b) => a.min - b.min).map(r => `
+    <div style="background:var(--glass-bg); padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid var(--glass-border); display:flex; justify-content:space-between;">
+      <div><b>${r.dep}</b> → ${r.arr}</div>
       <div style="opacity:0.6;">Voz ${r.id} ${r.id === '8021' ? '⚠️' : ''}</div>
-    </div>`).join('');
+    </div>`).join('') || '<div style="text-align:center; padding:20px;">Nema direktnih linija</div>';
 }
 
-function goTo(screen) {
+function goTo(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(screen + '-page').classList.add('active');
+  document.getElementById(id + '-page').classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('nav-' + screen).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
 }
 
-document.addEventListener('DOMContentLoaded', loadTrainData);
+// Initial Kickoff
+loadData();
 </script>
 </body>
 </html>
