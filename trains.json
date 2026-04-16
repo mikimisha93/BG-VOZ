@@ -2122,7 +2122,7 @@
     "stops": [
       { "station": "Ovča", "arrival": "22:35", "departure": "22:35" },
       { "station": "Sebeš", "arrival": "22:39", "departure": "22:39" },
-      { "station": "Krnjača ukrsnica", "arrival": "22:43", "departure": "22:43" },
+      { "station": "Krnjača", "arrival": "22:43", "departure": "22:43" },
       { "station": "Krnjača most", "arrival": "22:45", "departure": "22:45" },
       { "station": "Pančevački most", "arrival": "22:51", "departure": "22:51" },
       { "station": "Vukov spomenik", "arrival": "22:54", "departure": "22:54" },
