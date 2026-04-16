@@ -301,7 +301,7 @@ function updatePIDS(selectedStation) {
     pidsBody.innerHTML = html;
 }
 
-// --- PLANNER LOGIC ---
+// --- NEW PLANNER LOGIC (Safe & Isolated) ---
 function runPlanner() {
     const from = document.getElementById('fromPicker').value;
     const to = document.getElementById('toPicker').value;
@@ -310,59 +310,141 @@ function runPlanner() {
     let routes = [];
     const nowMin = getTimeNow();
 
+    // 1. Direct routes check (Unchanged)
     trainData.forEach(train => {
         const sIdx = train.stops.findIndex(s => norm(s.station) === norm(from));
         const eIdx = train.stops.findIndex(s => norm(s.station) === norm(to));
         
         if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-            const depTime = train.stops[sIdx].departure;
-            const arrTime = train.stops[eIdx].arrival;
-            const duration = timeToMin(arrTime) - timeToMin(depTime);
-
             routes.push({
                 type: 'direct',
                 train: train,
-                dep: depTime,
-                arr: arrTime,
-                duration: duration,
+                dep: train.stops[sIdx].departure,
+                arr: train.stops[eIdx].arrival,
+                duration: timeToMin(train.stops[eIdx].arrival) - timeToMin(train.stops[sIdx].departure),
                 stops: train.stops.slice(sIdx, eIdx + 1),
-                depMin: timeToMin(depTime)
+                depMin: timeToMin(train.stops[sIdx].departure)
             });
         }
     });
 
-    routes.sort((a,b) => a.depMin - b.depMin);
-    renderPlanner(routes, nowMin);
-}
+    // 2. Transfer logic (Only if direct routes are limited)
+    if (routes.length < 5) {
+        const hubs = ["Zemun", "Novi Beograd", "Beograd Centar (Prokop)", "Karađorđev park"];
+        
+        trainData.forEach(t1 => {
+            const sIdx = t1.stops.findIndex(s => norm(s.station) === norm(from));
+            if (sIdx === -1) return;
 
+            hubs.forEach(hubName => {
+                const hIdx1 = t1.stops.findIndex(s => norm(s.station) === norm(hubName));
+                if (hIdx1 !== -1 && sIdx < hIdx1) {
+                    const arrivalAtHub = t1.stops[hIdx1].arrival;
+                    const minAtHub = timeToMin(arrivalAtHub);
+
+                    trainData.forEach(t2 => {
+                        if (t1.train_id === t2.train_id) return;
+                        const hIdx2 = t2.stops.findIndex(s => norm(s.station) === norm(hubName));
+                        const eIdx2 = t2.stops.findIndex(s => norm(s.station) === norm(to));
+
+                        if (hIdx2 !== -1 && eIdx2 !== -1 && hIdx2 < eIdx2) {
+                            const minDepHub = timeToMin(t2.stops[hIdx2].departure);
+                            // Transfer window: 5 to 45 minutes
+                            if (minDepHub >= minAtHub + 5 && minDepHub <= minAtHub + 45) {
+                                routes.push({
+                                    type: 'transfer',
+                                    train1: t1,
+                                    train2: t2,
+                                    hub: hubName,
+                                    dep: t1.stops[sIdx].departure,
+                                    arr: t2.stops[eIdx2].arrival,
+                                    duration: timeToMin(t2.stops[eIdx2].arrival) - timeToMin(t1.stops[sIdx].departure),
+                                    depMin: timeToMin(t1.stops[sIdx].departure)
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    routes.sort((a,b) => a.depMin - b.depMin);
+    // Remove duplicates (same departure and arrival)
+    const unique = routes.filter((v,i,a) => a.findIndex(t => t.dep === v.dep && t.arr === v.arr) === i);
+    renderPlanner(unique.slice(0, 15), nowMin);
+}
+// --- NEW RENDERER (Clean & Mobile Friendly) ---
 function renderPlanner(routes, nowMin) {
     const container = document.getElementById('plannerResults');
+    if (routes.length === 0) {
+        container.innerHTML = '<div style="padding:40px; text-align:center; opacity:0.5;">Nema pronađenih veza.</div>';
+        return;
+    }
+
     container.innerHTML = routes.map((r, idx) => {
         const isPast = r.depMin < nowMin;
+        const isTransfer = r.type === 'transfer';
+        
+        // Safety math for duration
+        const displayDuration = (r.duration && r.duration > 0) ? `${r.duration} min` : "---";
+        const displayArr = r.arr || "--:--";
+
         return `
             <div class="trip-card ${isPast ? 'past-trip' : ''}" id="plan-${idx}">
                 <div class="trip-summary" onclick="toggleCard('plan-${idx}')">
                     <div class="trip-time">${r.dep}</div>
                     <div class="trip-dest">
-                        ${r.train.direction}
-                        <div class="trip-duration">Trajanje: ${r.duration} min</div>
+                        ${isTransfer ? `${r.train1.direction} ➔ ${r.train2.direction}` : r.train.direction}
+                        <div class="trip-duration">
+                            ${isTransfer ? `<span class="transfer-badge">${r.hub}</span> ` : ''}
+                            Trajanje: ${displayDuration}
+                        </div>
                     </div>
-                    <div class="trip-arr" style="color:var(--accent-yellow)">${r.arr}</div>
+                    <div class="trip-arr" style="color:var(--accent-yellow)">${displayArr}</div>
                 </div>
                 <div class="trip-details">
                     <div class="stop-list">
-                        ${r.stops.map(s => {
-                            const isActive = (nowMin >= timeToMin(s.departure) && nowMin < timeToMin(s.departure) + 2);
-                            return `
-                                <div class="stop-row ${isActive ? 'active-stop' : ''}">
-                                    <span>${s.station}</span>
-                                    <span>${s.departure}</span>
-                                </div>`;
-                        }).join('')}
+                        ${isTransfer ? renderTransferStops(r, nowMin) : renderDirectStops(r.stops, nowMin)}
                     </div>
                 </div>
             </div>`;
     }).join('');
+}
+
+// Helper for Direct Trains
+function renderDirectStops(stops, nowMin) {
+    return stops.map(s => {
+        const stopTime = timeToMin(s.departure);
+        const isActive = (nowMin >= stopTime && nowMin < stopTime + 2);
+        return `
+            <div class="stop-row ${isActive ? 'active-stop' : ''}">
+                <span>${s.station}</span>
+                <span>${s.departure || s.arrival}</span>
+            </div>`;
+    }).join('');
+}
+
+// Helper for Transfers (Shows both train segments)
+function renderTransferStops(route, nowMin) {
+    // Segment 1: From origin to Hub
+    const sIdx1 = route.train1.stops.findIndex(s => norm(s.station) === norm(document.getElementById('fromPicker').value));
+    const hIdx1 = route.train1.stops.findIndex(s => norm(s.station) === norm(route.hub));
+    const firstLeg = route.train1.stops.slice(sIdx1, hIdx1 + 1);
+
+    // Segment 2: From Hub to destination
+    const hIdx2 = route.train2.stops.findIndex(s => norm(s.station) === norm(route.hub));
+    const eIdx2 = route.train2.stops.findIndex(s => norm(s.station) === norm(document.getElementById('toPicker').value));
+    const secondLeg = route.train2.stops.slice(hIdx2, eIdx2 + 1);
+
+    return `
+        <div style="color:var(--accent-yellow); font-size:0.7rem; margin-bottom:10px;">VOZ ${route.train1.train_id}</div>
+        ${renderDirectStops(firstLeg, nowMin)}
+        <div style="border-top:1px dashed var(--glass-border); margin:15px 0; padding-top:10px;">
+            <div style="color:var(--accent-yellow); font-size:0.7rem; margin-bottom:10px;">PRESEDANJE (${route.hub}) ➔ VOZ ${route.train2.train_id}</div>
+            ${renderDirectStops(secondLeg, nowMin)}
+        </div>
+    `;
 }
 
 function toggleCard(id) {
