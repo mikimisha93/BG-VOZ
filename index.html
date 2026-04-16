@@ -330,7 +330,7 @@ function runPlanner() {
 
     // 2. Transfer logic (Only if direct routes are limited)
     if (routes.length < 5) {
-        const hubs = ["Zemun", "Novi Beograd", "Beograd Centar (Prokop)", "Karađorđev park"];
+        const hubs = ["Zemun", "Novi Beograd", "Beograd Centar", "Karađorđev park"];
         
         trainData.forEach(t1 => {
             const sIdx = t1.stops.findIndex(s => norm(s.station) === norm(from));
