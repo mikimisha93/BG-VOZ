@@ -67,9 +67,19 @@
 
         /* QR Styling */
         .qr-container { margin-top: 20px; display: flex; justify-content: center; width: 100%; }
-        .qr-card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 16px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 150px; }
-        .qr-image { width: 110px; height: 110px; border-radius: 10px; filter: brightness(1.1); }
-        .qr-text { font-size: 0.6rem; font-weight: 800; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; }
+.qr-card { 
+    background: var(--glass-bg); 
+    backdrop-filter: var(--glass-blur); 
+    -webkit-backdrop-filter: var(--glass-blur); 
+    border: 1px solid var(--glass-border); 
+    padding: 12px; /* Reduced from 16px */
+    border-radius: 24px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    width: fit-content; /* Card shrinks to fit the image */
+}        .qr-image { width: 110px; height: 110px; border-radius: 10px; filter: brightness(1.1); }
+        
 
         /* PLANNER RESULTS ENHANCED */
         .plan-controls { width: 100%; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; position: relative; }
@@ -97,6 +107,45 @@
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
         
         .transfer-badge { background: var(--accent-yellow); color: black; padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 900; vertical-align: middle; margin-bottom: 4px; display: inline-block; }
+        /* Fixed Header for PIDS */
+.pids-labels {
+    display: grid;
+    grid-template-columns: 70px 1fr 100px;
+    padding: 10px 15px;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    border-bottom: 1px solid #222;
+}
+
+/* Scrolling Napomena */
+.napomena-container {
+    background: #0a0a0a;
+    padding: 10px 15px;
+    border-top: 1px solid #222;
+    font-size: 0.75rem;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.napomena-label { color: var(--accent-yellow); font-weight: bold; margin-right: 10px; }
+.marquee {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 15s linear infinite;
+    color: #fff;
+}
+@keyframes marquee {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
+}
+
+/* Planner Duration & Past Trips */
+.trip-duration { font-size: 0.7rem; opacity: 0.6; color: #fff; }
+.past-trip { 
+    opacity: 0.5; 
+    filter: grayscale(1) brightness(0.7); 
+    border: 1px dashed rgba(255,255,255,0.1); /* Makes it look "expired" */
+}
     </style>
 </head>
 <body>
@@ -113,11 +162,10 @@
         <div class="btn-large" onclick="goTo('monitor')">STANIČNI RED VOŽNJE</div>
         <div class="btn-large" onclick="goTo('plan')">PLANIRAJ PUTOVANJE</div>
         <div class="qr-container">
-            <div class="qr-card">
-                <img id="pwa-qr" src="" alt="PWA" class="qr-image">
-                <p class="qr-text">SKENIRAJ ZA PWA</p>
-            </div>
-        </div>
+    <div class="qr-card">
+        <img id="pwa-qr" src="" alt="PWA" class="qr-image">
+    </div>
+</div>
     </main>
 </div>
 
@@ -171,188 +219,173 @@
 <script>
 let trainData = [];
 
-// 1. DATA NORMALIZATION (Prevents "Zemun" vs "zemun" or "Tosin" vs "Tošin" failures)
 const norm = (s) => s ? s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "dj").toLowerCase().trim() : "";
 
-// 2. TIME UTILITIES
 const timeToMin = (t) => {
     if (!t) return 0;
     const [h, m] = t.split(':').map(Number);
     return h * 60 + m;
 };
+
 const getTimeNow = () => {
     const n = new Date();
     return n.getHours() * 60 + n.getMinutes();
 };
 
-// 3. LOAD DATA & POPULATE
 async function loadTrainData() {
     try {
         const response = await fetch('trains.json');
         trainData = await response.json();
-        
-        // Extract all unique station names from your actual JSON data
         const stationSet = new Set();
         trainData.forEach(t => t.stops.forEach(s => stationSet.add(s.station)));
         const sortedStations = Array.from(stationSet).sort();
-
-        const options = `<option value="" disabled selected hidden>Izaberi stanicu...</option>` + 
-                        sortedStations.map(s => `<option value="${s}">${s}</option>`).join('');
-        
-        document.getElementById('stationPicker').innerHTML = options;
-        document.getElementById('fromPicker').innerHTML = options;
-        document.getElementById('toPicker').innerHTML = options;
+        const options = `<option value="" disabled selected>Izaberi stanicu...</option>` + 
+                sortedStations.map(s => `<option value="${s}">${s}</option>`).join('');
+        document.querySelectorAll('#stationPicker, #fromPicker, #toPicker').forEach(el => el.innerHTML = options);
     } catch (e) { console.error("Error loading JSON", e); }
 }
 
-// 4. PLANNER LOGIC (Direct + Hub Transfers)
+// --- PIDS LOGIC ---
+function updatePIDS(selectedStation) {
+    const nowMin = getTimeNow();
+    let directions = {};
+
+    trainData.forEach(train => {
+        if (norm(train.direction) === norm(selectedStation)) return;
+
+        const stop = train.stops.find(s => norm(s.station) === norm(selectedStation));
+        if (stop) {
+            const depMin = timeToMin(stop.departure);
+            if (depMin >= nowMin - 2) {
+                if (!directions[train.direction] || depMin < directions[train.direction].min) {
+                    directions[train.direction] = {
+                        id: train.train_id,
+                        dir: train.direction,
+                        time: stop.departure,
+                        min: depMin,
+                        napomena: train.napomena || ""
+                    };
+                }
+            }
+        }
+    });
+
+    const results = Object.values(directions).sort((a,b) => a.min - b.min);
+    const pidsBody = document.getElementById('pidsBody');
+    
+    let html = `<div class="pids-labels"><span>Broj</span><span>Smer</span><span style="text-align:right">Vreme</span></div>`;
+    
+    if (results.length > 0) {
+        html += results.map(d => `
+            <div class="pids-row">
+                <div class="col-vnum">${d.id}</div>
+                <div class="col-dir">${d.dir}</div>
+                <div class="col-time">${d.time.replace(':', '<span class="blink">:</span>')}</div>
+            </div>
+        `).join('');
+
+        // Updated Napomena Logic: Only show the div if a message actually exists
+        const mainNapomena = results[0].napomena; 
+        if (mainNapomena && mainNapomena.trim() !== "") {
+            html += `
+                <div class="napomena-container">
+                    <span class="napomena-label">NAPOMENA:</span>
+                    <span class="marquee">${mainNapomena}</span>
+                </div>`;
+        }
+    } else {
+        html += '<div style="padding:20px; text-align:center; opacity:0.5;">Nema planiranih polazaka.</div>';
+    }
+
+    document.getElementById('pidsDisplay').style.display = 'block';
+    pidsBody.innerHTML = html;
+}
+
+// --- PLANNER LOGIC ---
 function runPlanner() {
     const from = document.getElementById('fromPicker').value;
     const to = document.getElementById('toPicker').value;
-    if (!from || !to || from === to) return;
+    if (!from || !to) return;
 
-    let results = [];
+    let routes = [];
     const nowMin = getTimeNow();
-    const nFrom = norm(from);
-    const nTo = norm(to);
 
-    // LEG A: Direct Trains
     trainData.forEach(train => {
-        const sIdx = train.stops.findIndex(s => norm(s.station) === nFrom);
-        const eIdx = train.stops.findIndex(s => norm(s.station) === nTo);
+        const sIdx = train.stops.findIndex(s => norm(s.station) === norm(from));
+        const eIdx = train.stops.findIndex(s => norm(s.station) === norm(to));
+        
         if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
-            results.push({
+            const depTime = train.stops[sIdx].departure;
+            const arrTime = train.stops[eIdx].arrival;
+            const duration = timeToMin(arrTime) - timeToMin(depTime);
+
+            routes.push({
                 type: 'direct',
                 train: train,
-                dep: train.stops[sIdx],
-                arr: train.stops[eIdx],
-                fullPath: train.stops.slice(sIdx, eIdx + 1),
-                depMin: timeToMin(train.stops[sIdx].departure)
+                dep: depTime,
+                arr: arrTime,
+                duration: duration,
+                stops: train.stops.slice(sIdx, eIdx + 1),
+                depMin: timeToMin(depTime)
             });
         }
     });
 
-    // LEG B: Hub Transfers (Fixes Zemun > Resnik)
-    const hubs = ["Beograd Centar", "Rakovica", "Karadjordjev Park", "Vukov Spomenik"];
-    hubs.forEach(hubName => {
-        const nHub = norm(hubName);
-        if (nFrom === nHub || nTo === nHub) return;
-
-        const leg1Options = trainData.filter(t => {
-            const sIdx = t.stops.findIndex(s => norm(s.station) === nFrom);
-            const hIdx = t.stops.findIndex(s => norm(s.station) === nHub);
-            return sIdx !== -1 && hIdx !== -1 && sIdx < hIdx;
-        });
-
-        const leg2Options = trainData.filter(t => {
-            const hIdx = t.stops.findIndex(s => norm(s.station) === nHub);
-            const eIdx = t.stops.findIndex(s => norm(s.station) === nTo);
-            return hIdx !== -1 && eIdx !== -1 && hIdx < eIdx;
-        });
-
-        leg1Options.forEach(t1 => {
-            const s1 = t1.stops.find(s => norm(s.station) === nFrom);
-            const h1 = t1.stops.find(s => norm(s.station) === nHub);
-            leg2Options.forEach(t2 => {
-                const h2 = t2.stops.find(s => norm(s.station) === nHub);
-                const e2 = t2.stops.find(s => norm(s.station) === nTo);
-                const wait = timeToMin(h2.departure) - timeToMin(h1.arrival);
-                if (wait >= 2 && wait <= 60) {
-                    results.push({
-                        type: 'transfer',
-                        leg1: t1, leg2: t2, hub: hubName,
-                        dep: s1, arr: e2,
-                        depMin: timeToMin(s1.departure)
-                    });
-                }
-            });
-        });
-    });
-
-    results.sort((a, b) => {
-        const aScore = a.depMin < nowMin - 30 ? a.depMin + 1440 : a.depMin;
-        const bScore = b.depMin < nowMin - 30 ? b.depMin + 1440 : b.depMin;
-        return aScore - bScore;
-    });
-
-    renderPlanner(results);
+    routes.sort((a,b) => a.depMin - b.depMin);
+    renderPlanner(routes, nowMin);
 }
 
-// 5. UI RENDERING (Expandable Cards + Live Dot)
-function renderPlanner(trips) {
+function renderPlanner(routes, nowMin) {
     const container = document.getElementById('plannerResults');
-    const nowMin = getTimeNow();
-
-    if (trips.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>';
-        return;
-    }
-
-    container.innerHTML = trips.map((trip, idx) => {
-        const isTransfer = trip.type === 'transfer';
-        let itineraryHtml = "";
-
-        if (!isTransfer) {
-            itineraryHtml = trip.fullPath.map(s => {
-                const isActive = (nowMin >= timeToMin(s.departure) && nowMin < timeToMin(s.departure) + 2);
-                return `<div class="stop-row ${isActive ? 'active-stop' : ''}"><span>${s.station}</span><span>${s.departure}</span></div>`;
-            }).join('');
-        } else {
-            itineraryHtml = `
-            <div style="font-size:0.7rem; color:var(--accent-yellow); margin-bottom:5px;">VOZ ${trip.leg1.train_id} ka ${trip.leg1.direction}</div>
-            <div class="stop-row"><span>${trip.dep.station}</span><span>${trip.dep.departure}</span></div>
-            <div class="stop-row active-stop"><span>${trip.hub} (Presedanje)</span><span>${trip.leg1.stops.find(s=>norm(s.station)===norm(trip.hub)).arrival}</span></div>
-            <div style="font-size:0.7rem; color:var(--accent-yellow); margin:10px 0 5px 0;">VOZ ${trip.leg2.train_id} ka ${trip.leg2.direction}</div>
-            <div class="stop-row"><span>${trip.hub}</span><span>${trip.leg2.stops.find(s=>norm(s.station)===norm(trip.hub)).departure}</span></div>
-            <div class="stop-row"><span>${trip.arr.station}</span><span>${trip.arr.arrival}</span></div>`;
-        }
-
+    container.innerHTML = routes.map((r, idx) => {
+        const isPast = r.depMin < nowMin;
         return `
-        <div class="trip-card" id="card-${idx}">
-            <div class="trip-summary" onclick="toggleCard(${idx})">
-                <div class="trip-time">${trip.dep.departure}</div>
-                <div class="trip-dest">${isTransfer ? 'PRESEDANJE' : trip.train.direction}</div>
-                <div class="trip-arr">${trip.arr.arrival}</div>
-            </div>
-            <div class="trip-details"><div class="stop-list">${itineraryHtml}</div></div>
-        </div>`;
+            <div class="trip-card ${isPast ? 'past-trip' : ''}" id="plan-${idx}">
+                <div class="trip-summary" onclick="toggleCard('plan-${idx}')">
+                    <div class="trip-time">${r.dep}</div>
+                    <div class="trip-dest">
+                        ${r.train.direction}
+                        <div class="trip-duration">Trajanje: ${r.duration} min</div>
+                    </div>
+                    <div class="trip-arr" style="color:var(--accent-yellow)">${r.arr}</div>
+                </div>
+                <div class="trip-details">
+                    <div class="stop-list">
+                        ${r.stops.map(s => {
+                            const isActive = (nowMin >= timeToMin(s.departure) && nowMin < timeToMin(s.departure) + 2);
+                            return `
+                                <div class="stop-row ${isActive ? 'active-stop' : ''}">
+                                    <span>${s.station}</span>
+                                    <span>${s.departure}</span>
+                                </div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>`;
     }).join('');
 }
 
-function toggleCard(idx) {
-    const card = document.getElementById('card-' + idx);
-    const wasExp = card.classList.contains('expanded');
+function toggleCard(id) {
+    const el = document.getElementById(id);
+    const wasExp = el.classList.contains('expanded');
     document.querySelectorAll('.trip-card').forEach(c => c.classList.remove('expanded'));
-    if (!wasExp) card.classList.add('expanded');
+    if (!wasExp) el.classList.add('expanded');
 }
-
-// 6. REMAINING APP FUNCTIONS (PIDS, Nav, QR)
-function updatePIDS(station) {
-    const nowMin = getTimeNow();
-    let deps = [];
-    trainData.forEach(t => {
-        const s = t.stops.find(st => st.station === station);
-        if (s) {
-            const dMin = timeToMin(s.departure);
-            if (dMin >= nowMin - 5) deps.push({ id: t.train_id, dir: t.direction, time: s.departure, min: dMin });
-        }
-    });
-    deps.sort((a,b) => a.min - b.min);
-    document.getElementById('pidsDisplay').style.display = 'block';
-    document.getElementById('pidsBody').innerHTML = deps.slice(0, 6).map(d => `
-        <div class="pids-row"><div class="col-vnum">${d.id}</div><div class="col-dir">${d.dir}</div><div class="col-time">${d.time.replace(':', '<span class="blink">:</span>')}</div></div>`).join('');
+    
+function swapStations() {
+    const from = document.getElementById('fromPicker');
+    const to = document.getElementById('toPicker');
+    const temp = from.value;
+    from.value = to.value;
+    to.value = temp;
+    runPlanner();
 }
-
+    
 function goTo(screen) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(screen + '-page').classList.add('active');
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('nav-' + screen).classList.add('active');
-}
-
-function swapStations() {
-    const f = document.getElementById('fromPicker'), t = document.getElementById('toPicker');
-    const v = f.value; f.value = t.value; t.value = v; runPlanner();
 }
 
 function generateQRCode() {
