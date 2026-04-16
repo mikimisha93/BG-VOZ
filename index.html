@@ -237,8 +237,14 @@ async function loadTrainData() {
         const response = await fetch('trains.json');
         trainData = await response.json();
         const stationSet = new Set();
-        trainData.forEach(t => t.stops.forEach(s => stationSet.add(s.station)));
-        const sortedStations = Array.from(stationSet).sort();
+        trainData.forEach(t => {
+    if (t && t.stops && Array.isArray(t.stops)) {
+        t.stops.forEach(s => {
+            if (s.station) stationSet.add(s.station);
+        });
+    }
+});
+        const sortedStations = Array.from(stationSet).sort((a, b) => a.localeCompare(b, 'sr'));
         const options = `<option value="" disabled selected>Izaberi stanicu...</option>` + 
                 sortedStations.map(s => `<option value="${s}">${s}</option>`).join('');
         document.querySelectorAll('#stationPicker, #fromPicker, #toPicker').forEach(el => el.innerHTML = options);
