@@ -1069,7 +1069,7 @@
       { "station": "Batajnica", "arrival": "21:58", "departure": "21:58" }
     ]
   },
-    {
+   {
     "train_id": "8340",
     "direction": "Zemun",
     "napomena": "",
