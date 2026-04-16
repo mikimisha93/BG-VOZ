@@ -353,7 +353,7 @@
     "train_id": "8021",
     "line": "BG:voz 1",
     "direction": "BATAJNICA",
-    "info": "Ne saobraća vikendom"
+    "info": "Ne saobraća vikendom",
     "stops": [
       {"station": "Ovca", "departure": "13:50"}, {"station": "Sebes", "departure": "13:54"},
       {"station": "Krnjaca", "departure": "13:58"}, {"station": "Krnjaca Most", "departure": "14:00"},
@@ -1122,4 +1122,3 @@
     ]
   }
 ]
-
