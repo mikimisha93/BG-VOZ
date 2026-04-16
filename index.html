@@ -171,14 +171,15 @@
 <script>
 let trainData = [];
 
-// Static Line Definitions for Logic
+// Normalization helper to handle Š, Ć, Č, Đ, Ž and casing
+const norm = (s) => s ? s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "dj").toLowerCase().trim() : "";
+
 const LINE_STATIONS = {
-    1: ["Batajnica", "Kamendin", "Zemun Polje", "Altina", "Zemun", "Tošin Bunar", "Novi Beograd", "Beograd Centar", "Karađorđev Park", "Vukov Spomenik", "Pančevački Most", "Krnjača Most", "Krnjača", "Sebeš", "Ovča"],
-    2: ["Resnik", "Kijevo", "Kneževac", "Rakovica", "Karađorđev Park", "Vukov Spomenik", "Pančevački Most", "Krnjača Most", "Krnjača", "Sebeš", "Ovča"],
-    4: ["Resnik", "Kijevo", "Kneževac", "Rakovica", "Beograd Centar", "Novi Beograd", "Tošin Bunar", "Zemun"]
+    1: ["Batajnica", "Kamendin", "Zemun Polje", "Altina", "Zemun", "Tosin Bunar", "Novi Beograd", "Beograd Centar", "Karadjordjev Park", "Vukov Spomenik", "Pancevacki Most", "Krnjaca Most", "Krnjaca", "Sebes", "Ovca"],
+    2: ["Resnik", "Kijevo", "Knezevac", "Rakovica", "Karadjordjev Park", "Vukov Spomenik", "Pancevacki Most", "Krnjaca Most", "Krnjaca", "Sebes", "Ovca"],
+    4: ["Resnik", "Kijevo", "Knezevac", "Rakovica", "Beograd Centar", "Novi Beograd", "Tosin Bunar", "Zemun"]
 };
 
-// Map station names to keys
 const allStations = Array.from(new Set(Object.values(LINE_STATIONS).flat())).sort();
 
 async function loadTrainData() {
@@ -197,8 +198,16 @@ function populatePickers() {
     document.getElementById('toPicker').innerHTML = options;
 }
 
-const timeToMin = (t) => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-const getTimeNow = () => { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); };
+const timeToMin = (t) => { 
+    if (!t) return 0; 
+    const [h, m] = t.split(':').map(Number); 
+    return h * 60 + m; 
+};
+
+const getTimeNow = () => { 
+    const n = new Date(); 
+    return n.getHours() * 60 + n.getMinutes(); 
+};
 
 function runPlanner() {
     const from = document.getElementById('fromPicker').value;
@@ -207,12 +216,14 @@ function runPlanner() {
 
     let results = [];
     const nowMin = getTimeNow();
+    const nFrom = norm(from);
+    const nTo = norm(to);
 
     trainData.forEach(train => {
-        const sIdx = train.stops.findIndex(s => s.station === from);
-        const eIdx = train.stops.findIndex(s => s.station === to);
+        // Find indices using normalized names
+        const sIdx = train.stops.findIndex(s => norm(s.station) === nFrom);
+        const eIdx = train.stops.findIndex(s => norm(s.station) === nTo);
         
-        // Direct route logic
         if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
             results.push({
                 type: 'direct',
@@ -225,21 +236,30 @@ function runPlanner() {
         }
     });
 
-    // Transfer Logic (Hubs: Beograd Centar, Karađorđev Park, Rakovica)
-    if (results.length < 3) {
-        const hubs = ["Beograd Centar", "Karađorđev Park", "Rakovica"];
+    // If no direct trains, look for transfers at Hubs
+    if (results.length === 0) {
+        const hubs = ["Beograd Centar", "Karadjordjev Park", "Rakovica"];
         hubs.forEach(hub => {
-            if (from === hub || to === hub) return;
+            const nHub = norm(hub);
+            if (nFrom === nHub || nTo === nHub) return;
+
             trainData.forEach(t1 => {
-                const s1 = t1.stops.findIndex(s => s.station === from);
-                const h1 = t1.stops.findIndex(s => s.station === hub);
+                const s1 = t1.stops.findIndex(s => norm(s.station) === nFrom);
+                const h1 = t1.stops.findIndex(s => norm(s.station) === nHub);
+                
                 if (s1 !== -1 && h1 !== -1 && s1 < h1) {
+                    const arrivalAtHub = timeToMin(t1.stops[h1].arrival);
+
                     trainData.forEach(t2 => {
-                        const h2 = t2.stops.findIndex(s => s.station === hub);
-                        const e2 = t2.stops.findIndex(s => s.station === to);
+                        const h2 = t2.stops.findIndex(s => norm(s.station) === nHub);
+                        const e2 = t2.stops.findIndex(s => norm(s.station) === nTo);
+                        
                         if (h2 !== -1 && e2 !== -1 && h2 < e2) {
-                            const wait = timeToMin(t2.stops[h2].departure) - timeToMin(t1.stops[h1].departure);
-                            if (wait >= 5 && wait <= 45) {
+                            const departureFromHub = timeToMin(t2.stops[h2].departure);
+                            const wait = departureFromHub - arrivalAtHub;
+
+                            // Realistic transfer window: 4 to 60 minutes
+                            if (wait >= 4 && wait <= 60) {
                                 results.push({
                                     type: 'transfer',
                                     leg1: t1, leg2: t2, hub: hub,
@@ -254,7 +274,14 @@ function runPlanner() {
         });
     }
 
-    renderPlanner(results.sort((a,b) => a.depMin - b.depMin));
+    // Sort by departure time, showing future trains first
+    results.sort((a, b) => {
+        const aScore = a.depMin < nowMin ? a.depMin + 1440 : a.depMin;
+        const bScore = b.depMin < nowMin ? b.depMin + 1440 : b.depMin;
+        return aScore - bScore;
+    });
+
+    renderPlanner(results);
 }
 
 function renderPlanner(trips) {
