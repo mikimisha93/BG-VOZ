@@ -219,8 +219,8 @@ function runPlanner() {
     const nFrom = norm(from);
     const nTo = norm(to);
 
+    // 1. DIRECT SEARCH
     trainData.forEach(train => {
-        // Find indices using normalized names
         const sIdx = train.stops.findIndex(s => norm(s.station) === nFrom);
         const eIdx = train.stops.findIndex(s => norm(s.station) === nTo);
         
@@ -236,52 +236,72 @@ function runPlanner() {
         }
     });
 
-    // If no direct trains, look for transfers at Hubs
-    if (results.length === 0) {
-        const hubs = ["Beograd Centar", "Karadjordjev Park", "Rakovica"];
-        hubs.forEach(hub => {
-            const nHub = norm(hub);
-            if (nFrom === nHub || nTo === nHub) return;
+    // 2. TRANSFER SEARCH (If direct results are low)
+    // We check common hubs: Beograd Centar, Rakovica, Karadjordjev Park
+    const hubs = ["Beograd Centar", "Rakovica", "Karadjordjev Park"];
+    
+    hubs.forEach(hubName => {
+        const nHub = norm(hubName);
+        if (nFrom === nHub || nTo === nHub) return;
 
-            trainData.forEach(t1 => {
-                const s1 = t1.stops.findIndex(s => norm(s.station) === nFrom);
-                const h1 = t1.stops.findIndex(s => norm(s.station) === nHub);
-                
-                if (s1 !== -1 && h1 !== -1 && s1 < h1) {
-                    const arrivalAtHub = timeToMin(t1.stops[h1].arrival);
+        // Find Leg 1: From -> Hub
+        const leg1Options = trainData.filter(t => {
+            const sIdx = t.stops.findIndex(s => norm(s.station) === nFrom);
+            const hIdx = t.stops.findIndex(s => norm(s.station) === nHub);
+            return sIdx !== -1 && hIdx !== -1 && sIdx < hIdx;
+        });
 
-                    trainData.forEach(t2 => {
-                        const h2 = t2.stops.findIndex(s => norm(s.station) === nHub);
-                        const e2 = t2.stops.findIndex(s => norm(s.station) === nTo);
-                        
-                        if (h2 !== -1 && e2 !== -1 && h2 < e2) {
-                            const departureFromHub = timeToMin(t2.stops[h2].departure);
-                            const wait = departureFromHub - arrivalAtHub;
+        // Find Leg 2: Hub -> To
+        const leg2Options = trainData.filter(t => {
+            const hIdx = t.stops.findIndex(s => norm(s.station) === nHub);
+            const eIdx = t.stops.findIndex(s => norm(s.station) === nTo);
+            return hIdx !== -1 && eIdx !== -1 && hIdx < eIdx;
+        });
 
-                            // Realistic transfer window: 4 to 60 minutes
-                            if (wait >= 4 && wait <= 60) {
-                                results.push({
-                                    type: 'transfer',
-                                    leg1: t1, leg2: t2, hub: hub,
-                                    dep: t1.stops[s1], arr: t2.stops[e2],
-                                    depMin: timeToMin(t1.stops[s1].departure)
-                                });
-                            }
-                        }
+        leg1Options.forEach(t1 => {
+            const s1 = t1.stops.find(s => norm(s.station) === nFrom);
+            const h1 = t1.stops.find(s => norm(s.station) === nHub);
+            const arrHub = timeToMin(h1.arrival);
+
+            leg2Options.forEach(t2 => {
+                const h2 = t2.stops.find(s => norm(s.station) === nHub);
+                const e2 = t2.stops.find(s => norm(s.station) === nTo);
+                const depHub = timeToMin(h2.departure);
+
+                const wait = depHub - arrHub;
+                // Allow transfers between 3 and 90 minutes
+                if (wait >= 3 && wait <= 90) {
+                    results.push({
+                        type: 'transfer',
+                        leg1: t1,
+                        leg2: t2,
+                        hub: hubName,
+                        dep: s1,
+                        arr: e2,
+                        depMin: timeToMin(s1.departure)
                     });
                 }
             });
         });
-    }
+    });
 
-    // Sort by departure time, showing future trains first
-    results.sort((a, b) => {
-        const aScore = a.depMin < nowMin ? a.depMin + 1440 : a.depMin;
-        const bScore = b.depMin < nowMin ? b.depMin + 1440 : b.depMin;
+    // 3. SORT & FILTER
+    // Show only trains starting from "now" onwards
+    let finalResults = results.sort((a, b) => {
+        const aDiff = a.depMin - nowMin;
+        const bDiff = b.depMin - nowMin;
+        // Logic to handle "next day" sorting if it's late night
+        const aScore = aDiff < -120 ? aDiff + 1440 : aDiff; 
+        const bScore = bDiff < -120 ? bDiff + 1440 : bDiff;
         return aScore - bScore;
     });
 
-    renderPlanner(results);
+    // Remove duplicates (same departure time/type)
+    finalResults = finalResults.filter((v, i, a) => 
+        a.findIndex(t => t.depMin === v.depMin && t.type === v.type) === i
+    );
+
+    renderPlanner(finalResults.slice(0, 10)); // Top 10 options
 }
 
 function renderPlanner(trips) {
