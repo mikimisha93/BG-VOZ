@@ -171,44 +171,41 @@
 <script>
 let trainData = [];
 
-// Normalization helper to handle Š, Ć, Č, Đ, Ž and casing
+// 1. DATA NORMALIZATION (Prevents "Zemun" vs "zemun" or "Tosin" vs "Tošin" failures)
 const norm = (s) => s ? s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "dj").toLowerCase().trim() : "";
 
-const LINE_STATIONS = {
-    1: ["Batajnica", "Kamendin", "Zemun Polje", "Altina", "Zemun", "Tosin Bunar", "Novi Beograd", "Beograd Centar", "Karadjordjev Park", "Vukov Spomenik", "Pancevacki Most", "Krnjaca Most", "Krnjaca", "Sebes", "Ovca"],
-    2: ["Resnik", "Kijevo", "Knezevac", "Rakovica", "Karadjordjev Park", "Vukov Spomenik", "Pancevacki Most", "Krnjaca Most", "Krnjaca", "Sebes", "Ovca"],
-    4: ["Resnik", "Kijevo", "Knezevac", "Rakovica", "Beograd Centar", "Novi Beograd", "Tosin Bunar", "Zemun"]
+// 2. TIME UTILITIES
+const timeToMin = (t) => {
+    if (!t) return 0;
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+};
+const getTimeNow = () => {
+    const n = new Date();
+    return n.getHours() * 60 + n.getMinutes();
 };
 
-const allStations = Array.from(new Set(Object.values(LINE_STATIONS).flat())).sort();
-
+// 3. LOAD DATA & POPULATE
 async function loadTrainData() {
     try {
         const response = await fetch('trains.json');
         trainData = await response.json();
-        populatePickers();
+        
+        // Extract all unique station names from your actual JSON data
+        const stationSet = new Set();
+        trainData.forEach(t => t.stops.forEach(s => stationSet.add(s.station)));
+        const sortedStations = Array.from(stationSet).sort();
+
+        const options = `<option value="" disabled selected hidden>Izaberi stanicu...</option>` + 
+                        sortedStations.map(s => `<option value="${s}">${s}</option>`).join('');
+        
+        document.getElementById('stationPicker').innerHTML = options;
+        document.getElementById('fromPicker').innerHTML = options;
+        document.getElementById('toPicker').innerHTML = options;
     } catch (e) { console.error("Error loading JSON", e); }
 }
 
-function populatePickers() {
-    const options = `<option value="" disabled selected hidden>Izaberi...</option>` + 
-                    allStations.map(s => `<option value="${s}">${s}</option>`).join('');
-    document.getElementById('stationPicker').innerHTML = options;
-    document.getElementById('fromPicker').innerHTML = options;
-    document.getElementById('toPicker').innerHTML = options;
-}
-
-const timeToMin = (t) => { 
-    if (!t) return 0; 
-    const [h, m] = t.split(':').map(Number); 
-    return h * 60 + m; 
-};
-
-const getTimeNow = () => { 
-    const n = new Date(); 
-    return n.getHours() * 60 + n.getMinutes(); 
-};
-
+// 4. PLANNER LOGIC (Direct + Hub Transfers)
 function runPlanner() {
     const from = document.getElementById('fromPicker').value;
     const to = document.getElementById('toPicker').value;
@@ -219,11 +216,10 @@ function runPlanner() {
     const nFrom = norm(from);
     const nTo = norm(to);
 
-    // 1. DIRECT SEARCH
+    // LEG A: Direct Trains
     trainData.forEach(train => {
         const sIdx = train.stops.findIndex(s => norm(s.station) === nFrom);
         const eIdx = train.stops.findIndex(s => norm(s.station) === nTo);
-        
         if (sIdx !== -1 && eIdx !== -1 && sIdx < eIdx) {
             results.push({
                 type: 'direct',
@@ -236,22 +232,18 @@ function runPlanner() {
         }
     });
 
-    // 2. TRANSFER SEARCH (If direct results are low)
-    // We check common hubs: Beograd Centar, Rakovica, Karadjordjev Park
-    const hubs = ["Beograd Centar", "Rakovica", "Karadjordjev Park"];
-    
+    // LEG B: Hub Transfers (Fixes Zemun > Resnik)
+    const hubs = ["Beograd Centar", "Rakovica", "Karadjordjev Park", "Vukov Spomenik"];
     hubs.forEach(hubName => {
         const nHub = norm(hubName);
         if (nFrom === nHub || nTo === nHub) return;
 
-        // Find Leg 1: From -> Hub
         const leg1Options = trainData.filter(t => {
             const sIdx = t.stops.findIndex(s => norm(s.station) === nFrom);
             const hIdx = t.stops.findIndex(s => norm(s.station) === nHub);
             return sIdx !== -1 && hIdx !== -1 && sIdx < hIdx;
         });
 
-        // Find Leg 2: Hub -> To
         const leg2Options = trainData.filter(t => {
             const hIdx = t.stops.findIndex(s => norm(s.station) === nHub);
             const eIdx = t.stops.findIndex(s => norm(s.station) === nTo);
@@ -261,23 +253,15 @@ function runPlanner() {
         leg1Options.forEach(t1 => {
             const s1 = t1.stops.find(s => norm(s.station) === nFrom);
             const h1 = t1.stops.find(s => norm(s.station) === nHub);
-            const arrHub = timeToMin(h1.arrival);
-
             leg2Options.forEach(t2 => {
                 const h2 = t2.stops.find(s => norm(s.station) === nHub);
                 const e2 = t2.stops.find(s => norm(s.station) === nTo);
-                const depHub = timeToMin(h2.departure);
-
-                const wait = depHub - arrHub;
-                // Allow transfers between 3 and 90 minutes
-                if (wait >= 3 && wait <= 90) {
+                const wait = timeToMin(h2.departure) - timeToMin(h1.arrival);
+                if (wait >= 2 && wait <= 60) {
                     results.push({
                         type: 'transfer',
-                        leg1: t1,
-                        leg2: t2,
-                        hub: hubName,
-                        dep: s1,
-                        arr: e2,
+                        leg1: t1, leg2: t2, hub: hubName,
+                        dep: s1, arr: e2,
                         depMin: timeToMin(s1.departure)
                     });
                 }
@@ -285,29 +269,20 @@ function runPlanner() {
         });
     });
 
-    // 3. SORT & FILTER
-    // Show only trains starting from "now" onwards
-    let finalResults = results.sort((a, b) => {
-        const aDiff = a.depMin - nowMin;
-        const bDiff = b.depMin - nowMin;
-        // Logic to handle "next day" sorting if it's late night
-        const aScore = aDiff < -120 ? aDiff + 1440 : aDiff; 
-        const bScore = bDiff < -120 ? bDiff + 1440 : bDiff;
+    results.sort((a, b) => {
+        const aScore = a.depMin < nowMin - 30 ? a.depMin + 1440 : a.depMin;
+        const bScore = b.depMin < nowMin - 30 ? b.depMin + 1440 : b.depMin;
         return aScore - bScore;
     });
 
-    // Remove duplicates (same departure time/type)
-    finalResults = finalResults.filter((v, i, a) => 
-        a.findIndex(t => t.depMin === v.depMin && t.type === v.type) === i
-    );
-
-    renderPlanner(finalResults.slice(0, 10)); // Top 10 options
+    renderPlanner(results);
 }
 
+// 5. UI RENDERING (Expandable Cards + Live Dot)
 function renderPlanner(trips) {
     const container = document.getElementById('plannerResults');
     const nowMin = getTimeNow();
-    
+
     if (trips.length === 0) {
         container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">Nema rute.</div>';
         return;
@@ -315,89 +290,57 @@ function renderPlanner(trips) {
 
     container.innerHTML = trips.map((trip, idx) => {
         const isTransfer = trip.type === 'transfer';
-        const title = isTransfer ? 
-            `Via ${trip.hub}` : 
-            `Linija ${trip.train.direction}`;
+        let itineraryHtml = "";
+
+        if (!isTransfer) {
+            itineraryHtml = trip.fullPath.map(s => {
+                const isActive = (nowMin >= timeToMin(s.departure) && nowMin < timeToMin(s.departure) + 2);
+                return `<div class="stop-row ${isActive ? 'active-stop' : ''}"><span>${s.station}</span><span>${s.departure}</span></div>`;
+            }).join('');
+        } else {
+            itineraryHtml = `
+            <div style="font-size:0.7rem; color:var(--accent-yellow); margin-bottom:5px;">VOZ ${trip.leg1.train_id} ka ${trip.leg1.direction}</div>
+            <div class="stop-row"><span>${trip.dep.station}</span><span>${trip.dep.departure}</span></div>
+            <div class="stop-row active-stop"><span>${trip.hub} (Presedanje)</span><span>${trip.leg1.stops.find(s=>norm(s.station)===norm(trip.hub)).arrival}</span></div>
+            <div style="font-size:0.7rem; color:var(--accent-yellow); margin:10px 0 5px 0;">VOZ ${trip.leg2.train_id} ka ${trip.leg2.direction}</div>
+            <div class="stop-row"><span>${trip.hub}</span><span>${trip.leg2.stops.find(s=>norm(s.station)===norm(trip.hub)).departure}</span></div>
+            <div class="stop-row"><span>${trip.arr.station}</span><span>${trip.arr.arrival}</span></div>`;
+        }
 
         return `
-            <div class="trip-card" onclick="toggleExpand(${idx})">
-                <div class="trip-summary">
-                    <div class="trip-time">${trip.dep.departure}</div>
-                    <div class="trip-dest">
-                        ${isTransfer ? '<span class="transfer-badge">PRESEDANJE</span><br>' : ''}
-                        ${title}
-                    </div>
-                    <div class="trip-arr">${trip.arr.arrival}</div>
-                </div>
-                <div class="trip-details">
-                    <div class="stop-list">
-                        ${renderItinerary(trip, nowMin)}
-                    </div>
-                </div>
+        <div class="trip-card" id="card-${idx}">
+            <div class="trip-summary" onclick="toggleCard(${idx})">
+                <div class="trip-time">${trip.dep.departure}</div>
+                <div class="trip-dest">${isTransfer ? 'PRESEDANJE' : trip.train.direction}</div>
+                <div class="trip-arr">${trip.arr.arrival}</div>
             </div>
-        `;
+            <div class="trip-details"><div class="stop-list">${itineraryHtml}</div></div>
+        </div>`;
     }).join('');
 }
 
-function renderItinerary(trip, nowMin) {
-    if (trip.type === 'direct') {
-        return trip.fullPath.map(s => {
-            const isActive = isCurrent(s.departure, nowMin);
-            return `<div class="stop-row ${isActive ? 'active-stop' : ''}">
-                <span>${s.station}</span>
-                <span style="opacity:0.6">${s.departure}</span>
-            </div>`;
-        }).join('');
-    } else {
-        return `
-            <div style="font-size:0.7rem; opacity:0.5; margin-bottom:10px;">Voz ${trip.leg1.train_id} do ${trip.hub}</div>
-            <div class="stop-row"><span>${trip.dep.station}</span><span>${trip.dep.departure}</span></div>
-            <div class="stop-row active-stop"><span>${trip.hub}</span><span>${trip.leg1.stops.find(s=>s.station===trip.hub).arrival}</span></div>
-            <div style="font-size:0.7rem; opacity:0.5; margin:10px 0;">Presedanje na voz ${trip.leg2.train_id}</div>
-            <div class="stop-row"><span>${trip.arr.station}</span><span>${trip.arr.arrival}</span></div>
-        `;
-    }
+function toggleCard(idx) {
+    const card = document.getElementById('card-' + idx);
+    const wasExp = card.classList.contains('expanded');
+    document.querySelectorAll('.trip-card').forEach(c => c.classList.remove('expanded'));
+    if (!wasExp) card.classList.add('expanded');
 }
 
-function isCurrent(time, now) {
-    const m = timeToMin(time);
-    return now >= m && now < m + 2;
-}
-
-function toggleExpand(idx) {
-    const cards = document.querySelectorAll('.trip-card');
-    cards.forEach((c, i) => {
-        if (i === idx) c.classList.toggle('expanded');
-        else c.classList.remove('expanded');
-    });
-}
-
+// 6. REMAINING APP FUNCTIONS (PIDS, Nav, QR)
 function updatePIDS(station) {
     const nowMin = getTimeNow();
-    let departures = [];
+    let deps = [];
     trainData.forEach(t => {
         const s = t.stops.find(st => st.station === station);
         if (s) {
             const dMin = timeToMin(s.departure);
-            if (dMin >= nowMin - 5) {
-                departures.push({ id: t.train_id, dir: t.direction, time: s.departure, min: dMin });
-            }
+            if (dMin >= nowMin - 5) deps.push({ id: t.train_id, dir: t.direction, time: s.departure, min: dMin });
         }
     });
-    
-    departures.sort((a,b) => a.min - b.min);
+    deps.sort((a,b) => a.min - b.min);
     document.getElementById('pidsDisplay').style.display = 'block';
-    document.getElementById('pidsBody').innerHTML = departures.slice(0, 5).map(d => `
-        <div class="pids-row">
-            <div class="col-vnum">${d.id}</div>
-            <div class="col-dir">${d.dir}</div>
-            <div class="col-time">${d.time.replace(':', '<span class="blink">:</span>')}</div>
-        </div>`).join('');
-}
-
-function swapStations() {
-    const f = document.getElementById('fromPicker'), t = document.getElementById('toPicker');
-    const v = f.value; f.value = t.value; t.value = v; runPlanner();
+    document.getElementById('pidsBody').innerHTML = deps.slice(0, 6).map(d => `
+        <div class="pids-row"><div class="col-vnum">${d.id}</div><div class="col-dir">${d.dir}</div><div class="col-time">${d.time.replace(':', '<span class="blink">:</span>')}</div></div>`).join('');
 }
 
 function goTo(screen) {
@@ -407,15 +350,16 @@ function goTo(screen) {
     document.getElementById('nav-' + screen).classList.add('active');
 }
 
-function generateQRCode() {
-    const qrElement = document.getElementById('pwa-qr');
-    qrElement.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}&color=ffffff&bgcolor=333333`;
+function swapStations() {
+    const f = document.getElementById('fromPicker'), t = document.getElementById('toPicker');
+    const v = f.value; f.value = t.value; t.value = v; runPlanner();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadTrainData();
-    generateQRCode();
-});
+function generateQRCode() {
+    document.getElementById('pwa-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}&color=ffffff&bgcolor=333333`;
+}
+
+document.addEventListener('DOMContentLoaded', () => { loadTrainData(); generateQRCode(); });
 </script>
 </body>
 </html>
